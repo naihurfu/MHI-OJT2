@@ -231,7 +231,7 @@
                     <input type="hidden" runat="server" id="hiddenCourseAndPlanId" />
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" runat="server" id="btnEdit" class="btn btn-primary" onserverclick="btnEdit_Click" style="display:none;">Update</button>
-                    <button type="button" runat="server" id="btnInserted" class="btn btn-primary" onserverclick="btnInserted_Click" onclick="return validate();" style="display:none;">Save</button>
+                    <button type="button" runat="server" id="btnInserted" class="btn btn-primary" onserverclick="btnInserted_Click" style="display:none;">Save</button>
                 </div>
             </div>
         </div>
@@ -474,15 +474,7 @@
             }
         });
         function validate() {
-            // check plan or check not plan is not checked
-            var plan = $('#<%= checkPlan.ClientID %>').prop("checked")
-            var notPlan = $('#<%= checkNotPlan.ClientID %>').prop("checked")
-            if (plan !== true || notPlan !== true) {
-                return false
-            }
-
-            //console.log('validate pass!')
-            return true
+            
         }
         $('.btn__edit__course').on('click', function (e) {
             e.preventDefault();

@@ -56,7 +56,7 @@
                                                 <%# Eval("EMPLOYEE_NAME_EN") %>
                                             </td>
                                             <td>
-                                                <input class="" type="number" value='<%# Eval("SCORE_1") %>' class="form-control" />
+                                                <input type="number" value='<%# Eval("SCORE_1") %>' class="form-control" />
                                             </td>
                                             <td>
                                                 <input type="number" value='<%# Eval("SCORE_2") %>' class="form-control" />
