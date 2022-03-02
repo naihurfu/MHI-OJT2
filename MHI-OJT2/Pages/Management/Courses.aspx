@@ -50,7 +50,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive-xl">
-                        <table class="table table-responsive table-hover" id="courseTable">
+                        <table class="table table-hover" id="courseTable">
                             <thead>
                                 <tr>
                                     <th class="text-center">NO.</th>
@@ -114,7 +114,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="pt-2">
+                    <div class="pt-2 check-plan-container">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="plan" id="checkPlan" runat="server">
                             <label class="form-check-label" for="<%= checkPlan.ClientID %>">Planned training</label>
@@ -124,7 +124,7 @@
                             <label class="form-check-label" for="<%= checkNotPlan.ClientID %>">Off-plan training</label>
                         </div>
                     </div>
-                    <div class="form-group py-3">
+                    <div class="form-group py-3 select-plan-container">
                         <label>Choose a plan</label>
                         <select class="form-control selectpicker" id="trainingPlan" runat="server" data-live-search="true">
                             <option selected>-</option>
@@ -160,15 +160,15 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-md-5">
+                        <div class="form-group col-md-4">
                             <label>Training start time</label>
                             <input type="time" class="form-control" id="startTime" runat="server" />
                         </div>
-                        <div class="form-group col-md-5">
+                        <div class="form-group col-md-4">
                             <label>Training end time</label>
                             <input type="time" class="form-control" id="endTime" runat="server" />
                         </div>
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-4">
                             <label>Total number of hours</label>
                             <input type="number" class="form-control" id="totalHours" min="0" max="24" runat="server">
                         </div>
@@ -228,8 +228,9 @@
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" runat="server" id="hiddenId" />
+                    <input type="hidden" runat="server" id="hiddenCourseAndPlanId" />
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" runat="server" id="btnEdit" class="btn btn-primary" onserverclick="btnEdit_Click" onclick="return validate();" style="display:none;">Update</button>
+                    <button type="button" runat="server" id="btnEdit" class="btn btn-primary" onserverclick="btnEdit_Click" style="display:none;">Update</button>
                     <button type="button" runat="server" id="btnInserted" class="btn btn-primary" onserverclick="btnInserted_Click" onclick="return validate();" style="display:none;">Save</button>
                 </div>
             </div>
@@ -275,7 +276,6 @@
         })();
         function DDMMYYYY(value, event) {
             let newValue = value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');
-
             const dayOrMonth = (index) => index % 2 === 1 && index < 4;
 
             // on delete key.  
@@ -304,7 +304,21 @@
                     $('#addEmployeeModal').modal('show')
                     break;
                 case 'evaluate':
-                    sweetAlert("success", "ok")
+                    $.ajax({
+                        type: "POST",
+                        url: "/Pages/Management/Courses.aspx/CreateSessionToEvaluate",
+                        data: "{'courseId': " + courseId + "}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (results) {
+                            if (results.d === "SUCCESS") {
+                                window.location.href = window.location.protocol + "//" + window.location.host + "/Pages/Management/Evaluation.aspx"
+                            }
+                        },
+                        error: function (err) {
+                            console.log(err)
+                        }
+                    });
                     break;
                 default:
                     sweetAlert("error", "Undefined")
@@ -450,13 +464,13 @@
         }
         $('#<%= checkPlan.ClientID %>').on('change', function () {
             if (this.checked) {
-                $('#<%= trainingPlan.ClientID %>').prop("disabled", false)
+                $('.select-plan-container').find('div').find('button').removeClass('disabled')
             }
         });
         $('#<%= checkNotPlan.ClientID %>').on('change', function () {
             if (this.checked) {
-                $('#<%= trainingPlan.ClientID %>').prop("disabled", "disabled")
-                $('#<%= trainingPlan.ClientID %>').val("-")
+                $('#<%= trainingPlan.ClientID %>').val("-").change()
+                $('.select-plan-container').find('div').find('button').addClass('disabled')
             }
         });
         function validate() {
@@ -512,7 +526,6 @@
                 $('#addModalTitle').text('Course detail')
                 $('#<%= btnInserted.ClientID %>').hide()
                 $('#<%= btnEdit.ClientID %>').hide()
-
                 isDisabledInput(true)
             }
 
@@ -525,18 +538,20 @@
 
             $('#<%= checkPlan.ClientID %>').prop('checked', data.PLAN_ID !== null ? true : false);
             $('#<%= checkNotPlan.ClientID %>').prop('checked', data.PLAN_ID === null ? true : false);
+            $('#<%= checkPlan.ClientID %>').attr('disabled', true);
+            $('#<%= checkNotPlan.ClientID %>').attr('disabled', true);
 
             if (data.PLAN_ID !== null) {
-                $('#<%= trainingPlan.ClientID %>').val(data.PLAN_ID)
-                    $('#<%= trainingPlan.ClientID %>').prop("disabled", false)
+                $('#<%= trainingPlan.ClientID %>').val(data.PLAN_ID).change()
+                $('.select-plan-container').find('div').find('button').removeClass('disabled')
             }
 
             $('#<%= courseNumber.ClientID %>').val(data.COURSE_NUMBER)
             $('#<%= times.ClientID %>').val(data.TIMES)
             $('#<%= courseName.ClientID %>').val(data.COURSE_NAME)
             $('#<%= objective.ClientID %>').val(data.OBJECTIVE)
-            $('#<%= startDate.ClientID %>').val(data.START_DATE.split('T')[0])
-            $('#<%= endDate.ClientID %>').val(data.END_DATE.split('T')[0])
+            $('#<%= startDate.ClientID %>').val(SQLDateToInput(data.START_DATE))
+            $('#<%= endDate.ClientID %>').val(SQLDateToInput(data.END_DATE))
             $('#<%= startTime.ClientID %>').val(data.START_TIME)
             $('#<%= endTime.ClientID %>').val(data.END_TIME)
             $('#<%= totalHours.ClientID %>').val(data.TOTAL_HOURS)
@@ -550,16 +565,19 @@
             $('#<%= Assessor5.ClientID %>').val(data.ASSESSOR5_ID !== 0 && data.ASSESSOR5_ID !== null ? data.ASSESSOR5_ID : 0).change();
             $('#<%= Assessor6.ClientID %>').val(data.ASSESSOR6_ID !== 0 && data.ASSESSOR6_ID !== null ? data.ASSESSOR6_ID : 0).change();
             $('#<%= hiddenId.ClientID %>').val(data.ID)
+            $('#<%= hiddenCourseAndPlanId.ClientID %>').val(data.PLAN_AND_COURSE_ID)
 
         }
         $('#addModal').on('hidden.bs.modal', function () {
             ClearInputValue()
         })
         function ClearInputValue() {
-            $('#<%= checkPlan.ClientID %>').prop('checked', false);
-            $('#<%= checkNotPlan.ClientID %>').prop('checked', false);
-            $('#<%= trainingPlan.ClientID %>').val('-')
-            $('#<%= trainingPlan.ClientID %>').prop("disabled", "disabled")
+            $('#<%= checkPlan.ClientID %>').prop('checked', false)
+            $('#<%= checkNotPlan.ClientID %>').prop('checked', false)
+            $('#<%= checkPlan.ClientID %>').attr('disabled', false)
+            $('#<%= checkNotPlan.ClientID %>').attr('disabled', false)
+            $('#<%= trainingPlan.ClientID %>').val('-').change()
+            $('.select-plan-container').find('div').find('button').addClass('disabled')
             $('#<%= courseNumber.ClientID %>').val('')
             $('#<%= times.ClientID %>').val('')
             $('#<%= courseName.ClientID %>').val('')
@@ -572,13 +590,14 @@
             $('#<%= department.ClientID %>')[0].selectedIndex = 0;
             $('#<%= location.ClientID %>')[0].selectedIndex = 0;
             $('#<%= teacher.ClientID %>')[0].selectedIndex = 0;
-            $('#<%= Assessor1.ClientID %>').val('-')
-            $('#<%= Assessor2.ClientID %>').val('-')
-            $('#<%= Assessor3.ClientID %>').val('-')
-            $('#<%= Assessor4.ClientID %>').val('-')
-            $('#<%= Assessor5.ClientID %>').val('-')
-            $('#<%= Assessor6.ClientID %>').val('-')
+            $('#<%= Assessor1.ClientID %>').val('-').change()
+            $('#<%= Assessor2.ClientID %>').val('-').change()
+            $('#<%= Assessor3.ClientID %>').val('-').change()
+            $('#<%= Assessor4.ClientID %>').val('-').change()
+            $('#<%= Assessor5.ClientID %>').val('-').change()
+            $('#<%= Assessor6.ClientID %>').val('-').change()
             $('#<%= hiddenId.ClientID %>').val('')
+            $('#<%= hiddenCourseAndPlanId.ClientID %>').val('')
         }
 
         // handle assessor selected
@@ -657,6 +676,8 @@
         })
         assessor5.on
         function isDisabledInput(isDisabled) {
+            let readOnlyColor = "background-color: #e9ecef !important;"
+            let openInputColor = "background-color: #fff !important;"
             if (isDisabled === true) {
                 $('#<%= trainingPlan.ClientID %>').prop("disabled", 'disabled')
                 $('#<%= courseNumber.ClientID %>').prop('disabled', 'disabled')
@@ -679,6 +700,13 @@
                 $('#<%= Assessor5.ClientID %>').prop('disabled', 'disabled')
                 $('#<%= Assessor6.ClientID %>').prop('disabled', 'disabled')
                 $('#<%= hiddenId.ClientID %>').prop('disabled', 'disabled')
+                $('.select-plan-container').find('div').find('button').css("cssText", readOnlyColor);
+                $('.assessor-container-1').find('div').find('button').css("cssText", readOnlyColor);
+                $('.assessor-container-2').find('div').find('button').css("cssText", readOnlyColor);
+                $('.assessor-container-3').find('div').find('button').css("cssText", readOnlyColor);
+                $('.assessor-container-4').find('div').find('button').css("cssText", readOnlyColor);
+                $('.assessor-container-5').find('div').find('button').css("cssText", readOnlyColor);
+                $('.assessor-container-6').find('div').find('button').css("cssText", readOnlyColor);
             } else {
                 $('#<%= trainingPlan.ClientID %>').prop("disabled", false)
                 $('#<%= courseNumber.ClientID %>').prop('disabled', false)
@@ -701,6 +729,13 @@
                 $('#<%= Assessor5.ClientID %>').prop('disabled', false)
                 $('#<%= Assessor6.ClientID %>').prop('disabled', false)
                 $('#<%= hiddenId.ClientID %>').prop('disabled', false)
+                $('.select-plan-container').find('div').find('button').css("cssText", openInputColor);
+                $('.assessor-container-1').find('div').find('button').css("cssText", openInputColor);
+                $('.assessor-container-2').find('div').find('button').css("cssText", openInputColor);
+                $('.assessor-container-3').find('div').find('button').css("cssText", openInputColor);
+                $('.assessor-container-4').find('div').find('button').css("cssText", openInputColor);
+                $('.assessor-container-5').find('div').find('button').css("cssText", openInputColor);
+                $('.assessor-container-6').find('div').find('button').css("cssText", openInputColor);
             }
         }
     </script>

@@ -30,6 +30,15 @@
             function sweetAlert(type, title, message) {
                 Swal.fire(title, message, type);
             }
+
+            function SQLDateToInput(date) {
+                let yyyyMMdd = date.split('T')[0].split('-')
+                let year = yyyyMMdd[0]
+                let month = yyyyMMdd[1]
+                let day = yyyyMMdd[2]
+
+                return `${day}/${month}/${year}`
+            }
         </script>
 
         <div class="wrapper">

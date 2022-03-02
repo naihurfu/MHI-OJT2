@@ -231,6 +231,15 @@ namespace MHI_OJT2.Pages.Management
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden hiddenId;
 
         /// <summary>
+        /// hiddenCourseAndPlanId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hiddenCourseAndPlanId;
+
+        /// <summary>
         /// btnEdit control.
         /// </summary>
         /// <remarks>

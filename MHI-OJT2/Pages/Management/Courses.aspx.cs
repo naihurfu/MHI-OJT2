@@ -36,17 +36,17 @@ namespace MHI_OJT2.Pages.Management
 
 				if (_sessionAlert == "inserted")
 				{
-					Alert("success", "สำเร็จ", "เพิ่มผู้ใช้เรียบร้อย");
+					Alert("success", "Done!", "Successfully data added.");
 				};
 
 				if (_sessionAlert == "updated")
 				{
-					Alert("success", "สำเร็จ", "แก้ไขข้อมูลเรียบร้อย");
+					Alert("success", "Updated!", "Successfully updated data.");
 				}
 
 				if (_sessionAlert == "deleted")
 				{
-					Alert("success", "สำเร็จ", "ลบข้อมูลเรียบร้อย");
+					Alert("success", "Deleted!", "The data has been deleted.");
 				}
 
 				if (_sessionAlert == "update_status")
@@ -60,7 +60,7 @@ namespace MHI_OJT2.Pages.Management
 		void GetGridViewData()
 		{
 			string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
-			RepeatCourseTable.DataSource = SQL.GetDataTable("SELECT * FROM COURSE", mainDb);
+			RepeatCourseTable.DataSource = SQL.GetDataTable("SELECT * FROM VIEW_ADJUST_COURSE", mainDb);
 			RepeatCourseTable.DataBind();
 		}
 		void GetAssessor()					   
@@ -336,7 +336,7 @@ namespace MHI_OJT2.Pages.Management
 				string connectionString = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
 				using (SqlConnection connection = new SqlConnection(connectionString))
 				{
-					string queryString = "SELECT (SELECT PLAN_ID FROM PLAN_AND_COURSE WHERE COURSE_ID=@courseId) AS PLAN_ID,*  FROM ADJUST_COURSE  WHERE ID=@courseId";
+					string queryString = "SELECT (SELECT PLAN_ID FROM PLAN_AND_COURSE WHERE COURSE_ID=@courseId) AS PLAN_ID,(SELECT ID FROM PLAN_AND_COURSE WHERE COURSE_ID=@courseId) AS PLAN_AND_COURSE_ID,*  FROM ADJUST_COURSE  WHERE ID=@courseId";
 					using (SqlCommand cmd = new SqlCommand(queryString, connection))
 					{
 						cmd.Parameters.AddWithValue("courseId", SqlDbType.Int).Value = courseId;
@@ -359,44 +359,91 @@ namespace MHI_OJT2.Pages.Management
 				return $"{ex.Message}";
 			}
 		}
-
+		[WebMethod]
+		public static string CreateSessionToEvaluate(int courseId)
+		{
+			try
+			{
+				HttpContext.Current.Session["EVALUATE_COURSE_ID"] = courseId;
+				return "SUCCESS";
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return "FAILED";
+			}
+		}
 		protected void btnEdit_Click(object sender, EventArgs e)
 		{
 			try
 			{
 				string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
-				SqlParameterCollection param = new SqlCommand().Parameters;
+				SqlParameterCollection updateAdjustCourseParamCollection = new SqlCommand().Parameters;
 
-				string query = "INSERT INTO ADJUST_COURSE([COURSE_NUMBER],[TIMES],[COURSE_NAME],[START_DATE],[END_DATE],[START_TIME],[END_TIME],[TOTAL_HOURS],[DEPARTMENT_ID],[LOCATION_ID],[TEACHER_ID],[DETAIL],[OBJECTIVE],[ASSESSOR1_ID],[ASSESSOR2_ID],[ASSESSOR3_ID],[ASSESSOR4_ID],[ASSESSOR5_ID],[ASSESSOR6_ID],[STATUS],[CREATED_BY]) OUTPUT INSERTED.ID VALUES(@COURSE_NUMBER,@TIMES,@COURSE_NAME,@START_DATE,@END_DATE,@START_TIME,@END_TIME,@TOTAL_HOURS,@DEPARTMENT_ID,@LOCATION_ID,@TEACHER_ID,@DETAIL,@OBJECTIVE,@ASSESSOR1_ID,@ASSESSOR2_ID,@ASSESSOR3_ID,@ASSESSOR4_ID,@ASSESSOR5_ID,@ASSESSOR6_ID,@STATUS,@CREATED_BY)";
-				param.AddWithValue("COURSE_NUMBER", SqlDbType.VarChar).Value = courseNumber.Value;
-				param.AddWithValue("TIMES", SqlDbType.Int).Value = times.Value;
-				param.AddWithValue("COURSE_NAME", SqlDbType.VarChar).Value = courseName.Value;
-				param.AddWithValue("START_DATE", SqlDbType.Date).Value = DATA.DateTimeToSQL(startDate.Value);
-				param.AddWithValue("END_DATE", SqlDbType.Date).Value = DATA.DateTimeToSQL(endDate.Value);
-				param.AddWithValue("START_TIME", SqlDbType.VarChar).Value = startTime.Value;
-				param.AddWithValue("END_TIME", SqlDbType.VarChar).Value = endTime.Value;
-				param.AddWithValue("TOTAL_HOURS", SqlDbType.Int).Value = totalHours.Value;
-				param.AddWithValue("DEPARTMENT_ID", SqlDbType.Int).Value = department.Value;
-				param.AddWithValue("LOCATION_ID", SqlDbType.Int).Value = location.Value;
-				param.AddWithValue("TEACHER_ID", SqlDbType.Int).Value = teacher.Value;
-				param.AddWithValue("DETAIL", SqlDbType.VarChar).Value = detail.Value;
-				param.AddWithValue("OBJECTIVE", SqlDbType.VarChar).Value = objective.Value;
-				param.AddWithValue("ASSESSOR1_ID", SqlDbType.Int).Value = Assessor1.Value;
-				param.AddWithValue("ASSESSOR2_ID", SqlDbType.Int).Value = Assessor2.Value;
-				param.AddWithValue("ASSESSOR3_ID", SqlDbType.Int).Value = Assessor3.Value;
-				param.AddWithValue("ASSESSOR4_ID", SqlDbType.Int).Value = Assessor4.Value;
-				param.AddWithValue("ASSESSOR5_ID", SqlDbType.Int).Value = Assessor5.Value;
-				param.AddWithValue("ASSESSOR6_ID", SqlDbType.Int).Value = Assessor6.Value;
-				param.AddWithValue("STATUS", SqlDbType.Int).Value = 1;
-				param.AddWithValue("CREATED_BY", SqlDbType.Int).Value = Session["userId"];
+				string queryUpdateAdjustCourse = "UPDATE [ADJUST_COURSE] SET " +
+					"[COURSE_NUMBER]=@COURSE_NUMBER " +
+					",[TIMES]=@TIMES " +
+					",[COURSE_NAME]=@COURSE_NAME " +
+					",[START_DATE]=@START_DATE " +
+					",[END_DATE]=@END_DATE " +
+					",[START_TIME]=@START_TIME " +
+					",[END_TIME]=@END_TIME " +
+					",[TOTAL_HOURS]=@TOTAL_HOURS " +
+					",[DEPARTMENT_ID]=@DEPARTMENT_ID " +
+					",[LOCATION_ID]=@LOCATION_ID " +
+					",[TEACHER_ID]=@TEACHER_ID " +
+					",[DETAIL]=@DETAIL " +
+					",[OBJECTIVE]=@OBJECTIVE " +
+					",[ASSESSOR1_ID]=@ASSESSOR1_ID " +
+					",[ASSESSOR2_ID]=@ASSESSOR2_ID " +
+					",[ASSESSOR3_ID]=@ASSESSOR3_ID " +
+					",[ASSESSOR4_ID]=@ASSESSOR4_ID " +
+					",[ASSESSOR5_ID]=@ASSESSOR5_ID " +
+					",[ASSESSOR6_ID]=@ASSESSOR6_ID " +
+					",[CREATED_BY]=@CREATED_BY " +
+					"WHERE ID=@courseId";
+				updateAdjustCourseParamCollection.AddWithValue("COURSE_NUMBER", SqlDbType.VarChar).Value = courseNumber.Value;
+				updateAdjustCourseParamCollection.AddWithValue("TIMES", SqlDbType.Int).Value = times.Value;
+				updateAdjustCourseParamCollection.AddWithValue("COURSE_NAME", SqlDbType.VarChar).Value = courseName.Value;
+				updateAdjustCourseParamCollection.AddWithValue("START_DATE", SqlDbType.Date).Value = startDate.Value;
+				updateAdjustCourseParamCollection.AddWithValue("END_DATE", SqlDbType.Date).Value = endDate.Value;
+				updateAdjustCourseParamCollection.AddWithValue("START_TIME", SqlDbType.VarChar).Value = startTime.Value;
+				updateAdjustCourseParamCollection.AddWithValue("END_TIME", SqlDbType.VarChar).Value = endTime.Value;
+				updateAdjustCourseParamCollection.AddWithValue("TOTAL_HOURS", SqlDbType.Int).Value = totalHours.Value;
+				updateAdjustCourseParamCollection.AddWithValue("DEPARTMENT_ID", SqlDbType.Int).Value = department.Value;
+				updateAdjustCourseParamCollection.AddWithValue("LOCATION_ID", SqlDbType.Int).Value = location.Value;
+				updateAdjustCourseParamCollection.AddWithValue("TEACHER_ID", SqlDbType.Int).Value = teacher.Value;
+				updateAdjustCourseParamCollection.AddWithValue("DETAIL", SqlDbType.VarChar).Value = detail.Value;
+				updateAdjustCourseParamCollection.AddWithValue("OBJECTIVE", SqlDbType.VarChar).Value = objective.Value;
+				updateAdjustCourseParamCollection.AddWithValue("ASSESSOR1_ID", SqlDbType.Int).Value = Assessor1.Value;
+				updateAdjustCourseParamCollection.AddWithValue("ASSESSOR2_ID", SqlDbType.Int).Value = Assessor2.Value;
+				updateAdjustCourseParamCollection.AddWithValue("ASSESSOR3_ID", SqlDbType.Int).Value = Assessor3.Value;
+				updateAdjustCourseParamCollection.AddWithValue("ASSESSOR4_ID", SqlDbType.Int).Value = Assessor4.Value;
+				updateAdjustCourseParamCollection.AddWithValue("ASSESSOR5_ID", SqlDbType.Int).Value = Assessor5.Value;
+				updateAdjustCourseParamCollection.AddWithValue("ASSESSOR6_ID", SqlDbType.Int).Value = Assessor6.Value;
+				updateAdjustCourseParamCollection.AddWithValue("CREATED_BY", SqlDbType.Int).Value = Session["userId"];
+				updateAdjustCourseParamCollection.AddWithValue("courseId", SqlDbType.Int).Value = hiddenId.Value;
+				SQL.ExecuteWithParams(queryUpdateAdjustCourse, mainDb, updateAdjustCourseParamCollection);
 
+				SqlParameterCollection updatePlanAndCourseParamCollection = new SqlCommand().Parameters;
+				string queryUpdatePlanAndCourse = "UPDATE PLAN_AND_COURSE SET " +
+                    "PLAN_ID = @PLAN_ID" +
+					",CREATED_AT = GETDATE()" +
+					",CREATED_BY = @CREATED_BY " +
+					"WHERE ID=@ID";
+				updatePlanAndCourseParamCollection.AddWithValue("PLAN_ID", SqlDbType.Int).Value = trainingPlan.Value;
+				updatePlanAndCourseParamCollection.AddWithValue("CREATED_BY", SqlDbType.Int).Value = Session["userId"];
+				updatePlanAndCourseParamCollection.AddWithValue("ID", SqlDbType.Int).Value = hiddenCourseAndPlanId.Value;
+				SQL.ExecuteWithParams(queryUpdatePlanAndCourse, mainDb, updatePlanAndCourseParamCollection);
+
+				Session["alert"] = "updated";
+				Response.Redirect(_selfPathName);
 			}
 			catch (Exception ex)
 			{
 				Alert("error", "Error!", $"{ex.Message}");
 			}
 		}
-
         protected void btnScanBarcode_ServerClick(object sender, EventArgs e)
         {
 			int courseId = int.Parse(hiddenCourseId_AddEmployeeModal.Value);

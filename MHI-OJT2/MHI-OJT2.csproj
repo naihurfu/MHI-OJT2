@@ -2007,6 +2007,7 @@
     <Content Include="Global.asax" />
     <Content Include="Login.aspx" />
     <Content Include="Pages\Management\Courses.aspx" />
+    <Content Include="Pages\Management\Evaluation.aspx" />
     <Content Include="Pages\Management\scan-barcode.aspx" />
     <Content Include="Pages\Management\Training-plans.aspx" />
     <Content Include="Pages\Master\Department.aspx" />
@@ -2058,6 +2059,13 @@
     </Compile>
     <Compile Include="Pages\Management\Courses.aspx.designer.cs">
       <DependentUpon>Courses.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Management\Evaluation.aspx.cs">
+      <DependentUpon>Evaluation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Management\Evaluation.aspx.designer.cs">
+      <DependentUpon>Evaluation.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Management\scan-barcode.aspx.cs">
       <DependentUpon>scan-barcode.aspx</DependentUpon>
