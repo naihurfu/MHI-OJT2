@@ -10,11 +10,6 @@
             height: 20px !important;
         }
 
-        th, td {
-            vertical-align: middle !important;
-            white-space: nowrap;
-        }
-
         .bootstrap-select > .dropdown-toggle {
             background-color: #fff !important;
             border: 1px solid #ced4da !important;
@@ -49,52 +44,50 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
-                    <div class="table-responsive-xl">
-                        <table class="table table-hover" id="courseTable">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">NO.</th>
-                                    <th class="text-center">Edit</th>
-                                    <th class="text-center">Detail</th>
-                                    <th>Course Code</th>
-                                    <th>Course Name</th>
-                                    <th>Creator</th>
-                                    <th>Actual Date</th>
-                                    <th class="text-center">Status</th>
-                                    <th class="text-center">Download Report</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <asp:Repeater ID="RepeatCourseTable" runat="server" OnItemCommand="RepleaterItemCommand">
-                                    <ItemTemplate>
-                                        <tr>
-                                            <th scope="row" class="text-center">
-                                                <%# Container.ItemIndex + 1 %>
-                                            </th>
-                                            <td class="text-center">
-                                                <button class="btn btn-sm btn-primary btn__edit__course" data-id="<%# Eval("COURSE_ID") %>">Edit</button>
-                                            </td>
-                                            <td class="text-center">
-                                                <button class="btn btn-sm btn-link btn__view__course" data-id="<%# Eval("COURSE_ID") %>">Show</button>
-                                            </td>
-                                            <td><%# Eval("COURSE_NUMBER") %></td>
-                                            <td><%# Eval("COURSE_NAME") %></td>
-                                            <td><%# Eval("CREATED_NAME") %></td>
-                                            <td><%# Eval("START_DATE", "{0:dd MMM yyyy}").ToString() %></td>
-                                            <td class="text-center">
-                                                <button type="button" class='<%# (int)Eval("STATUS_CODE") == 1 ? "btn btn-sm btn-primary" : (int)Eval("STATUS_CODE") == 2 ? "btn btn-sm btn-warning" : "btn btn-sm btn-secondary" %>' onclick="handleShowModal(<%# Eval("COURSE_ID") %>,'<%# (int)Eval("STATUS_CODE")== 1 ? "add-employee" : (int)Eval("STATUS_CODE")== 2 ? "evaluate" : "none" %>')" style="width: 220px !important;">
-                                                    <%# Eval("STATUS_TEXT") %>
-                                                </button>
-                                            </td>
-                                            <td class="text-center">
-                                                <asp:Button ID="btnExportReport" CommandName="EXPORT_REPORT_MANAGE_COURSE" Text="Training/Evaluation OJT" runat="server" CommandArgument='<%# Eval("COURSE_ID") %>' CssClass="btn btn-sm btn-success" Enabled='<%# (int)Eval("STATUS_CODE") >= 3 ? true : false %>' />
-                                            </td>
-                                        </tr>
-                                    </ItemTemplate>
-                                </asp:Repeater>
-                            </tbody>
-                        </table>
-                    </div>
+                    <table class="hover nowrap" id="courseTable" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th class="text-center">NO.</th>
+                                <th class="text-center">Edit</th>
+                                <th class="text-center">Detail</th>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                                <th>Creator</th>
+                                <th>Actual Date</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Download Report</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <asp:Repeater ID="RepeatCourseTable" runat="server" OnItemCommand="RepleaterItemCommand">
+                                <ItemTemplate>
+                                    <tr>
+                                        <th scope="row" class="text-center">
+                                            <%# Container.ItemIndex + 1 %>
+                                        </th>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-primary btn__edit__course" data-id="<%# Eval("COURSE_ID") %>">Edit</button>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-link btn__view__course" data-id="<%# Eval("COURSE_ID") %>">Show</button>
+                                        </td>
+                                        <td><%# Eval("COURSE_NUMBER") %></td>
+                                        <td><%# Eval("COURSE_NAME") %></td>
+                                        <td><%# Eval("CREATED_NAME") %></td>
+                                        <td><%# Eval("START_DATE", "{0:dd MMM yyyy}").ToString() %></td>
+                                        <td class="text-center">
+                                            <button type="button" class='<%# (int)Eval("STATUS_CODE") == 1 ? "btn btn-sm btn-primary" : (int)Eval("STATUS_CODE") == 2 ? "btn btn-sm btn-warning" : "btn btn-sm btn-secondary" %>' onclick="handleShowModal(<%# Eval("COURSE_ID") %>,'<%# (int)Eval("STATUS_CODE")== 1 ? "add-employee" : (int)Eval("STATUS_CODE")== 2 ? "evaluate" : "view-status" %>')" style="width: 220px !important;">
+                                                <%# Eval("STATUS_TEXT") %>
+                                            </button>
+                                        </td>
+                                        <td class="text-center">
+                                            <asp:Button ID="btnExportReport" CommandName="EXPORT_REPORT_MANAGE_COURSE" Text="Training/Evaluation OJT" runat="server" CommandArgument='<%# Eval("COURSE_ID") %>' CssClass="btn btn-sm btn-success" Enabled='<%# (int)Eval("STATUS_CODE") >= 3 ? true : false %>' />
+                                        </td>
+                                    </tr>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -230,8 +223,8 @@
                     <input type="hidden" runat="server" id="hiddenId" />
                     <input type="hidden" runat="server" id="hiddenCourseAndPlanId" />
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" runat="server" id="btnEdit" class="btn btn-primary" onserverclick="btnEdit_Click" style="display:none;">Update</button>
-                    <button type="button" runat="server" id="btnInserted" class="btn btn-primary" onserverclick="btnInserted_Click" style="display:none;">Save</button>
+                    <button type="button" runat="server" id="btnEdit" class="btn btn-primary" onserverclick="btnEdit_Click" style="display: none;">Update</button>
+                    <button type="button" runat="server" id="btnInserted" class="btn btn-primary" onserverclick="btnInserted_Click" style="display: none;">Save</button>
                 </div>
             </div>
         </div>
@@ -261,6 +254,45 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="viewStatusModal" tabindex="-1" aria-labelledby="viewStatusModal" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" style="box-shadow: none !important;">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-light">Check approval status</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">No.</th>
+                                    <th>Approver name</th>
+                                    <th class="text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">1</td>
+                                    <td>Call of Duty IV</td>
+                                    <td class="text-center">
+                                        <span class="badge badge-success">
+                                            APPROVED <i class="ml-2 fa fa-check"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer" style="justify-content: end !important;">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </asp:Content>
 <asp:Content ID="ScriptContent" ContentPlaceHolderID="script" runat="server">
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
@@ -268,23 +300,16 @@
         (function () {
             // initial datatable
             $("#courseTable").DataTable({
-                responsive: true
+                responsive: true,
+                scrollX: 500,
+                scrollCollapse: true,
+                scroller: true
             });
             // hide select option value - 
             $("#<%= trainingPlan.ClientID %> option[value='-']").hide()
             $("#<%= trainingPlan.ClientID %>").prop("disabled", "disabled")
         })();
-        function DDMMYYYY(value, event) {
-            let newValue = value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');
-            const dayOrMonth = (index) => index % 2 === 1 && index < 4;
 
-            // on delete key.  
-            if (!event.data) {
-                return value;
-            }
-
-            return newValue.split('').map((v, i) => dayOrMonth(i) ? v + '/' : v).join('');;
-        }
         function handleShowAddModal() {
             $('#<%= btnInserted.ClientID %>').show()
             $('#<%= btnEdit.ClientID %>').hide()
@@ -303,6 +328,7 @@
                     iniTransferBox(courseId)
                     $('#addEmployeeModal').modal('show')
                     break;
+
                 case 'evaluate':
                     $.ajax({
                         type: "POST",
@@ -320,121 +346,55 @@
                         }
                     });
                     break;
-                default:
-                    sweetAlert("error", "Undefined")
+
+                case 'view-status':
+                    $('#viewStatusModal').modal('show')
+                    break;
+
+                default: sweetAlert("error", "WTF!")
             }
         };
         var dualBox;
         function handleInsertEmployee(isDraft) {
             // get course id
             var courseId = $('#<%= hiddenCourseId_AddEmployeeModal.ClientID %>').val()
-            if (isDraft) {
-                // delete employee without evaluate in course
-                $.ajax({
-                    type: "POST",
-                    url: "/Pages/Management/Courses.aspx/DeleteEmployeeInCourse",
-                    data: "{'courseId': " + courseId + "}",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    async: false,
-                    success: (results) => {
-                        console.log(results.d)
-                        //loop insert employee to course
-                        InsertLoop(courseId)
 
-                        let timerInterval
-                        Swal.fire({
-                            title: 'Processing...',
-                            html: 'Close in <b></b> milliseconds.',
-                            timer: 2000,
-                            timerProgressBar: true,
-                            didOpen: () => {
-                                Swal.showLoading()
-                                const b = Swal.getHtmlContainer().querySelector('b')
-                                timerInterval = setInterval(() => {
-                                    b.textContent = Swal.getTimerLeft()
-                                }, 100)
-                            },
-                            willClose: () => {
-                                clearInterval(timerInterval)
-                            }
-                        }).then((result) => {
-                            /* Read more about handling dismissals below */
-                            if (result.dismiss === Swal.DismissReason.timer) {
-                                sweetAlert("success", "Success!", "Employees have been recorded in the course successfully.")
-                            }
-                        })
-                    },
-                    error: function (err) {
-                        console.log(err)
-                    }
-                });
-            } else {
-                $.ajax({
-                    type: "POST",
-                    url: "/Pages/Management/Courses.aspx/DeleteEmployeeInCourse",
-                    data: "{'courseId': " + courseId + "}",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    async: false,
-                    success: (results) => {
-                        console.log(results.d)
-                        //loop insert employee to course
-                        InsertLoop(courseId)
-                        SaveCourseWithoutDraft(courseId)
-                    },
-                    error: function (err) {
-                        console.log(err)
-                    }
-                });
-            }
-        };
-        function SaveCourseWithoutDraft(courseId) {
-            $.ajax({
-                type: "POST",
-                url: "/Pages/Management/Courses.aspx/SaveCourseWithoutDraft",
-                data: "{'courseId': " + courseId + "}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                async: false,
-                success: (results) => {
-                    console.log(results.d)
-                    window.location.href = window.location.href;
-                },
-                error: function (err) {
-                    console.log(err)
-                }
-            });
-        }
-        function InsertLoop(courseId) {
             // get employee selected list
             var selectedList = dualBox.getSelectedItems()
+
             try {
+                var employeeList = []
                 // loop insert employee list
                 for (var i = 0; i < selectedList.length; i++) {
-                    var PersonID = selectedList[i].PersonID
-                    data = "{'courseId': " + courseId + ", 'personId': " + PersonID + "}"
-                    $.ajax({
-                        type: "POST",
-                        url: "/Pages/Management/Courses.aspx/InsertEmployee",
-                        data: data,
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        async: true,
-                        success: (results) => {
-                            console.log(results.d)
-                        },
-                        error: function (err) {
-                            console.log(err)
-                        }
-                    });
+                    let employee = {}
+
+                    employee.CourseID = parseInt(courseId)
+                    employee.PersonID = parseInt(selectedList[i].PersonID)
+
+                    employeeList.push(employee)
                 }
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Pages/Management/Courses.aspx/InsertEmployee",
+                    data: "{'EmployeeSelectedList': " + JSON.stringify(employeeList) + ", 'CourseId': " + courseId + ", 'IsDraft': " + isDraft + "}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: (res) => {
+                        window.location.href = window.location.href;
+                    },
+                    error: function (err) {
+                        console.log(err)
+                        sweetAlert("error", "Error!", err)
+                    }
+                });
             } catch (e) {
                 sweetAlert("error", "ผิดพลาด", "การเชื่อมต่อกับเครือข่ายล้มเหลว กรุณาลองใหม่อีกครั้ง.")
             } finally {
                 $('#addEmployeeModal').modal('hide')
             }
-        }
+        };
+
         function iniTransferBox(courseId) {
             $(".transfer-double").remove()
             var allEmployee = []
@@ -474,7 +434,7 @@
             }
         });
         function validate() {
-            
+
         }
         $('.btn__edit__course').on('click', function (e) {
             e.preventDefault();

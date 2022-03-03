@@ -51,7 +51,19 @@ namespace MHI_OJT2.Pages.Management
 
 				if (_sessionAlert == "update_status")
 				{
-					Alert("success", "สำเร็จ", "อัพเดทสถานะเรียบร้อยแล้ว");
+					Alert("success", "Success", "Status has been updated.");
+				}
+
+				if (_sessionAlert == "employee_inserted")
+                {
+					Alert("success", "Success!", "Employees have been recorded in the course successfully.");
+
+				}
+
+				if (_sessionAlert == "evaluated")
+				{
+					Alert("success", "Success!", "Evaluated successfully.");
+
 				}
 
 				Session.Remove("alert");
@@ -209,70 +221,60 @@ namespace MHI_OJT2.Pages.Management
 			}
 		}
 		[WebMethod]
-		public static string InsertEmployee(int courseId, int personId)
+		public static int InsertEmployee(List<EmployeeIntoCourse> EmployeeSelectedList, int CourseId, Boolean IsDraft)
 		{
-			string connectionString = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
 			try
 			{
+				string connectionString = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
+
+				// clear employee in course before insert
+				SqlConnection deleteConnection = new SqlConnection(connectionString);
+				SqlCommand deleteCommand = new SqlCommand("DELETE FROM EVALUATE WHERE COURSE_ID=@courseId", deleteConnection);
+				deleteCommand.Parameters.AddWithValue("courseId", SqlDbType.Int).Value = CourseId;
+				deleteConnection.Open();
+				deleteCommand.ExecuteNonQuery();
+				deleteConnection.Close();
+
+				int successCount = 0;
 				using (SqlConnection connection = new SqlConnection(connectionString))
 				{
 					string queryString = "INSERT INTO EVALUATE(COURSE_ID,PERSON_ID,SCORE_1,SCORE_2,SCORE_3,SCORE_4,SCORE_5,TOTAL_SCORE,IS_EVALUATED) VALUES(@courseId,@personId,0,0,0,0,0,0,0)";
-					using (SqlCommand cmd = new SqlCommand(queryString, connection))
-					{
-						cmd.Parameters.AddWithValue("courseId", SqlDbType.Int).Value = courseId;
-						cmd.Parameters.AddWithValue("personId", SqlDbType.Int).Value = personId;
 
-						connection.Open();
-						cmd.ExecuteNonQuery();
-						connection.Close();
-						return $"PersonID : {personId} AND CourseID : {courseId} has been inserted.";
+					List<EmployeeIntoCourse> list = EmployeeSelectedList;
+					for (int i = 0; i < list.Count; i++)
+                    {
+						using (SqlCommand cmd = new SqlCommand(queryString, connection))
+						{
+							cmd.Parameters.AddWithValue("courseId", SqlDbType.Int).Value = list[i].CourseID;
+							cmd.Parameters.AddWithValue("personId", SqlDbType.Int).Value = list[i].PersonID;
+
+							connection.Open();
+							cmd.ExecuteNonQuery();
+							connection.Close();
+						}
+						successCount++;
 					}
+
+
+					// update status if IsDraft != true
+					if (IsDraft != true)
+                    {
+						SqlConnection updateConnection = new SqlConnection(connectionString);
+						SqlCommand updateCommand = new SqlCommand("UPDATE ADJUST_COURSE SET [STATUS]=2 WHERE ID=@courseId", updateConnection);
+						updateCommand.Parameters.AddWithValue("courseId", SqlDbType.Int).Value = CourseId;
+						updateConnection.Open();
+						updateCommand.ExecuteNonQuery();
+						updateConnection.Close();
+					}
+
+                    HttpContext.Current.Session.Add("alert", "employee_inserted");
+					return successCount;
 				}
 			}
 			catch (Exception ex)
 			{
-				return $"{ex.Message}";
-			}
-		}
-		[WebMethod]
-		public static string DeleteEmployeeInCourse(int courseId)
-		{
-			try
-			{
-				string connectionString = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
-				SqlConnection con = new SqlConnection(connectionString);
-				SqlCommand command = new SqlCommand("DELETE FROM EVALUATE WHERE COURSE_ID=@courseId", con);
-				command.Parameters.AddWithValue("courseId", SqlDbType.Int).Value = courseId;
-				con.Open();
-				command.ExecuteNonQuery();
-				con.Close();
-				return $"courseId : {courseId} is Removed";
-			}
-			catch (Exception ex)
-			{
-				return $"{ex.Message}";
-			}
-		}
-		[WebMethod]
-		public static string SaveCourseWithoutDraft(int courseId)
-		{
-			try
-			{
-				string connectionString = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
-				SqlConnection con = new SqlConnection(connectionString);
-				SqlCommand command = new SqlCommand("UPDATE ADJUST_COURSE SET [STATUS]=2 WHERE ID=@courseId", con);
-				command.Parameters.AddWithValue("courseId", SqlDbType.Int).Value = courseId;
-				con.Open();
-				command.ExecuteNonQuery();
-				con.Close();
-
-				HttpContext.Current.Session["alert"] = "update_status";
-
-				return $"courseId : {courseId} is updated";
-			}
-			catch (Exception ex)
-			{
-				return $"{ex.Message}";
+				Console.WriteLine(ex.Message);
+				return 0;
 			}
 		}
 		[WebMethod]
@@ -451,5 +453,10 @@ namespace MHI_OJT2.Pages.Management
 			Response.Redirect($"~/Pages/Management/scan-barcode.aspx?queryId={courseId}");
 			Response.End();
 		}
+    }
+	public class EmployeeIntoCourse
+    {
+        public int PersonID { get; set; }
+        public int CourseID { get; set; }
     }
 }

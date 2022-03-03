@@ -1,16 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Auth.Master" AutoEventWireup="true" CodeBehind="Location.aspx.cs" Inherits="MHI_OJT2.Pages.Master.Location" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
-    <style type="text/css">
-        table {
-            width: 100% !important;
-        }
-
-        th, td {
-            vertical-align: middle !important;
-            white-space: nowrap;
-        }
-    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="body" runat="server">
     <!-- Content Header (Page header) -->
@@ -39,8 +29,7 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
-                    <div class="table-responsive-xl">
-                        <table class="table table-hover">
+                        <table class="hover nowrap" style="width:100%">
                             <thead>
                                 <tr>
                                     <th class="text-center">NO.</th>
@@ -77,7 +66,6 @@
                                 </asp:Repeater>
                             </tbody>
                         </table>
-                    </div>
                 </div>
             </div>
         </div>
@@ -90,7 +78,10 @@
     <script type="text/javascript">
         (function () {
             $("table").DataTable({
-                responsive: true
+                responsive: true,
+                scrollX: 500,
+                scrollCollapse: true,
+                scroller: true
             });
         })();
     </script>

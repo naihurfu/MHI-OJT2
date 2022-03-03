@@ -1,16 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Auth.Master" AutoEventWireup="true" CodeBehind="Speaker.aspx.cs" Inherits="MHI_OJT2.Pages.Master.Speaker" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
-    <style type="text/css">
-        table {
-            width: 100% !important;
-        }
-
-        th, td {
-            vertical-align: middle !important;
-            white-space: nowrap;
-        }
-    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="body" runat="server">
     <!-- Content Header (Page header) -->
@@ -39,47 +30,45 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
-                    <div class="table-responsive-xl">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">NO.</th>
-                                    <th>Speaker Name</th>
-                                    <th class="text-center">Status</th>
-                                    <th class="text-center">Tools</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <asp:Repeater ID="RepeatTable" runat="server">
-                                    <ItemTemplate>
-                                        <tr>
-                                            <th scope="row" class="text-center">
-                                                <%# Container.ItemIndex + 1 %>
-                                            </th>
-                                            <td>
-                                                <%# (string)Eval("INITIAL_NAME") + (string)Eval("FIRST_NAME") + " " + (string)Eval("LAST_NAME") %>
-                                            </td>    
-                                            <td class="text-center">
-                                                <span class='<%# (Boolean)Eval("IS_ACTIVE") == true ? "badge badge-success" : "badge badge-danger" %>'>
-                                                    <%# (Boolean)Eval("IS_ACTIVE") == true ? "ACTIVE" : "INACTIVE" %> 
-                                                </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="btn-group" role="group" aria-label="Basic example">
-                                                    <button type="button" class="btn btn-sm btn-warning">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button type="button" class="btn btn-sm btn-danger">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </ItemTemplate>
-                                </asp:Repeater>
-                            </tbody>
-                        </table>
-                    </div>
+                    <table class="hover nowrap" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th class="text-center">NO.</th>
+                                <th>Speaker Name</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Tools</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <asp:Repeater ID="RepeatTable" runat="server">
+                                <ItemTemplate>
+                                    <tr>
+                                        <th scope="row" class="text-center">
+                                            <%# Container.ItemIndex + 1 %>
+                                        </th>
+                                        <td>
+                                            <%# (string)Eval("INITIAL_NAME") + (string)Eval("FIRST_NAME") + " " + (string)Eval("LAST_NAME") %>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class='<%# (Boolean)Eval("IS_ACTIVE") == true ? "badge badge-success" : "badge badge-danger" %>'>
+                                                <%# (Boolean)Eval("IS_ACTIVE") == true ? "ACTIVE" : "INACTIVE" %> 
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                <button type="button" class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -92,7 +81,10 @@
     <script type="text/javascript">
         (function () {
             $("table").DataTable({
-                responsive: true
+                responsive: true,
+                scrollX: 500,
+                scrollCollapse: true,
+                scroller: true
             });
         })();
     </script>

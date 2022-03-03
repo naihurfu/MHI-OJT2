@@ -11,6 +11,11 @@
         * {
             font-family: 'Kanit', sans-serif;
         }
+        
+        /* jQuery dataTable border bottom */
+        .dataTables_wrapper.no-footer .dataTables_scrollBody, table.dataTable thead th, table.dataTable thead td {
+            border-bottom: 1px solid #ccc !important;
+        }
     </style>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="~/Assets/plugins/fontawesome-free/css/all.min.css">
@@ -225,6 +230,20 @@
         <asp:ContentPlaceHolder ID="modal" runat="server"></asp:ContentPlaceHolder>
         <asp:ContentPlaceHolder ID="script" runat="server">
         </asp:ContentPlaceHolder>
+        <script type="text/javascript">
+            // global script
+            function DDMMYYYY(value, event) {
+                let newValue = value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');
+                const dayOrMonth = (index) => index % 2 === 1 && index < 4;
+
+                // on delete key.  
+                if (!event.data) {
+                    return value;
+                }
+
+                return newValue.split('').map((v, i) => dayOrMonth(i) ? v + '/' : v).join('');;
+            }
+        </script>
     </form>
 </body>
 </html>
