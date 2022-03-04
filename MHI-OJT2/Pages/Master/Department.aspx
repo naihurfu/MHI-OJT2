@@ -1,6 +1,20 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Auth.Master" AutoEventWireup="true" CodeBehind="Department.aspx.cs" Inherits="MHI_OJT2.Pages.Master.Department" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+    <style type="text/css">
+        input[type=checkbox], input[type=radio] {
+            width: 20px !important;
+            height: 20px !important;
+        }
+
+        .bootstrap-select > .dropdown-toggle {
+            background-color: #fff !important;
+            border: 1px solid #ced4da !important;
+            border-radius: .25rem !important;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="body" runat="server">
     <!-- Content Header (Page header) -->
@@ -13,7 +27,7 @@
                 <!-- /.col -->
                 <div class="col-sm-6">
                     <div class="float-sm-right">
-                        <button type="button" class="btn btn-primary" onclick="handleShowAddModal('add')">Create</button>
+                        <button type="button" class="btn btn-primary" onclick="handleShowModal('add', {})">Create</button>
                     </div>
                 </div>
                 <!-- /.col -->
@@ -29,51 +43,92 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
-                        <table class="hover nowrap" style="width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">No.</th>
-                                    <th>Department Name</th>
-                                    <th>Section Name</th>
-                                    <th class="text-center">Status</th>
-                                    <th class="text-center">Tools</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <asp:Repeater ID="RepeatDepartmentTable" runat="server">
-                                    <ItemTemplate>
-                                        <tr>
-                                            <th scope="row" class="text-center">
-                                                <%# Container.ItemIndex + 1 %>
-                                            </th>
-                                            <td><%# Eval("DEPARTMENT_NAME") %></td>
-                                            <td><%# Eval("SECTION_NAME") %></td>
-                                            <td class="text-center">
-                                                <span class='<%# (Boolean)Eval("IS_ACTIVE") == true ? "badge badge-success" : "badge badge-danger" %>'>
-                                                    <%# (Boolean)Eval("IS_ACTIVE") == true ? "ACTIVE" : "INACTIVE" %> 
-                                                </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="btn-group" role="group" aria-label="Basic example">
-                                                    <button type="button" class="btn btn-sm btn-warning">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button type="button" class="btn btn-sm btn-danger">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </ItemTemplate>
-                                </asp:Repeater>
-                            </tbody>
-                        </table>
+                    <table class="hover nowrap" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th class="text-center">No.</th>
+                                <th>Department Name</th>
+                                <th>Section Name</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Tools</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <asp:Repeater ID="RepeatDepartmentTable" runat="server">
+                                <ItemTemplate>
+                                    <tr>
+                                        <th scope="row" class="text-center">
+                                            <%# Container.ItemIndex + 1 %>
+                                        </th>
+                                        <td><%# Eval("DEPARTMENT_NAME") %></td>
+                                        <td><%# Eval("SECTION_NAME") %></td>
+                                        <td class="text-center">
+                                            <span class='<%# (Boolean)Eval("IS_ACTIVE") == true ? "badge badge-success" : "badge badge-danger" %>'>
+                                                <%# (Boolean)Eval("IS_ACTIVE") == true ? "ACTIVE" : "INACTIVE" %> 
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                <button type="button" class="btn btn-sm btn-warning" onclick="handleShowModal('edit', { ID:<%# Eval("ID") %>, DEPARTMENT_NAME: '<%# Eval("DEPARTMENT_NAME") %>', SECTION_NAME: '<%# Eval("SECTION_NAME") %>', IS_ACTIVE: <%# (Boolean)Eval("IS_ACTIVE") == true ? 1 : 0 %>, CREATED_NAME: '<%# Eval("CREATED_NAME") %>'  })">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-danger" onclick="handleShowModal('delete', { ID:<%# Eval("ID") %>, DEPARTMENT_NAME: '<%# Eval("DEPARTMENT_NAME") %>', SECTION_NAME: '<%# Eval("SECTION_NAME") %>', IS_ACTIVE: <%# (Boolean)Eval("IS_ACTIVE") == true ? 1 : 0 %>, CREATED_NAME: '<%# Eval("CREATED_NAME") %>'  })">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
         <!-- /.container-fluid -->
     </div>
     <!-- /.content -->
+</asp:Content>
+<asp:Content ID="ModalContent" ContentPlaceHolderID="modal" runat="server">
+    <div class="modal fade" id="crudModal" tabindex="-1" aria-labelledby="crudModal" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="box-shadow: none !important;">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-light" id="titleModal"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for='<%= departmentName.ClientID %>'>แผนก / Department name</label>
+                        <input type="text" class="form-control" id="departmentName" runat="server">
+                    </div>
+                    <div class="form-group">
+                        <label for='<%= sectionName.ClientID %>'>ชื่อสังกัด / Section name</label>
+                        <select class="form-control selectpicker" data-live-search="true" id="sectionName" runat="server"></select>
+                    </div>
+                    <div class="pt-2 check-container">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="set-active" id="active" runat="server">
+                            <label class="form-check-label" for="<%= active.ClientID %>">ใช้งาน / active</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="set-active" id="inactive" runat="server">
+                            <label class="form-check-label" for="<%= inactive.ClientID %>">ไม่ใช้งาน/ inactive</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="justify-content: end !important;">
+                    <input type="hidden" id="hiddenId" runat="server" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด/Close</button>
+                    <button type="button" class="btn btn-danger" id="btnDelete" runat="server" onserverclick="Delete">ลบ/Delete</button>
+                    <button type="button" class="btn btn-success" id="btnEdit" runat="server" onserverclick="Update">บันทึก/Save</button>
+                    <button type="button" class="btn btn-primary" id="btnAdd" runat="server" onserverclick="Create">บันทึก/Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </asp:Content>
 <asp:Content ID="ScriptContent" ContentPlaceHolderID="script" runat="server">
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
@@ -86,5 +141,70 @@
                 scroller: true
             });
         })();
+
+        // modal title
+        var modalTitle = $('#titleModal')
+
+        // input variable
+        var departmentName = $('#<%= departmentName.ClientID %>')
+        var sectionName = $('#<%= sectionName.ClientID %>')
+        var checkActive = $('#<%= active.ClientID %>')
+        var checkInActive = $('#<%= inactive.ClientID %>')
+        var hiddenId = $('#<%= hiddenId.ClientID %>')
+
+        // control button 
+        var btnAdd = $('#<%= btnAdd.ClientID %>')
+        var btnEdit = $('#<%= btnEdit.ClientID %>')
+        var btnDelete = $('#<%= btnDelete.ClientID %>')
+
+        function handleShowModal(action, data) {
+            setDefaultValue()
+            const crudModal = $('#crudModal')
+            switch (action) {
+                case "add":
+                    modalTitle.text('เพิ่มข้อมูล / Add data')
+                    btnAdd.show()
+                    checkActive.prop('checked', true)
+                    crudModal.modal('show')
+                    break
+
+                case "edit":
+                    modalTitle.text('แก้ไขข้อมูล / Edit data')
+                    sectionName.val(data.SECTION_ID)
+                    departmentName.val(data.DEPARTMENT_NAME)
+                    hiddenId.val(data.ID)
+                    checkActive.prop('checked', data.IS_ACTIVE)
+                    checkInActive.prop('checked', !data.IS_ACTIVE)
+                    $('.check-container').show()
+                    btnEdit.show()
+                    crudModal.modal('show')
+                    break
+
+                case "delete":
+                    modalTitle.text('ลบข้อมูล / Delete data ?')
+                    departmentName.val(data.DEPARTMENT_NAME)
+                    departmentName.prop('disabled', 'disabled')
+                    sectionName.val(data.SECTION_ID)
+                    sectionName.prop('disabled', 'disabled')
+                    hiddenId.val(data.ID)
+                    checkActive.prop('checked', data.IS_ACTIVE)
+                    checkInActive.prop('checked', !data.IS_ACTIVE)
+                    $('.check-container').hide()
+                    btnDelete.show()
+                    crudModal.modal('show')
+                    break
+            }
+        }
+        function setDefaultValue() {
+            btnAdd.hide()
+            btnEdit.hide()
+            btnDelete.hide()
+            $('.check-container').hide()
+            departmentName.val("")
+            sectionName.val("")
+            checkActive.prop('checked', false)
+            checkInActive.prop('checked', false)
+            hiddenId.val("")
+        }
     </script>
 </asp:Content>

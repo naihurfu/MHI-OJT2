@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Script.Serialization;
 
@@ -111,6 +112,10 @@ namespace MHI_OJT2
 			string result = $"{year}-{month}-{day}";
 			DateTime dt = DateTime.ParseExact(result, "yyyy-MM-dd", CultureInfo.InvariantCulture);
 			return dt;
+		}
+		public static string RemoveSpecialCharacters(string str)
+		{
+			return Regex.Replace(str, @"[^0-9a-zA-Z]+", " ");
 		}
 	}
 }
