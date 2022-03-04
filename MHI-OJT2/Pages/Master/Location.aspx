@@ -161,7 +161,7 @@
                     $('.check-container').show()
                     btnEdit.show()
 
-                    locationName.val(data.locationName)
+                    locationName.val(data.LOCATION_NAME)
 
                     crudModal.modal('show')
                     break
@@ -174,7 +174,7 @@
                     $('.check-container').hide()
                     btnDelete.show()
 
-                    locationName.val(data.INITIAL_NAME)
+                    locationName.val(data.LOCATION_NAME)
                     locationName.prop("disabled", "disabled")
 
                     crudModal.modal('show')

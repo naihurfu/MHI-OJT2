@@ -129,7 +129,7 @@ namespace MHI_OJT2.Pages.Master
 				}
 
 				// delete command
-				string query = "DELETE FROM TEACHER WHERE ID=@ID";
+				string query = "DELETE FROM LOCATION WHERE ID=@ID";
 				SQL.ExecuteWithParams(query, MainDB, param);
 
 				Session.Add("alert", "deleted");

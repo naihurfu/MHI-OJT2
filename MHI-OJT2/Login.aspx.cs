@@ -110,11 +110,10 @@ namespace MHI_OJT2
 
             Response.Redirect("~/Default.aspx");
         }
-        static DataTable FindInTigerSoftDatabase(string username)
+        public static DataTable FindInTigerSoftDatabase(string username)
         {
             string TigerDB = WebConfigurationManager.ConnectionStrings["TigerDB"].ConnectionString;
 
-            DataTable dt = new DataTable();
             SqlParameterCollection param = new SqlCommand().Parameters;
             param.AddWithValue("@username", SqlDbType.VarChar).Value = username;
             string queryString = "SELECT person.PersonID ID";
@@ -132,18 +131,17 @@ namespace MHI_OJT2
             // where resign and delete person
             queryString += "AND person.ResignStatus = 1 AND person.ChkDeletePerson = 1";
 
-            dt = SQL.GetDataTableWithParams(queryString, TigerDB, param);
+            DataTable dt = SQL.GetDataTableWithParams(queryString, TigerDB, param);
             return dt;
         }
-        static DataTable FindInMainDatabase(string username)
+        public static DataTable FindInMainDatabase(string username)
         {
             string MainDB = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
 
-            DataTable dt = new DataTable();
             SqlParameterCollection param = new SqlCommand().Parameters;
             param.AddWithValue("USERNAME", SqlDbType.VarChar).Value = username;
             string queryString = "SELECT * FROM SYSTEM_USERS WHERE USERNAME=@USERNAME AND IS_ACTIVE = 1";
-            dt = SQL.GetDataTableWithParams(queryString, MainDB, param);
+            DataTable dt = SQL.GetDataTableWithParams(queryString, MainDB, param);
             return dt;
         }
         private void Alert(string type, string title, string message)
