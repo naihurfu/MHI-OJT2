@@ -11,16 +11,16 @@ namespace MHI_OJT2
 {
     public partial class Auth : System.Web.UI.MasterPage
     {
-			string _firstName = String.Empty;
-			string _lastName = String.Empty;
-			string _positionName = String.Empty;
+		string _firstName = String.Empty;
+		string _lastName = String.Empty;
+		string _positionName = String.Empty;
 		public int notificationCount = 0;
 		protected void Page_Load(object sender, EventArgs e)
 			{
 				if (!IsPostBack)
 				{
 					CheckLoggedIn();
-
+					CheckPermissionAndRedirect();
 					if ((string)Session["roles"] == "user")
 					{
 						GetNotification();
@@ -66,5 +66,11 @@ namespace MHI_OJT2
 				Session.RemoveAll();
 				Response.Redirect("~/login.aspx");
 			}
+			protected void CheckPermissionAndRedirect()
+			{
+				string currentPath = String.Empty;
+				_ = HttpContext.Current.Request.Url.AbsolutePath;
+				
+		}
     }
 }

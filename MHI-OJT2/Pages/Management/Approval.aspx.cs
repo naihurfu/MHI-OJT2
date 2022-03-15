@@ -13,16 +13,37 @@ namespace MHI_OJT2.Pages.Management
 {
     public partial class Approval : Page
     {
+        string _sessionAlert = String.Empty;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
+                CheckAlertSession();
                 if ((string)Session["roles"] == "user")
                 {
                     RepeatTable.DataSource = GetApproveList(int.Parse(Session["userId"].ToString()));
                     RepeatTable.DataBind();
                 }
             }
+        }
+        void CheckAlertSession()
+        {
+            _sessionAlert = null;
+            if (Session["alert"] != null)
+            {
+                _sessionAlert = Session["alert"] as string;
+
+                if (_sessionAlert == "approved")
+                {
+                    Alert("success", "Done!", "Successfully data added.");
+                };
+
+                Session.Remove("alert");
+            }
+        }
+        void Alert(string type, string title, string message)
+        {
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "SweetAlert", $"sweetAlert('{type}','{title}','{message}')", true);
         }
         public static DataTable GetApproveList(int userId)
         {
@@ -31,17 +52,19 @@ namespace MHI_OJT2.Pages.Management
                 ",COURSE_NUMBER " +
                 ",COURSE_NAME " +
                 ",DEPARTMENT_NAME " +
+                ",[STATUS] " +
                 ",(SELECT SUM(CAST(ISNULL(APPROVAL_RESULT,0) AS INT)) FROM APPROVAL WHERE COURSE_ID = ADJ.ID) COUNT_APPROVED_RESULT " +
                 ",(SELECT APPROVAL_SEQUENCE FROM APPROVAL WHERE COURSE_ID = ADJ.ID AND PERSON_ID = @USER_ID) APPROVAL_SEQUENCE " +
                 ",(SELECT ID FROM APPROVAL WHERE COURSE_ID = ADJ.ID AND PERSON_ID = @USER_ID) APPROVAL_ID " +
                 "FROM ADJUST_COURSE ADJ " +
                 "JOIN DEPARTMENT DEP ON DEP.ID = ADJ.DEPARTMENT_ID " +
-                "WHERE ASSESSOR1_ID = @USER_ID " +
+                "WHERE [STATUS] >= 3" +
+                "AND (ASSESSOR1_ID = @USER_ID " +
                 "OR ASSESSOR2_ID = @USER_ID " +
                 "OR ASSESSOR3_ID = @USER_ID " +
                 "OR ASSESSOR4_ID = @USER_ID " +
                 "OR ASSESSOR5_ID = @USER_ID " +
-                "OR ASSESSOR6_ID = @USER_ID " +
+                "OR ASSESSOR6_ID = @USER_ID) " +
                 ") DATA " +
                 "WHERE COUNT_APPROVED_RESULT+1 = APPROVAL_SEQUENCE ";
             SqlParameterCollection param = new SqlCommand().Parameters;
@@ -51,53 +74,60 @@ namespace MHI_OJT2.Pages.Management
         [WebMethod]
         public static string HandleApprove(ApproveResult _ApproveResult)
         {
-            if (_ApproveResult.IS_APPROVE == false)
+            if (_ApproveResult.IS_APPROVE == 0)
             {
                 RejectApprovalUpdate(_ApproveResult.COURSE_ID);
+                HttpContext.Current.Session.Add("alert", "approved");
                 return "REJECTED";
             }
 
 			string connectionString = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            SqlConnection connection = new SqlConnection(connectionString);
+            
+            using (SqlCommand command = new SqlCommand("UPDATE APPROVAL SET APPROVAL_RESULT=@IS_APPROVE,IS_APPROVED=1 WHERE ID=@APPROVE_ID", connection))
             {
-               string queryString = "UPDATE APPROVAL SET APPROVAL_RESULT=@IS_APPROVE,IS_APPROVED=1 WHERE ID=@APPROVE_ID";
-               using (SqlCommand command = new SqlCommand(queryString, connection))
-                {
-                    command.Parameters.AddWithValue("APPROVE_ID", SqlDbType.Int).Value = _ApproveResult.APPROVE_ID;
-                    command.Parameters.AddWithValue("IS_APPROVE", SqlDbType.Int).Value = _ApproveResult.IS_APPROVE;
+                command.Parameters.AddWithValue("APPROVE_ID", SqlDbType.Int).Value = _ApproveResult.APPROVE_ID;
+                command.Parameters.AddWithValue("IS_APPROVE", SqlDbType.Bit).Value = _ApproveResult.IS_APPROVE;
 
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+
+                string query = "UPDATE ADJUST_COURSE " +
+                    "SET [STATUS]=(SELECT [STATUS] FROM ADJUST_COURSE WHERE ID = " + _ApproveResult.COURSE_ID + ")+1 " +
+                    "WHERE ID=" + _ApproveResult.COURSE_ID;
+                using (SqlCommand update = new SqlCommand(query, connection))
+                {
                     connection.Open();
-                    command.ExecuteNonQuery();
+                    update.ExecuteNonQuery();
                     connection.Close();
                 }
             }
 
 
             // check if last approval
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using(SqlCommand command = new SqlCommand("SELECT * FROM APPROVAL WHERE COURSE_ID=@COURSE_ID", connection))
             {
-                using(SqlCommand command = new SqlCommand("SELECT * FROM APPROVAL WHERE COURSE_ID=@COURSE_ID", connection))
-                {
-                    command.Parameters.AddWithValue("COURSE_ID", SqlDbType.Int).Value = _ApproveResult.COURSE_ID;
+                command.Parameters.AddWithValue("COURSE_ID", SqlDbType.Int).Value = _ApproveResult.COURSE_ID;
 
-                    connection.Open();
-                    command.CommandType = CommandType.Text;
-                    SqlDataAdapter da = new SqlDataAdapter();
-                    da.SelectCommand = command;
-                    connection.Close();
+                connection.Open();
+                command.CommandType = CommandType.Text;
+                SqlDataAdapter da = new SqlDataAdapter();
+                da.SelectCommand = command;
+                connection.Close();
 
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
                     
-                    if (dt.Rows.Count == _ApproveResult.APPROVAL_SEQUENCE)
-                    {
-                        LastOfApprovalUpdate(_ApproveResult.COURSE_ID);
-                    }
+                if (dt.Rows.Count == _ApproveResult.APPROVAL_SEQUENCE)
+                {
+                    LastOfApprovalUpdate(_ApproveResult.COURSE_ID);
                 }
             }
 
 
-                return "ssss";
+            HttpContext.Current.Session.Add("alert", "approved");
+            return "APPROVED";
         }
         public static int LastOfApprovalUpdate(int courseId)
         {
@@ -134,13 +164,12 @@ namespace MHI_OJT2.Pages.Management
                 return 0;
             }
         }
-}
     }
     public class ApproveResult
     {
         public int APPROVE_ID { get; set; }
         public int COURSE_ID { get; set; }
-        public Boolean IS_APPROVE { get; set; }
+        public int IS_APPROVE { get; set; }
         public int APPROVAL_SEQUENCE { get; set; }
     }
 }

@@ -2006,6 +2006,7 @@
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Login.aspx" />
+    <Content Include="Pages\Error\403.aspx" />
     <Content Include="Pages\Management\Approval.aspx" />
     <Content Include="Pages\Management\Courses.aspx" />
     <Content Include="Pages\Management\Evaluation.aspx" />
@@ -2017,6 +2018,7 @@
     <Content Include="Pages\Master\Speaker.aspx" />
     <Content Include="Pages\Profiles.aspx" />
     <Content Include="Pages\Systems\Users.aspx" />
+    <Content Include="Pages\Training-profile.aspx" />
     <Content Include="Reports\Pic\0_19.png" />
     <Content Include="Reports\Pic\20_25.png" />
     <Content Include="Reports\Pic\26_50.png" />
@@ -2053,6 +2055,13 @@
     </Compile>
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Error\403.aspx.cs">
+      <DependentUpon>403.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Error\403.aspx.designer.cs">
+      <DependentUpon>403.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Management\Approval.aspx.cs">
       <DependentUpon>Approval.aspx</DependentUpon>
@@ -2130,6 +2139,13 @@
     </Compile>
     <Compile Include="Pages\Systems\Users.aspx.designer.cs">
       <DependentUpon>Users.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Training-profile.aspx.cs">
+      <DependentUpon>Training-profile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Training-profile.aspx.designer.cs">
+      <DependentUpon>Training-profile.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reports\rpt_Manage_Course.cs">

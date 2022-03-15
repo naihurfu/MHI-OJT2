@@ -49,8 +49,8 @@
                                             <%# Eval("DEPARTMENT_NAME") %>
                                         </td>
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="handleApprove({courseId: <%# Eval("ID") %>, aprovalId: <%# Eval("APPROVAL_ID") %>, isApprove: false, approvalSequence: <%# Eval("APPROVAL_SEQUENCE") %>})">Reject</button>
-                                            <button type="button" class="btn btn-success btn-sm ml-2" onclick="handleApprove({courseId: <%# Eval("ID") %>, aprovalId: <%# Eval("APPROVAL_ID") %>, isApprove: true, approvalSequence: <%# Eval("APPROVAL_SEQUENCE") %>})">Approve</button>
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="handleApprove({courseId: <%# Eval("ID") %>, aprovalId: <%# Eval("APPROVAL_ID") %>, isApprove: 0, approvalSequence: <%# Eval("APPROVAL_SEQUENCE") %>})">Reject</button>
+                                            <button type="button" class="btn btn-success btn-sm ml-2" onclick="handleApprove({courseId: <%# Eval("ID") %>, aprovalId: <%# Eval("APPROVAL_ID") %>, isApprove: 1, approvalSequence: <%# Eval("APPROVAL_SEQUENCE") %>})">Approve</button>
                                         </td>
                                     </tr>
                                 </ItemTemplate>
@@ -82,6 +82,8 @@
 
         function handleApprove(data) {
             const { aprovalId, courseId, isApprove, approvalSequence } = data
+            let body = "{'APPROVE_ID': " + aprovalId + ",'COURSE_ID': " + courseId + ",'IS_APPROVE': " + isApprove + ",'APPROVAL_SEQUENCE': " + approvalSequence + "}"
+            console.log(body)
             Swal.fire({
                 title: isApprove ? 'Do you want to approve?' : 'Would you like to reject the request?',
                 showConfirmButton: true,
@@ -94,19 +96,18 @@
                     $.ajax({
                         type: "POST",
                         url: "/Pages/Management/Approval.aspx/HandleApprove",
-                        data: "{'APPROVE_ID': " + aprovalId + ",'COURSE_ID': " + courseId + ",'IS_APPROVE': " + isApprove + ",'APPROVAL_SEQUENCE': " + approvalSequence + "}",
+                        data: "{ '_ApproveResult': " + body + " }",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (results) {
-                            console.log(results.d)
                             switch (results.d) {
-                                case "SUCCESS":
-                                    window.location.href = window.location.href;
-                                    break
-
                                 case "ERROR":
                                     Swal.fire('Error!', 'Network connection encountered a problem. Please try again later.', 'error')
                                     break
+
+                                default:
+                                    window.location.href = window.location.href;
+                
                             }
                         },
                         error: function (err) {
@@ -115,14 +116,6 @@
                     });
                 }
             })
-        }
-
-        function handleViewDetail(id) {
-            alert(id)
-        }
-
-        function clearValue() {
-
         }
     </script>
 </asp:Content>

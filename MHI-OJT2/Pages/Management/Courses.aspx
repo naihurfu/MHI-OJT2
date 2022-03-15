@@ -76,7 +76,7 @@
                                         <td><%# Eval("CREATED_NAME") %></td>
                                         <td><%# Eval("START_DATE", "{0:dd MMM yyyy}").ToString() %></td>
                                         <td class="text-center">
-                                            <button type="button" class='<%# (int)Eval("STATUS_CODE") == 1 ? "btn btn-sm btn-primary" : (int)Eval("STATUS_CODE") == 2 ? "btn btn-sm btn-warning" : "btn btn-sm btn-secondary" %>' onclick="handleShowModal(<%# Eval("COURSE_ID") %>,'<%# (int)Eval("STATUS_CODE")== 1 ? "add-employee" : (int)Eval("STATUS_CODE")== 2 ? "evaluate" : "view-status" %>')" style="width: 220px !important;">
+                                            <button type="button" class='<%# (int)Eval("STATUS_CODE") == 1 ? "btn btn-sm btn-primary" : (int)Eval("STATUS_CODE") == 2 ? "btn btn-sm btn-warning" : (int)Eval("STATUS_CODE") == 9 ? "btn btn-sm btn-success" : (int)Eval("STATUS_CODE") == 10 ? "btn btn-sm btn-danger" : "btn btn-sm btn-secondary" %>' onclick="handleShowModal(<%# Eval("COURSE_ID") %>,'<%# (int)Eval("STATUS_CODE")== 1 ? "add-employee" : (int)Eval("STATUS_CODE")== 2 ? "evaluate" : "view-status" %>')" style="width: 220px !important;">
                                                 <%# Eval("STATUS_TEXT") %>
                                             </button>
                                         </td>

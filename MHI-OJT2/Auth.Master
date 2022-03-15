@@ -64,24 +64,36 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#">
                             <i class="far fa-bell"></i>
+                            
+                            <% if (notificationCount > 0)
+                                { %>
                             <span class="badge badge-danger navbar-badge">
                                 <%= notificationCount %>
                             </span>
+                            <% } %>
+
                         </a>
+
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                             <% if (notificationCount > 0) { %>
+                            <span class="dropdown-header">You have <%= notificationCount %> request for approval</span>
+                            <div class="dropdown-divider"></div>
                             <asp:Repeater ID="RepeatNotification" runat="server">
                                 <ItemTemplate>
-                                    <a href="#" class="dropdown-item">
+                                    <a href="~/Pages/Management/Approval.aspx" runat="server" class="dropdown-item">
                                         <%# Eval("COURSE_NAME") %>
                                         <span class="float-right text-muted text-sm"><%# Eval("COURSE_NUMBER") %></span>
                                     </a>
+                                    <div class="dropdown-divider"></div>
                                 </ItemTemplate>
                             </asp:Repeater>                     
-                            <div class="dropdown-divider"></div>
-                            <a href="~/Pages/Management/Approval.aspx" runat="server" class="dropdown-item dropdown-footer">
-                                See All
-                            </a>
+                            <% } else { %>
+                               <a href="#" class="dropdown-item text-center">
+                                    No items
+                               </a>
+                            <% } %>
                         </div>
+                        
                     </li>
                 </ul>
 
@@ -90,13 +102,16 @@
                 <ul class='<%= Session["roles"].ToString().ToLower() == "user" ? "navbar-nav" : "navbar-nav ml-auto" %>'>
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#">
-                            <i c="far fa-user"></i>
-                            <span runat="server" id="sessionProfileName" class="ml-1"></span>
+                            <i class="far fa-user mr-3" ></i>
+                            <span runat="server" id="sessionProfileName"></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a href="#" class="dropdown-item dropdown-footer" style="padding: 0  10px !important"></a>
+                            <a href="~/Pages/Profiles.aspx" runat="server" class="dropdown-item dropdown-footer" style="padding: 0  10px !important;">
+                                Profile
+                            </a>
                             <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdownter" style="padding: 0 !important;" runat="server" onserverclick="Logout">Logout
+                            <a href="#" class="dropdown-item dropdown-footer" style="padding: 0 !important;" runat="server" onserverclick="Logout">
+                                Logout
                             </a>
                         </div>
                     </li>
@@ -125,6 +140,22 @@
                                     </p>
                                 </a>
                             </li>
+
+                             <% if (Session["roles"].ToString().ToUpper() == "USER")
+                                 {%>
+                            <li class="nav-header">TRAINING</li>
+                            <li class="nav-item">
+                                <a href="~/Pages/Training-profile.aspx" runat="server" class="nav-link">
+                                    <i class="nav-icon fas fa-th"></i>
+                                    <p>
+                                        Training Profile
+                                    </p>
+                                </a>
+                            </li>
+                            <% } %>
+                            
+                            <% if (Session["roles"].ToString().ToUpper() == "CLERK")
+                                {%>
                             <li class="nav-header">MANAGE</li>
                             <li class="nav-item">
                                 <a href="~/Pages/Management/Training-plans.aspx" runat="server" class="nav-link">
@@ -142,6 +173,10 @@
                                     </p>
                                 </a>
                             </li>
+                            <% } %>
+
+                            <% if (Session["roles"].ToString().ToUpper() != "USER")
+                                {%>
                             <li class="nav-header">MASTER DATA SETTING</li>
                             <li class="nav-item">
                                 <a href="~/Pages/Master/Section.aspx" runat="server" class="nav-link">
@@ -175,7 +210,10 @@
                                     </p>
                                 </a>
                             </li>
+                            <% } %>
 
+                            <% if (Session["roles"].ToString().ToUpper() == "ADMIN")
+                                {%>
                             <li class="nav-header">SYSTEM SETTING</li>
                             <li class="nav-item">
                                 <a href="~/Pages/Systems/Users.aspx" runat="server" class="nav-link">
@@ -185,6 +223,7 @@
                                     </p>
                                 </a>
                             </li>
+                            <% } %>
                         </ul>
                     </nav>
                     <!-- /.sidebar-menu -->

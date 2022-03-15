@@ -72,7 +72,12 @@ namespace MHI_OJT2.Pages.Management
 		void GetGridViewData()
 		{
 			string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
-			RepeatCourseTable.DataSource = SQL.GetDataTable("SELECT * FROM VIEW_ADJUST_COURSE", mainDb);
+			string query = "SELECT * FROM VIEW_ADJUST_COURSE ";
+			if (Session["roles"].ToString().ToUpper() != "ADMIN")
+            {
+				query += "WHERE CREATED_BY = " + int.Parse(Session["userId"].ToString());
+            }
+			RepeatCourseTable.DataSource = SQL.GetDataTable(query, mainDb);
 			RepeatCourseTable.DataBind();
 		}
 		void GetAssessor()					   
