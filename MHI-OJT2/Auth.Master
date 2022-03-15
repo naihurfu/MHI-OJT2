@@ -11,7 +11,7 @@
         * {
             font-family: 'Kanit', sans-serif;
         }
-        
+
         /* jQuery dataTable border bottom */
         .dataTables_wrapper.no-footer .dataTables_scrollBody, table.dataTable thead th, table.dataTable thead td {
             border-bottom: 1px solid #ccc !important;
@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="~/Assets/plugins/fontawesome-free/css/all.min.css">
     <!-- IonIcons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <!-- Theme style -->                      
+    <!-- Theme style -->
     <link rel="stylesheet" href="~/Assets/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="~/Assets/jquery.transfer.css">
     <link rel="stylesheet" href="~/Assets/pe-icon-7-stroke.css">
@@ -57,51 +57,46 @@
                 </ul>
 
                 <!-- Right navbar links -->
+                <% if ((string)Session["roles"] == "user")
+                    { %>
                 <ul class="navbar-nav ml-auto">
                     <!-- Notifications Dropdown Menu -->
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#">
                             <i class="far fa-bell"></i>
-                            <span class="badge badge-warning navbar-badge">15</span>
+                            <span class="badge badge-danger navbar-badge">
+                                <%= notificationCount %>
+                            </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <span class="dropdown-item dropdown-header">15 Notifications</span>
+                            <asp:Repeater ID="RepeatNotification" runat="server">
+                                <ItemTemplate>
+                                    <a href="#" class="dropdown-item">
+                                        <%# Eval("COURSE_NAME") %>
+                                        <span class="float-right text-muted text-sm"><%# Eval("COURSE_NUMBER") %></span>
+                                    </a>
+                                </ItemTemplate>
+                            </asp:Repeater>                     
                             <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-envelope mr-2"></i>4 new messages
-            <span class="float-right text-muted text-sm">3 mins</span>
+                            <a href="~/Pages/Management/Approval.aspx" runat="server" class="dropdown-item dropdown-footer">
+                                See All
                             </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-users mr-2"></i>8 friend requests
-            <span class="float-right text-muted text-sm">12 hours</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-file mr-2"></i>3 new reports
-            <span class="float-right text-muted text-sm">2 days</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
                         </div>
                     </li>
                 </ul>
-                
-                <!-- Right navbar links -->
-                <ul class="navbar-nav">
-                    <!-- Notifications Dropdown Menu -->
+
+                <% } %>
+
+                <ul class='<%= Session["roles"].ToString().ToLower() == "user" ? "navbar-nav" : "navbar-nav ml-auto" %>'>
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#">
-                            <i class="far fa-user"></i>
+                            <i c="far fa-user"></i>
                             <span runat="server" id="sessionProfileName" class="ml-1"></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a href="#" class="dropdown-item dropdown-footer" style="padding: 0  10px !important;">
-                                Profile
-                            </a>
+                            <a href="#" class="dropdown-item dropdown-footer" style="padding: 0  10px !important"></a>
                             <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer" style="padding: 0 !important;" runat="server" onserverclick="Logout">
-                                Logout
+                            <a href="#" class="dropdown-item dropdownter" style="padding: 0 !important;" runat="server" onserverclick="Logout">Logout
                             </a>
                         </div>
                     </li>

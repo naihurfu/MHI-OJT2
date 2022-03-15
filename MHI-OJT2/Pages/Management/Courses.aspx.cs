@@ -183,12 +183,16 @@ namespace MHI_OJT2.Pages.Management
 				param.AddWithValue("STATUS", SqlDbType.Int).Value = 1;
 				param.AddWithValue("CREATED_BY", SqlDbType.Int).Value = Session["userId"];
 
+				int insertedId = SQL.ExecuteAndGetInsertId(query, mainDb, param);
+				CreateApproval(insertedId, int.Parse(Assessor1.Value), 1);
+				CreateApproval(insertedId, int.Parse(Assessor2.Value), 2);
+				CreateApproval(insertedId, int.Parse(Assessor3.Value), 3);
+				CreateApproval(insertedId, int.Parse(Assessor4.Value), 4);
+				CreateApproval(insertedId, int.Parse(Assessor5.Value), 5);
+				CreateApproval(insertedId, int.Parse(Assessor6.Value), 6);
 
 				if (checkPlan.Checked == true && checkNotPlan.Checked == false)
 				{
-					int insertedId;
-					insertedId = SQL.ExecuteAndGetInsertId(query, mainDb, param);
-
 					if (insertedId == 0) throw new Exception("Something went wrong!");
 
 					SqlParameterCollection paramPlanAndCourse = new SqlCommand().Parameters;
@@ -196,28 +200,27 @@ namespace MHI_OJT2.Pages.Management
 					paramPlanAndCourse.AddWithValue("COURSE_ID", SqlDbType.Int).Value = insertedId;
 					paramPlanAndCourse.AddWithValue("CREATED_BY", SqlDbType.Int).Value = 1;
 					SQL.ExecuteWithParams("INSERT INTO PLAN_AND_COURSE([PLAN_ID],[COURSE_ID],[CREATED_BY]) VALUES(@PLAN_ID,@COURSE_ID,@CREATED_BY)", mainDb, paramPlanAndCourse);
-
-					Session.Add("alert", "inserted");
-					Response.Redirect(_selfPathName);
-				}
-				else if (checkPlan.Checked == false && checkNotPlan.Checked == true)
-				{
-					SQL.ExecuteWithParams(query, mainDb, param);
-
-					Session.Add("alert", "inserted");
-					Response.Redirect(_selfPathName);
-				}
-				else
-				{
-					throw new Exception("Training plan error, Please try agin.");
 				}
 
 
 
+				Session.Add("alert", "inserted");
+				Response.Redirect(_selfPathName);
 			}
 			catch (Exception ex)
 			{
 				Alert("error", "Error!", $"{ex.Message}");
+			}
+		}
+		void CreateApproval(int courseId, int personId, int seq) {
+			if (personId != 0)
+			{
+				SqlParameterCollection param = new SqlCommand().Parameters;
+				param.AddWithValue("COURSE_ID", SqlDbType.Int).Value = courseId;
+				param.AddWithValue("PERSON_ID", SqlDbType.Int).Value = personId;
+				param.AddWithValue("APPROVAL_SEQUENCE", SqlDbType.Int).Value = seq;
+				string query = "INSERT INTO APPROVAL(COURSE_ID,PERSON_ID,APPROVAL_SEQUENCE) VALUES(@COURSE_ID,@PERSON_ID,@APPROVAL_SEQUENCE)";
+				SQL.ExecuteWithParams(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString, param);
 			}
 		}
 		[WebMethod]
@@ -363,6 +366,36 @@ namespace MHI_OJT2.Pages.Management
 			}
 		}
 		[WebMethod]
+		public static string GetApprovalList(int courseId)
+		{
+			try
+			{
+				using (SqlConnection connection = new SqlConnection(WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
+				{
+					string queryString = "SELECT * FROM APPROVAL_LIST WHERE COURSE_ID=@ID";
+					using (SqlCommand cmd = new SqlCommand(queryString, connection))
+					{
+						cmd.Parameters.AddWithValue("ID", SqlDbType.Int).Value = courseId;
+
+						connection.Open();
+						cmd.CommandType = CommandType.Text;
+						SqlDataAdapter da = new SqlDataAdapter();
+						da.SelectCommand = cmd;
+						connection.Close();
+
+						DataTable dt = new DataTable();
+						da.Fill(dt);
+
+						return DATA.DataTableToJSONWithJSONNet(dt);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				return $"{ex.Message}";
+			}
+		}
+		[WebMethod]
 		public static string CreateSessionToEvaluate(int courseId)
 		{
 			try
@@ -453,8 +486,31 @@ namespace MHI_OJT2.Pages.Management
 			Response.Redirect($"~/Pages/Management/scan-barcode.aspx?queryId={courseId}");
 			Response.End();
 		}
+        protected void btnDelete_ServerClick(object sender, EventArgs e)
+        {
+			 try
+			{
+				string connectionString = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
+
+				SqlParameterCollection param = new SqlCommand().Parameters;
+				param.AddWithValue("ID", SqlDbType.Int).Value = hiddenId.Value;
+
+				SQL.ExecuteWithParams("DELETE FROM ADJUST_COURSE WHERE ID = @ID", connectionString, param);
+				SQL.ExecuteWithParams("DELETE FROM PLAN_AND_COURSE WHERE COURSE_ID = @ID", connectionString, param);
+				SQL.ExecuteWithParams("DELETE FROM EVALUATE WHERE COURSE_ID = @ID", connectionString, param);
+				SQL.ExecuteWithParams("DELETE FROM APPROVAL WHERE COURSE_ID = @ID", connectionString, param);
+
+				Session.Add("alert", "deleted");
+				Response.Redirect(_selfPathName);
+			}
+			catch (Exception ex)
+            {
+				Console.WriteLine(ex.Message);
+				Alert("error", "Failed!", "A network error was encountered, Please try again.");
+			}
+		}
     }
-	public class EmployeeIntoCourse
+    public class EmployeeIntoCourse
     {
         public int PersonID { get; set; }
         public int CourseID { get; set; }

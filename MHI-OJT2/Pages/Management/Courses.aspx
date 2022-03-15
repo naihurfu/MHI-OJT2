@@ -74,7 +74,7 @@
                                         <td><%# Eval("COURSE_NUMBER") %></td>
                                         <td><%# Eval("COURSE_NAME") %></td>
                                         <td><%# Eval("CREATED_NAME") %></td>
-                                        <td><%# Eval("START_DATE", "{0:dd MM yyyy}").ToString() %></td>
+                                        <td><%# Eval("START_DATE", "{0:dd MMM yyyy}").ToString() %></td>
                                         <td class="text-center">
                                             <button type="button" class='<%# (int)Eval("STATUS_CODE") == 1 ? "btn btn-sm btn-primary" : (int)Eval("STATUS_CODE") == 2 ? "btn btn-sm btn-warning" : "btn btn-sm btn-secondary" %>' onclick="handleShowModal(<%# Eval("COURSE_ID") %>,'<%# (int)Eval("STATUS_CODE")== 1 ? "add-employee" : (int)Eval("STATUS_CODE")== 2 ? "evaluate" : "view-status" %>')" style="width: 220px !important;">
                                                 <%# Eval("STATUS_TEXT") %>
@@ -220,11 +220,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" runat="server" id="btnDelete" class="btn btn-danger mr-auto" onserverclick="btnDelete_ServerClick" style="display: none;">DELETE</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
+                    <button type="button" runat="server" id="btnEdit" class="btn btn-primary" onserverclick="btnEdit_Click" style="display: none;">UPDATE</button>
+                    <button type="button" runat="server" id="btnInserted" class="btn btn-primary" onserverclick="btnInserted_Click" style="display: none;">SAVE</button>
                     <input type="hidden" runat="server" id="hiddenId" />
                     <input type="hidden" runat="server" id="hiddenCourseAndPlanId" />
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" runat="server" id="btnEdit" class="btn btn-primary" onserverclick="btnEdit_Click" style="display: none;">Update</button>
-                    <button type="button" runat="server" id="btnInserted" class="btn btn-primary" onserverclick="btnInserted_Click" style="display: none;">Save</button>
                 </div>
             </div>
         </div>
@@ -264,8 +265,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table m-0">
+                    <div class="text-center my-5" id="approval-loading">
+                      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                    </div>
+                    <div class="table-responsive" id="approval-table-container">
+                        <table class="table m-0" id="approval-table">
                             <thead>
                                 <tr>
                                     <th class="text-center">No.</th>
@@ -274,15 +280,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="text-center">1</td>
-                                    <td>Call of Duty IV</td>
-                                    <td class="text-center">
-                                        <span class="badge badge-success">
-                                            APPROVED <i class="ml-2 fa fa-check"></i>
-                                        </span>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -349,6 +346,57 @@
 
                 case 'view-status':
                     $('#viewStatusModal').modal('show')
+
+                    var approval_loading = $('#approval-loading')
+                    var approval_container = $('#approval-table-container')
+                    $('#approval-table tbody tr').remove()
+
+                    approval_loading.show()
+                    approval_container.hide()
+                    $.ajax({
+                        type: "POST",
+                        url: "/Pages/Management/Courses.aspx/GetApprovalList",
+                        data: "{'courseId': " + courseId + "}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (results) {
+                            var data = JSON.parse(results.d)
+                            var tableBody = $('#approval-table tbody')
+                            console.log(data)
+                            approval_loading.hide()
+                            approval_container.show()
+
+                            data.forEach(function (r) {
+                                let icon = '<i class="ml-2 fa fa-check"></i>'
+                                let statusText = 'APPROVED'
+                                let badgeColor = 'success'
+
+                                if (!r.IS_APPROVED) {
+                                    icon = '<i class="ml-2 fa fa-spinner"></i>'
+                                    badgeColor = 'warning'
+                                    statusText = 'PENDING'
+                                } else {
+                                    if (!r.APPROVAL_RESULT) {
+                                        icon = '<i class="ml-2 fa fa-times"></i>'
+                                        badgeColor = 'danger'
+                                        statusText = 'REJECT'
+                                    }
+                                }
+
+                                var tableRow = `<tr>
+                                                    <td class="text-center">${r.APPROVAL_SEQUENCE}</td>
+                                                    <td>${r.InitialE} ${r.FnameE} ${r.LnameE}</td>
+                                                    <td class="text-center">
+                                                        <span class="badge badge-${badgeColor}">${statusText} ${icon}</span>
+                                                    </td>
+                                                </tr>`;
+                                tableBody.append(tableRow);
+                            });
+                        },
+                        error: function (err) {
+                            console.log(err)
+                        }
+                    });
                     break;
 
                 default: sweetAlert("error", "WTF!")
@@ -478,6 +526,7 @@
                 $('#addModalTitle').text('Course detail')
                 $('#<%= btnInserted.ClientID %>').hide()
                 $('#<%= btnEdit.ClientID %>').hide()
+                $('#<%= btnDelete.ClientID %>').show()
                 isDisabledInput(true)
             }
 
@@ -524,6 +573,8 @@
             ClearInputValue()
         })
         function ClearInputValue() {
+            $('#<%= btnDelete.ClientID %>').hide()
+
             $('#<%= checkPlan.ClientID %>').prop('checked', false)
             $('#<%= checkNotPlan.ClientID %>').prop('checked', false)
             $('#<%= checkPlan.ClientID %>').attr('disabled', false)

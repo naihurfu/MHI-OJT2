@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using MHI_OJT2.Pages.Management;
 
 namespace MHI_OJT2
 {
@@ -12,12 +14,26 @@ namespace MHI_OJT2
 			string _firstName = String.Empty;
 			string _lastName = String.Empty;
 			string _positionName = String.Empty;
-			protected void Page_Load(object sender, EventArgs e)
+		public int notificationCount = 0;
+		protected void Page_Load(object sender, EventArgs e)
 			{
 				if (!IsPostBack)
 				{
 					CheckLoggedIn();
+
+					if ((string)Session["roles"] == "user")
+					{
+						GetNotification();
+					}
 				}
+			}
+			void GetNotification()
+			{
+			DataTable dt = Approval.GetApproveList(int.Parse(Session["userId"].ToString()));
+			notificationCount = dt.Rows.Count;
+			
+			RepeatNotification.DataSource = dt;
+			RepeatNotification.DataBind();
 			}
 			void CheckLoggedIn()
 			{

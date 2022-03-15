@@ -222,22 +222,13 @@ namespace MHI_OJT2.Pages.Management
         protected global::System.Web.UI.HtmlControls.HtmlSelect Assessor6;
 
         /// <summary>
-        /// hiddenId control.
+        /// btnDelete control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hiddenId;
-
-        /// <summary>
-        /// hiddenCourseAndPlanId control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hiddenCourseAndPlanId;
+        protected global::System.Web.UI.HtmlControls.HtmlButton btnDelete;
 
         /// <summary>
         /// btnEdit control.
@@ -256,6 +247,24 @@ namespace MHI_OJT2.Pages.Management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlButton btnInserted;
+
+        /// <summary>
+        /// hiddenId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hiddenId;
+
+        /// <summary>
+        /// hiddenCourseAndPlanId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hiddenCourseAndPlanId;
 
         /// <summary>
         /// btnScanBarcode control.

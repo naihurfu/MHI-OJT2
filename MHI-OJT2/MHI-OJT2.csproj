@@ -2006,6 +2006,7 @@
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Login.aspx" />
+    <Content Include="Pages\Management\Approval.aspx" />
     <Content Include="Pages\Management\Courses.aspx" />
     <Content Include="Pages\Management\Evaluation.aspx" />
     <Content Include="Pages\Management\scan-barcode.aspx" />
@@ -2052,6 +2053,13 @@
     </Compile>
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Management\Approval.aspx.cs">
+      <DependentUpon>Approval.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Management\Approval.aspx.designer.cs">
+      <DependentUpon>Approval.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Management\Courses.aspx.cs">
       <DependentUpon>Courses.aspx</DependentUpon>
