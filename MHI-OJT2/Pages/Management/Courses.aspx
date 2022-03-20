@@ -23,7 +23,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Adjust Course</h1>
+                    <h1 class="m-0">จัดการหลักสูตร</h1>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-6">
@@ -47,15 +47,15 @@
                     <table class="hover nowrap" id="courseTable" style="width: 100%">
                         <thead>
                             <tr>
-                                <th class="text-center">NO.</th>
-                                <th class="text-center">Edit</th>
-                                <th class="text-center">Detail</th>
-                                <th>Course Code</th>
-                                <th>Course Name</th>
-                                <th>Creator</th>
-                                <th>Actual Date</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Download Report</th>
+                                <th class="text-center">ลำดับ</th>
+                                <th class="text-center">แก้ไข</th>
+                                <th class="text-center">รายละเอียด</th>
+                                <th>รหัสหลักสูตร</th>
+                                <th>ชื่อหลักสูตร</th>
+                                <th>ผู้จัดทำ</th>
+                                <th>วันที่ (Actual Date)</th>
+                                <th class="text-center">สถานะ</th>
+                                <th class="text-center">ดาวโหลดรายงาน</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -66,15 +66,15 @@
                                             <%# Container.ItemIndex + 1 %>
                                         </th>
                                         <td class="text-center">
-                                            <button class="btn btn-sm btn-primary btn__edit__course" data-id="<%# Eval("COURSE_ID") %>">Edit</button>
+                                            <button class="btn btn-sm btn-primary btn__edit__course" data-id="<%# Eval("COURSE_ID") %>">แก้ไข</button>
                                         </td>
                                         <td class="text-center">
-                                            <button class="btn btn-sm btn-link btn__view__course" data-id="<%# Eval("COURSE_ID") %>">Show</button>
+                                            <button class="btn btn-sm btn-link btn__view__course" data-id="<%# Eval("COURSE_ID") %>">แสดง</button>
                                         </td>
                                         <td><%# Eval("COURSE_NUMBER") %></td>
                                         <td><%# Eval("COURSE_NAME") %></td>
                                         <td><%# Eval("CREATED_NAME") %></td>
-                                        <td><%# Eval("START_DATE", "{0:dd MMM yyyy}").ToString() %></td>
+                                        <td><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd MMM yyyy}", Eval("START_DATE")) %></td>
                                         <td class="text-center">
                                             <button type="button" class='<%# (int)Eval("STATUS_CODE") == 1 ? "btn btn-sm btn-primary" : (int)Eval("STATUS_CODE") == 2 ? "btn btn-sm btn-warning" : (int)Eval("STATUS_CODE") == 9 ? "btn btn-sm btn-success" : (int)Eval("STATUS_CODE") == 10 ? "btn btn-sm btn-danger" : "btn btn-sm btn-secondary" %>' onclick="handleShowModal(<%# Eval("COURSE_ID") %>,'<%# (int)Eval("STATUS_CODE")== 1 ? "add-employee" : (int)Eval("STATUS_CODE")== 2 ? "evaluate" : "view-status" %>')" style="width: 220px !important;">
                                                 <%# Eval("STATUS_TEXT") %>
@@ -100,25 +100,25 @@
     <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModal" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-dialog-scrollable modal-xl">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-danger">
                     <h5 class="modal-title" id="addModalTitle"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true" class="text-light">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="pt-2 check-plan-container">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="plan" id="checkPlan" runat="server">
-                            <label class="form-check-label" for="<%= checkPlan.ClientID %>">Planned training</label>
+                            <label class="form-check-label" for="<%= checkPlan.ClientID %>">อบรมตามแผน</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="plan" id="checkNotPlan" runat="server">
-                            <label class="form-check-label" for="<%= checkNotPlan.ClientID %>">Off-plan training</label>
+                            <label class="form-check-label" for="<%= checkNotPlan.ClientID %>">อบรมนอกแผน</label>
                         </div>
                     </div>
                     <div class="form-group py-3 select-plan-container">
-                        <label>Choose a plan</label>
+                        <label>เลือกแผนฝึกอบรม</label>
                         <select class="form-control selectpicker" id="trainingPlan" runat="server" data-live-search="true">
                             <option selected>-</option>
                         </select>
@@ -126,104 +126,106 @@
                     <hr />
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label>Course code</label>
+                            <label>รหัสหลักสูตร</label>
                             <input type="text" class="form-control" id="courseNumber" runat="server">
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Times</label>
+                            <label>ครั้งที่</label>
                             <input type="text" class="form-control" id="times" runat="server">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Course name</label>
+                        <label>ชื่อหลักสูตร</label>
                         <input type="text" class="form-control" id="courseName" runat="server">
                     </div>
                     <div class="form-group">
-                        <label>Objective</label>
+                        <label>วัตถุประสงค์</label>
                         <textarea class="form-control" id="objective" rows="3" runat="server"></textarea>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label>Training start date</label>
+                            <label>วันที่เริ่มอบรม</label>
                             <input type="tel" id="startDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Training end date</label>
+                            <label>วันที่สิ้นสุด</label>
                             <input type="tel" id="endDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-4">
-                            <label>Training start time</label>
+                            <label>เวลาเริ่ม</label>
                             <input type="time" class="form-control" id="startTime" runat="server" />
                         </div>
                         <div class="form-group col-md-4">
-                            <label>Training end time</label>
+                            <label>เวลาสิ้นสุด</label>
                             <input type="time" class="form-control" id="endTime" runat="server" />
                         </div>
                         <div class="form-group col-md-4">
-                            <label>Total number of hours</label>
+                            <label>รวมจำนวนชั่วโมง</label>
                             <input type="number" class="form-control" id="totalHours" min="0" max="24" runat="server">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Training Department</label>
+                        <label>แผนก</label>
                         <select class="form-control" id="department" runat="server">
                             <option selected>-</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Training location</label>
+                        <label>สถานที่ฝึกอบรม</label>
                         <select class="form-control" id="location" runat="server">
                             <option selected>-</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Speaker</label>
+                        <label>วิทยากร</label>
                         <select class="form-control" id="teacher" runat="server">
                             <option selected>-</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Detail</label>
+                        <label>รายละเอียด</label>
                         <textarea class="form-control" id="detail" rows="3" runat="server"></textarea>
                     </div>
-                    <div class="form-group assessor-container-1">
-                        <label>1st approver</label>
-                        <select class="form-control selectpicker" id="Assessor1" runat="server" data-live-search="true">
+                    <div class="assessor-container-all">
+                        <div class="form-group assessor-container-1">
+                            <label>ผู้อนุมัติคนที่ 1</label>
+                            <select class="form-control selectpicker" id="Assessor1" runat="server" data-live-search="true">
+                            </select>
+                        </div>
+                        <div class="form-group assessor-container-2">
+                            <label>ผู้อนุมัติคนที่ 2</label>
+                            <select class="form-control selectpicker" id="Assessor2" runat="server" data-live-search="true">
+                            </select>
+                        </div>
+                        <div class="form-group assessor-container-3">
+                            <label>ผู้อนุมัติคนที่ 3</label>
+                            <select class="form-control selectpicker" id="Assessor3" runat="server" data-live-search="true">
+                            </select>
+                        </div>
+                        <div class="form-group assessor-container-4">
+                            <label>ผู้อนุมัติคนที่ 4</label>
+                            <select class="form-control selectpicker" id="Assessor4" runat="server" data-live-search="true">
+                            </select>
+                        </div>
+                        <div class="form-group assessor-container-5">
+                            <label>ผู้อนุมัติคนที่ 5</label>
+                            <select class="form-control selectpicker" id="Assessor5" runat="server" data-live-search="true">
+                            </select>
+                        </div>
+                        <div class="form-group assessor-container-6">
+                            <label>ผู้อนุมัติคนที่ 6</label>
+                            <select class="form-control selectpicker" id="Assessor6" runat="server" data-live-search="true">
                         </select>
                     </div>
-                    <div class="form-group assessor-container-2">
-                        <label>2nd approver</label>
-                        <select class="form-control selectpicker" id="Assessor2" runat="server" data-live-search="true">
-                        </select>
-                    </div>
-                    <div class="form-group assessor-container-3">
-                        <label>3rd approver</label>
-                        <select class="form-control selectpicker" id="Assessor3" runat="server" data-live-search="true">
-                        </select>
-                    </div>
-                    <div class="form-group assessor-container-4">
-                        <label>4th approver</label>
-                        <select class="form-control selectpicker" id="Assessor4" runat="server" data-live-search="true">
-                        </select>
-                    </div>
-                    <div class="form-group assessor-container-5">
-                        <label>5th approver</label>
-                        <select class="form-control selectpicker" id="Assessor5" runat="server" data-live-search="true">
-                        </select>
-                    </div>
-                    <div class="form-group assessor-container-6">
-                        <label>6th approver</label>
-                        <select class="form-control selectpicker" id="Assessor6" runat="server" data-live-search="true">
-                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" runat="server" id="btnDelete" class="btn btn-danger mr-auto" onserverclick="btnDelete_ServerClick" style="display: none;">DELETE</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
-                    <button type="button" runat="server" id="btnEdit" class="btn btn-primary" onserverclick="btnEdit_Click" style="display: none;">UPDATE</button>
-                    <button type="button" runat="server" id="btnInserted" class="btn btn-primary" onserverclick="btnInserted_Click" style="display: none;">SAVE</button>
+                    <button type="button" runat="server" id="btnDelete" class="btn btn-danger mr-auto" onserverclick="btnDelete_ServerClick" style="display: none;">ลบ</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                    <button type="button" runat="server" id="btnEdit" class="btn btn-primary" onserverclick="btnEdit_Click" style="display: none;">บันทึก</button>
+                    <button type="button" runat="server" id="btnInserted" class="btn btn-primary" onserverclick="btnInserted_Click" style="display: none;">บันทึก</button>
                     <input type="hidden" runat="server" id="hiddenId" />
                     <input type="hidden" runat="server" id="hiddenCourseAndPlanId" />
                 </div>
@@ -259,7 +261,7 @@
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" style="box-shadow: none !important;">
             <div class="modal-content">
                 <div class="modal-header bg-primary">
-                    <h5 class="modal-title text-light">Check approval status</h5>
+                    <h5 class="modal-title text-light">ตรวจสอบสถานะการอนุมัติ</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -267,16 +269,17 @@
                 <div class="modal-body">
                     <div class="text-center my-5" id="approval-loading">
                       <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                        <span class="sr-only">Loading...</span>
+                        <span class="sr-only">โปรดรอ...</span>
                       </div>
                     </div>
                     <div class="table-responsive" id="approval-table-container">
                         <table class="table m-0" id="approval-table">
                             <thead>
                                 <tr>
-                                    <th class="text-center">No.</th>
-                                    <th>Approver name</th>
-                                    <th class="text-center">Status</th>
+                                    <th class="text-center">ลำดับ</th>
+                                    <th>ชื่อผู้อนุมัติ</th>
+                                    <th class="text-center">สถานะ</th>
+                                    <th class="text-center">วันที่</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -314,7 +317,7 @@
             isDisabledInput(false)
 
             assessor1.val(0).change()
-
+            $('.assessor-container-all').show()
             $('#addModalTitle').text('Add course')
             $('#addModal').modal('show')
         };
@@ -370,6 +373,7 @@
                                 let icon = '<i class="ml-2 fa fa-check"></i>'
                                 let statusText = 'APPROVED'
                                 let badgeColor = 'success'
+                                let actionDate = r.ACTION_DATE !== null ? new Date(r.ACTION_DATE).toLocaleDateString("th-TH") : "รอผลการอนุมัติ"
 
                                 if (!r.IS_APPROVED) {
                                     icon = '<i class="ml-2 fa fa-spinner"></i>'
@@ -388,6 +392,9 @@
                                                     <td>${r.InitialE} ${r.FnameE} ${r.LnameE}</td>
                                                     <td class="text-center">
                                                         <span class="badge badge-${badgeColor}">${statusText} ${icon}</span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        ${actionDate}
                                                     </td>
                                                 </tr>`;
                                 tableBody.append(tableRow);
@@ -528,6 +535,7 @@
                 $('#<%= btnEdit.ClientID %>').hide()
                 $('#<%= btnDelete.ClientID %>').show()
                 isDisabledInput(true)
+                $('.assessor-container-all').show()
             }
 
             if (type === 'edit') {
@@ -574,6 +582,7 @@
         })
         function ClearInputValue() {
             $('#<%= btnDelete.ClientID %>').hide()
+            $('.assessor-container-all').hide()
 
             $('#<%= checkPlan.ClientID %>').prop('checked', false)
             $('#<%= checkNotPlan.ClientID %>').prop('checked', false)

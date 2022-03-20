@@ -13,6 +13,26 @@
             -moz-appearance: textfield;
             text-align: center;
         }
+
+        .topic-score {
+            width: 150px !important;
+        }
+
+        table thead tr th {
+            vertical-align: top !important;
+        }
+
+        .dataTables_scroll {
+            padding: 20px 0 !important;
+        }
+
+        table.dataTable thead .sorting_asc {
+           background-image: none !important;
+        }
+
+        .dataTables_wrapper {
+            padding-bottom: 20px !important;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="body" runat="server">
@@ -34,17 +54,17 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body" style="padding: 1.25rem 1.25rem 0 !important">
-                        <table class="hover nowrap" id="evaluateTable"  style="width: 100%">
+                        <table class="hover" id="evaluateTable"  style="width: 100%; border-top: 1px solid #ccc; margin-top: 20px 0 !important;">
                             <thead>
                                 <tr>
-                                    <th scope="col">Employee ID</th>
-                                    <th scope="col">Employee name</th>
-                                    <th scope="col">Score 1</th>
-                                    <th scope="col">Score 2</th>
-                                    <th scope="col">Score 3</th>
-                                    <th scope="col">Score 4</th>
-                                    <th scope="col">Score 5</th>
-                                    <th scope="col" class="text-center">Total score</th>
+                                    <th scope="col" class="no-sort">Employee ID</th>
+                                    <th scope="col" class="no-sort">Employee name</th>
+                                    <th scope="col" class="topic-score no-sort">1.ความรู้ในงานและหน้าที่ (Knowledge in work and duties)</th>
+                                    <th scope="col" class="topic-score no-sort">2.คุณภาพของงาน (Quality of work)</th>
+                                    <th scope="col" class="topic-score no-sort">3.ความไว้วางใจ ความรับผิดชอบต่อหน้าที่ (Reliability, Responsibi-lity for duties )</th>
+                                    <th scope="col" class="topic-score no-sort">4.ความสามารถในการทำงานตามระยะเวลาที่กำหนด (Ability to work on time)</th>
+                                    <th scope="col" class="topic-score no-sort">5.การปฎิบัติงานตามขั้นตอนเอกสารที่กำหนด (Working follow documents procedure to define)</th>
+                                    <th scope="col" class="topic-score no-sort">ผลการฝึกอบรม (Training Result)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -105,7 +125,11 @@
                 responsive: true,
                 scrollX: 500,
                 scrollCollapse: true,
-                scroller: true
+                scroller: true,
+                columnDefs: [{
+                    orderable: false,
+                    targets: "no-sort"
+                }],
             });
         })();
 
@@ -138,13 +162,25 @@
                 let personId = row[i].dataset.personid
                 let td = row[i].children
 
+                let score1 = parseInt(td[2].firstElementChild.value)
+                let score2 = parseInt(td[3].firstElementChild.value)
+                let score3 = parseInt(td[4].firstElementChild.value)
+                let score4 = parseInt(td[5].firstElementChild.value)
+                let score5 = parseInt(td[6].firstElementChild.value)
+                let totalScore = parseInt(td[7].firstElementChild.value)
+
+                if (score1 > 5 || score1 < 0 || score2 > 5 || score2 < 0 || score3 > 5 || score3 < 0 || score4 > 5 || score4 < 0 || score5 > 5 || score5 < 0 || totalScore > 100 || totalScore < 0) {
+                    sweetAlert("error", "Failed!", "Please enter correct score.")
+                    return
+                }
+
                 person.PersonID = parseInt(personId);
-                person.Score_1 = parseInt(td[2].firstElementChild.value)
-                person.Score_2 = parseInt(td[3].firstElementChild.value)
-                person.Score_3 = parseInt(td[4].firstElementChild.value)
-                person.Score_4 = parseInt(td[5].firstElementChild.value)
-                person.Score_5 = parseInt(td[6].firstElementChild.value)
-                person.Total = parseInt(td[7].firstElementChild.value)
+                person.Score_1 = score1
+                person.Score_2 = score2
+                person.Score_3 = score3
+                person.Score_4 = score4
+                person.Score_5 = score5
+                person.Total = totalScore
 
                 evaluatedList.push(person)
             }

@@ -18,14 +18,18 @@
     <!-- /.content-header -->
     <!-- Main content -->
     <div class="content">
-        <div class="container-fluid">
-            <div class="row justify-content-center">
-                <h3>
-                    <i class="fas fa-exclamation-triangle text-danger"></i>
-                    Access denied contact your administrator.
-                </h3>
+            <div class="d-flex align-items-center" style="min-height: calc(100vh - calc(8rem + 120px));">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-12" align="center">
+                            <h3>
+                                <i class="fas fa-exclamation-triangle text-danger"></i>
+                                สิทธิ์การใช้งานของคุณไม่อนุญาติให้เข้าถึงหน้านี้
+                            </h3>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
     </div>
 
 </asp:Content>

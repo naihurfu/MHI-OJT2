@@ -1,76 +1,120 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Configuration;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using MHI_OJT2.Pages.Management;
 
 namespace MHI_OJT2
 {
-    public partial class Auth : System.Web.UI.MasterPage
+    public partial class Auth : MasterPage
     {
-		string _firstName = String.Empty;
-		string _lastName = String.Empty;
-		string _positionName = String.Empty;
+        string _sessionAlert = String.Empty;
+		public static string _403 = "~/Pages/Error/403.aspx";
+		static string _firstName = String.Empty;
+		static string _lastName = String.Empty;
+		static string _positionName = String.Empty;
+		public static string sessionProfileName = String.Empty;
 		public int notificationCount = 0;
+		public int clerkNoticationCount = 0;
+
 		protected void Page_Load(object sender, EventArgs e)
 			{
 				if (!IsPostBack)
 				{
 					CheckLoggedIn();
+					CheckAlertSession();
+					int userId = int.Parse(Session["userId"].ToString());
 					CheckPermissionAndRedirect();
-					if ((string)Session["roles"] == "user")
+					if (Session["roles"].ToString().ToLower() == "user")
 					{
-						GetNotification();
+						GetNotification(userId);
+					}
+
+					if (Session["roles"].ToString().ToLower() == "clerk")
+					{
+						GetClerkNotification(userId);
+
 					}
 				}
 			}
-			void GetNotification()
+		void CheckAlertSession()
+		{
+			_sessionAlert = null;
+			if (Session["alert"] != null)
 			{
-			DataTable dt = Approval.GetApproveList(int.Parse(Session["userId"].ToString()));
+				_sessionAlert = Session["alert"] as string;
+
+				if (_sessionAlert == "approved")
+				{
+					Alert("success", "สำเร็จ!", "บันทึกข้อมูลการอนุมัติเรียบร้อยแล้ว");
+				};
+
+				Session.Remove("alert");
+			}
+		}
+		void Alert(string type, string title, string message)
+	{
+		Page.ClientScript.RegisterStartupScript(this.GetType(), "SweetAlert", $"sweetAlert('{type}','{title}','{message}')", true);
+	}
+		void GetNotification(int userId)
+		{
+				
+			DataTable dt = Approval.GetApproveList(userId);
 			notificationCount = dt.Rows.Count;
 			
 			RepeatNotification.DataSource = dt;
 			RepeatNotification.DataBind();
-			}
-			void CheckLoggedIn()
+		}
+		void GetClerkNotification(int userId)
+		{
+			string query = $"SELECT * FROM VIEW_CLERK_NOTIFICATION WHERE USER_ID = {userId} AND [READ]=0";
+			DataTable ClerkDataTable = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+			clerkNoticationCount = ClerkDataTable.Rows.Count;
+			ClerkNotificationRepleter.DataSource = ClerkDataTable;
+			ClerkNotificationRepleter.DataBind();
+		}
+		public static int CheckLoggedIn()
+		{
+			try
 			{
-				try
-				{
-					_firstName = (string)Session["firstName"];
-					_lastName = (string)Session["lastName"];
-					_positionName = (string)Session["positionName"];
+				_firstName = (string)HttpContext.Current.Session["firstName"];
+				_lastName = (string)HttpContext.Current.Session["lastName"];
+				_positionName = (string)HttpContext.Current.Session["positionName"];
 
-					if (String.IsNullOrEmpty(_firstName) && String.IsNullOrEmpty(_lastName) && String.IsNullOrEmpty(_positionName)) throw new Exception("Session is empty.");
+				if (String.IsNullOrEmpty(_firstName) && String.IsNullOrEmpty(_lastName) && String.IsNullOrEmpty(_positionName)) throw new Exception("Session is empty.");
 
-					string fullName = $"{_firstName} {_lastName}";
-					BindSession(fullName, _positionName);
-				}
-				catch (Exception ex)
-				{
-					Response.Redirect("~/Login.aspx");
-					Console.WriteLine(ex.Message);
-				}
+				string fullName = $"{_firstName} {_lastName}";
+				BindSession(fullName, _positionName);
+				return 1;
 			}
-			void BindSession(string fullName, string positionName)
+			catch (Exception ex)
 			{
-				sessionProfileName.InnerText = fullName;
-				sessionProfileName.DataBind();
-
+				HttpContext.Current.Response.Redirect("~/Login.aspx");
+				Console.WriteLine(ex.Message);
+				return 0;
 			}
-			protected void Logout(object sender, EventArgs e)
-			{
-				Session.Abandon();
-				Session.RemoveAll();
-				Response.Redirect("~/login.aspx");
-			}
-			protected void CheckPermissionAndRedirect()
-			{
-				string currentPath = String.Empty;
-				_ = HttpContext.Current.Request.Url.AbsolutePath;
-				
+		}
+		public static int BindSession(string fullName, string positionName)
+		{
+			sessionProfileName = fullName;
+			return 1;
+		}
+		protected void Logout(object sender, EventArgs e)
+		{
+			Session.Abandon();
+			Session.RemoveAll();
+			Response.Redirect("~/login.aspx");
+		}
+		protected void CheckPermissionAndRedirect()
+		{
+			string currentPath = String.Empty;
+			_ = HttpContext.Current.Request.Url.AbsolutePath;
 		}
     }
 }

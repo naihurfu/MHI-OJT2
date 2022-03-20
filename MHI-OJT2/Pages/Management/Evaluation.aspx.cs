@@ -16,8 +16,15 @@ namespace MHI_OJT2.Pages.Management
         public static int _courseId = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
-           if (!IsPostBack)
+			Auth.CheckLoggedIn();
+            if (!IsPostBack)
             {
+                string role = Session["roles"].ToString().ToLower();
+                if (role == "user")
+                {
+                    Response.Redirect(Auth._403);
+                }
+
                 GetCourseIdFromSession();
             }
         }

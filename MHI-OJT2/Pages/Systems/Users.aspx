@@ -107,6 +107,16 @@
                             <label>ชื่อผู้ใช้งาน / Username</label>
                             <input type="text" class="form-control" id="username" runat="server">
                         </div>
+                        <div class="add-password">
+                            <div class="form-group">
+                                <label>รหัสผ่าน / Password</label>
+                                <input type="password" class="form-control" id="addPassword" runat="server" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label>ยืนยันรหัสผ่าน / Password Confirm</label>
+                                <input type="password" class="form-control" id="addConfirmPassword" runat="server" autocomplete="off">
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label>คำนำหน้าชื่อ / Initial name</label>
                             <input type="text" class="form-control" id="initialName" runat="server">
@@ -169,7 +179,9 @@
                 scrollCollapse: true,
                 scroller: true
             });
+
         })();
+
 
         // modal title
         var modalTitle = $('#titleModal')
@@ -203,6 +215,7 @@
                     modalTitle.text('เพิ่มข้อมูล / Add data')
                     btnAdd.show()
                     crudModal.modal('show')
+                    $('.add-password').show()
                     break
 
                 case "edit":
@@ -221,6 +234,7 @@
                     hiddenId.val(data.ID)
 
                     crudModal.modal('show')
+                    $('.add-password').hide()
                     break
 
                 case "delete":
@@ -258,12 +272,15 @@
                     $('#change-password-container').show()
                     hiddenId.val(data.ID)
                     crudModal.modal('show')
+                    btnChangePassword.show()
+                    $('.add-password').hide()
                     break
             }
         }
         function setDefaultValue() {
             $('#crud-container').hide()
             $('#change-password-container').hide()
+            $('.add-password').hide()
 
             btnAdd.hide()
             btnEdit.hide()

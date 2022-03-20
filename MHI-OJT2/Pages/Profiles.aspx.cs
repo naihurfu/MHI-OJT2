@@ -11,7 +11,7 @@ namespace MHI_OJT2.Pages
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            Auth.CheckLoggedIn();
         }
     }
 }

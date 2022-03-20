@@ -33,6 +33,24 @@ namespace MHI_OJT2.Pages.Systems
         protected global::System.Web.UI.HtmlControls.HtmlInputText username;
 
         /// <summary>
+        /// addPassword control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputPassword addPassword;
+
+        /// <summary>
+        /// addConfirmPassword control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputPassword addConfirmPassword;
+
+        /// <summary>
         /// initialName control.
         /// </summary>
         /// <remarks>

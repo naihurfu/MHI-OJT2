@@ -18,8 +18,16 @@ namespace MHI_OJT2.Pages.Management
         string _selfPathName = "~/Pages/Management/Training-plans.aspx";
         protected void Page_Load(object sender, EventArgs e)
         {
+            Auth.CheckLoggedIn();
+
             if (!IsPostBack)
             {
+                string role = Session["roles"].ToString().ToLower();
+                if (role == "user")
+                {
+                    Response.Redirect(Auth._403);
+                }
+
                 GetMasterData();
                 CheckAlertSession();
             }

@@ -14,9 +14,19 @@ namespace MHI_OJT2.Pages
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            Auth.CheckLoggedIn();
             if (!IsPostBack)
             {
+                string role = Session["roles"].ToString().ToLower();
+                CheckRoles(role);
                 GetTrainingHistory();
+            }
+        }
+        protected void CheckRoles(string role)
+        {
+            if (role != "user")
+            {
+                Response.Redirect(Auth._403);
             }
         }
         void GetTrainingHistory()

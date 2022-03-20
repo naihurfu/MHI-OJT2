@@ -49,8 +49,8 @@
                                             <%# Eval("DEPARTMENT_NAME") %>
                                         </td>
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="handleApprove({courseId: <%# Eval("ID") %>, aprovalId: <%# Eval("APPROVAL_ID") %>, isApprove: 0, approvalSequence: <%# Eval("APPROVAL_SEQUENCE") %>})">Reject</button>
-                                            <button type="button" class="btn btn-success btn-sm ml-2" onclick="handleApprove({courseId: <%# Eval("ID") %>, aprovalId: <%# Eval("APPROVAL_ID") %>, isApprove: 1, approvalSequence: <%# Eval("APPROVAL_SEQUENCE") %>})">Approve</button>
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="handleApprove({courseId: <%# Eval("COURSE_ID") %>, aprovalId: <%# Eval("APPROVAL_ID") %>, isApprove: 0, approvalSequence: <%# Eval("APPROVAL_SEQUENCE") %>})">Reject</button>
+                                            <button type="button" class="btn btn-success btn-sm ml-2" onclick="handleApprove({courseId: <%# Eval("COURSE_ID") %>, aprovalId: <%# Eval("APPROVAL_ID") %>, isApprove: 1, approvalSequence: <%# Eval("APPROVAL_SEQUENCE") %>})">Approve</button>
                                         </td>
                                     </tr>
                                 </ItemTemplate>

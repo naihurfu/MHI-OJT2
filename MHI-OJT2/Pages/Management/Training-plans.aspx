@@ -9,12 +9,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Training Plans</h1>
+                    <h1 class="m-0">แผนการฝึกอบรม</h1>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-6">
                     <div class="float-sm-right">
-                        <button type="button" class="btn btn-primary" onclick="handleShowAddModal('add')">Create</button>
+                        <button type="button" class="btn btn-primary" onclick="handleShowAddModal('add')">เพิ่มแผนฝึกอบรม</button>
                     </div>
                 </div>
                 <!-- /.col -->
@@ -33,11 +33,11 @@
                         <table class="hover nowrap" id="trainingPlanTable" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th class="text-center">NO.</th>
-                                    <th>Plan name</th>
-                                    <th>Department</th>
-                                    <th>Plan date</th>
-                                    <th class="text-center">Tools</th>
+                                    <th class="text-center">ลำดับ</th>
+                                    <th>ชื่อแผน</th>
+                                    <th>แผนก</th>
+                                    <th>วันที่</th>
+                                    <th class="text-center">แก้ไข/ลบ</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -49,7 +49,7 @@
                                             </th>
                                             <td><%# Eval("PLAN_NAME") %></td>
                                             <td><%# Eval("DEPARTMENT_NAME") %></td>
-                                            <td><%# String.Format(new System.Globalization.CultureInfo("en-US"), "{0:dd MMM yyyy}", Eval("PLAN_DATE")) %></td>
+                                            <td><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:d MMMM yyyy}", Eval("PLAN_DATE")) %></td>
                                             <td class="text-center">
                                                 <div class="btn-group" role="group" aria-label="Basic example">
                                                     <button type="button" class="btn btn-sm btn-warning" onclick="handleShowAddModal('edit', { ID: <%# Eval("ID") %>, DEPARTMENT_ID: <%# Eval("DEPARTMENT_ID") %>, PLAN_NAME: '<%# Eval("PLAN_NAME") %>', REF_DOCUMENT: '<%# Eval("REF_DOCUMENT") %>', HOURS: <%# Eval("HOURS") %>, FREQUENCY: '<%# Eval("FREQUENCY") %>', SM_MG: <%# bool.Parse(Eval("SM_MG").ToString()) == true ? 1 : 0  %>, SAM_AM: <%# bool.Parse(Eval("SAM_AM").ToString()) == true ? 1 : 0  %>, SEG_SV: <%# bool.Parse(Eval("SEG_SV").ToString()) == true ? 1 : 0  %>, EG_ST: <%# bool.Parse(Eval("EG_ST").ToString()) == true ? 1 : 0  %>, FM: <%# bool.Parse(Eval("FM").ToString()) == true ? 1 : 0  %>, LD_SEP_EP: <%# bool.Parse(Eval("LD_SEP_EP").ToString()) == true ? 1 : 0  %>, OP: <%# bool.Parse(Eval("OP").ToString()) == true ? 1 : 0  %>, PLAN_DATE: '<%# Eval("PLAN_DATE") %>', ACTUAL_DATE: '<%# Eval("ACTUAL_DATE") %>', TRAINER: '<%# Eval("TRAINER") %>' })">
@@ -78,7 +78,7 @@
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl" style="box-shadow: none !important;">
             <div class="modal-content">
                 <div class="modal-header bg-danger">
-                    <h5 class="modal-title text-light">Create an annual training plan</h5>
+                    <h5 class="modal-title text-light">สร้างแผนการฝึกอบรม</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -86,27 +86,27 @@
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="form-group col-8">
-                            <label>Training plan name</label>
+                            <label>ชื่อแผน</label>
                             <input runat="server" id="planName" class="form-control" />
                         </div>
                         <div class="form-group col-4">
-                            <label>Document reference number</label>
+                            <label>เอกสารอ้างอิง</label>
                             <input runat="server" id="refDocument" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Department</label>
+                        <label>แผนก</label>
                         <select class="form-control" id="department" runat="server">
                             <option selected>-</option>
                         </select>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-10">
-                            <label>Frequency</label>
+                            <label>ความถี่</label>
                             <input runat="server" id="frequency" class="form-control" />
                         </div>
                         <div class="form-group col-2">
-                            <label>Total hours</label>
+                            <label>จำนวนชั่วโมงรวม</label>
                             <input runat="server" id="hours" class="form-control" />
                         </div>
                     </div>
@@ -146,7 +146,7 @@
                             <input runat="server" id="trainer" class="form-control" />
                         </div>
                         <div class="form-group col-4">
-                            <label>Training plan date</label>
+                            <label>วันที่</label>
                             <input type="tel" id="date" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
                         </div>
                     </div>
@@ -169,7 +169,21 @@
                 responsive: true,
                 scrollX: 500,
                 scrollCollapse: true,
-                scroller: true
+                scroller: true,
+                "aLengthMenu": [10, 20, 50, 100],
+                "order": [[3, "asc"]],
+                "oLanguage": {
+                    "sSearch": "ค้นหา :",
+                    "sLengthMenu": "แสดง _MENU_ รายการ"
+                },
+                "language": {
+                    searchPlaceholder: "ชื่อแผน/แผนก/วันที่",
+                    "info": "แสดง _START_-_END_ รายการ ทั้งหมด _TOTAL_ รายการ",
+                    "paginate": {
+                        "previous": "ย้อนกลับ",
+                        "next": "หน้าถัดไป"
+                    }
+                }
             });
         })();
 

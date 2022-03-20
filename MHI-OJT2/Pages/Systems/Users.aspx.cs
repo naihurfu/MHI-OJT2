@@ -16,9 +16,15 @@ namespace MHI_OJT2.Pages.Systems
         string _selfPathName = "~/Pages/Systems/Users.aspx";
         protected void Page_Load(object sender, EventArgs e)
         {
+			Auth.CheckLoggedIn();
             if (!IsPostBack)
             {
-                CheckAlertSession();
+				string role = Session["roles"].ToString().ToLower();
+				if (role != "admin")
+				{
+					Response.Redirect(Auth._403);
+				}
+				CheckAlertSession();
                 GetUsers();
             }
         }
@@ -55,6 +61,11 @@ namespace MHI_OJT2.Pages.Systems
 					Alert("success", "Deleted!", "The data has been deleted.");
 				}
 
+				if (_sessionAlert == "change-password")
+                {
+					Alert("success", "Done!", "Password has been changed.");
+                }
+
 				Session.Remove("alert");
 			}
 		}
@@ -63,12 +74,16 @@ namespace MHI_OJT2.Pages.Systems
 			try
             {
 				int duplicateCount = 0;
-				using (DataTable dt = SQL.GetDataTable("SELECT ID FROM PNT_Person WHERE PersonCode = '" + username + "'", WebConfigurationManager.ConnectionStrings["TigerDB"].ConnectionString))
+				string tigerQuery = "SELECT PersonID FROM PNT_Person " +
+					"WHERE LOWER(PersonCode) = LOWER('" + username + "')";
+				using (DataTable dt = SQL.GetDataTable(tigerQuery, WebConfigurationManager.ConnectionStrings["TigerDB"].ConnectionString))
                 {
 					duplicateCount += dt.Rows.Count;
                 }
-				
-				using (DataTable dt = SQL.GetDataTable("SELECT ID FROM SYSTEM_USERS WHERE USERNAME = '" + username + "'", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
+
+				string mainQuery = "SELECT ID FROM SYSTEM_USERS " +
+					"WHERE LOWER(USERNAME) = LOWER('" + username + "')";
+				using (DataTable dt = SQL.GetDataTable(mainQuery, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
 				{
 					duplicateCount += dt.Rows.Count;
 				}
@@ -77,17 +92,16 @@ namespace MHI_OJT2.Pages.Systems
 			catch (Exception ex)
             {
 				Console.WriteLine(ex.Message);
-				return 0;
+				return 100;
             }
         }
 		protected void Create(object sender, EventArgs e)
 		{
 			try
 			{
-				if (3 == 3)
-                {
-					if (CheckUsernameDuplicate("") > 0) throw new Exception("Username is already in use.");
-				}
+				int checkDup = CheckUsernameDuplicate(username.Value);
+				if (checkDup > 0) throw new Exception("Username is already in use.");
+				if (addPassword.Value != addConfirmPassword.Value) throw new Exception("Password is not match.");
 
 				string MainDB = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
 				string query = "INSERT INTO SYSTEM_USERS (" +
@@ -110,7 +124,7 @@ namespace MHI_OJT2.Pages.Systems
 					",1)";
 				SqlParameterCollection param = new SqlCommand().Parameters;
 				param.AddWithValue("USERNAME", SqlDbType.VarChar).Value = username.Value;
-				param.AddWithValue("PASSWORD", SqlDbType.VarChar).Value = DATA.Encrypt(password.Value);
+				param.AddWithValue("PASSWORD", SqlDbType.VarChar).Value = DATA.Encrypt(addPassword.Value);
 				param.AddWithValue("INITIAL_NAME", SqlDbType.VarChar).Value = initialName.Value;
 				param.AddWithValue("FIRST_NAME", SqlDbType.VarChar).Value = firstName.Value;
 				param.AddWithValue("LAST_NAME", SqlDbType.VarChar).Value = lastName.Value;
@@ -191,7 +205,7 @@ namespace MHI_OJT2.Pages.Systems
                 {
 					if( dt.Rows.Count > 0)
                     {
-						if (DATA.Encrypt(oldPassword.Value) != dt.Rows[0]["PASSWORD"].ToString()) throw new Exception("Old password is not match, Please try again.");
+						if (DATA.Encrypt(oldPassword.Value) != dt.Rows[0]["PASSWORD"].ToString()) throw new Exception("Password is valid, Please try again.");
 					}
 				}
 
@@ -204,7 +218,7 @@ namespace MHI_OJT2.Pages.Systems
 				string query = "UPDATE SYSTEM_USERS SET PASSWORD=@PASSWORD WHERE ID=@ID";
 				SQL.ExecuteWithParams(query, MainDB, param);
 
-				Session.Add("alert", "deleted");
+				Session.Add("alert", "change-password");
 				Response.Redirect(_selfPathName);
 			}
 			catch (Exception ex)

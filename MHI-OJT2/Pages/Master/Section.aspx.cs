@@ -16,8 +16,14 @@ namespace MHI_OJT2.Pages.Master
 		string _selfPathName = "~/Pages/Master/Section.aspx";
 		protected void Page_Load(object sender, EventArgs e)
         {
+			Auth.CheckLoggedIn();
               if (!IsPostBack)
             {
+				string role = Session["roles"].ToString().ToLower();
+				if (role == "user")
+				{
+					Response.Redirect(Auth._403);
+				}
 				GetSection();
 				CheckAlertSession();
 			}

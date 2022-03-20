@@ -19,8 +19,15 @@ namespace MHI_OJT2.Pages.Management
 		string _selfPathName = "~/Pages/Management/Courses.aspx";
 		protected void Page_Load(object sender, EventArgs e)
 		{
+			Auth.CheckLoggedIn();
+			string role = Session["roles"].ToString().ToLower();
 			if (!IsPostBack)
 			{
+				if (role == "user")
+				{
+					Response.Redirect(Auth._403);
+				}
+
 				CheckAlertSession();
 				GetGridViewData();
 				GetMasterOfCourse();
