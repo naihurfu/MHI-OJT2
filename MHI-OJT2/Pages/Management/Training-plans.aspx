@@ -102,7 +102,7 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-10">
-                            <label>ความถี่</label>
+                            <label>ความถี่ในการฝึกอบรม</label>
                             <input runat="server" id="frequency" class="form-control" />
                         </div>
                         <div class="form-group col-2">
@@ -142,7 +142,7 @@
                     </div>
                     <div class="form-row mt-3">
                         <div class="form-group col-8">
-                            <label>Trainer</label>
+                            <label>ผู้รับฝึกอบรม</label>
                             <input runat="server" id="trainer" class="form-control" />
                         </div>
                         <div class="form-group col-4">
@@ -153,9 +153,9 @@
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" runat="server" id="hiddenIdAddModal" />
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <asp:Button ID="btnEdit" runat="server" CssClass="btn btn-primary" Text="Update" OnClick="btnEdit_Click" />
-                    <asp:Button ID="btnInserted" runat="server" CssClass="btn btn-primary" Text="Save" OnClick="btnInserted_Click" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                    <asp:Button ID="btnEdit" runat="server" CssClass="btn btn-primary" Text="บันทึก" OnClick="btnEdit_Click" />
+                    <asp:Button ID="btnInserted" runat="server" CssClass="btn btn-primary" Text="บันทึก" OnClick="btnInserted_Click" />
                 </div>
             </div>
         </div>
