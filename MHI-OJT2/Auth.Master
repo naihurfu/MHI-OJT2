@@ -222,6 +222,35 @@
                             </li>
                             <% } %>
 
+                            <li class="nav-header">รายงาน</li>
+                             <% if (Session["roles"].ToString().ToLower() != "user")
+                                {%>
+                            <li class="nav-item">
+                                <a href="~/Pages/Management/Training-plans.aspx" runat="server" class="nav-link">
+                                    <i class="nav-icon fas fa-calendar-alt"></i>
+                                    <p>
+                                        แผนการฝึกอบรม
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="~/Pages/Management/Courses.aspx" runat="server" class="nav-link">
+                                    <i class="nav-icon fas fa-pen-square"></i>
+                                    <p>
+                                        Skill map
+                                    </p>
+                                </a>
+                            </li>
+                            <% } %>
+                            <li class="nav-item">
+                                <a href="~/Pages/Management/Courses.aspx" runat="server" class="nav-link">
+                                    <i class="nav-icon fas fa-pen-square"></i>
+                                    <p>
+                                        ประวัติการฝึกอบรม
+                                    </p>
+                                </a>
+                            </li>
+
                             <% if (Session["roles"].ToString().ToLower() != "user")
                                 {%>
                             <li class="nav-header">ตั้งค่าข้อมูลหลัก</li>
