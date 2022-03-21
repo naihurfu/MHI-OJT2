@@ -57,8 +57,8 @@
                         <table class="hover" id="evaluateTable"  style="width: 100%; border-top: 1px solid #ccc; margin-top: 20px 0 !important;">
                             <thead>
                                 <tr>
-                                    <th scope="col" class="no-sort">Employee ID</th>
-                                    <th scope="col" class="no-sort">Employee name</th>
+                                    <th scope="col" class="no-sort">รหัสพนักงาน</th>
+                                    <th scope="col" class="no-sort">ชื่อ-สกุล</th>
                                     <th scope="col" class="topic-score no-sort">1.ความรู้ในงานและหน้าที่ (Knowledge in work and duties)</th>
                                     <th scope="col" class="topic-score no-sort">2.คุณภาพของงาน (Quality of work)</th>
                                     <th scope="col" class="topic-score no-sort">3.ความไว้วางใจ ความรับผิดชอบต่อหน้าที่ (Reliability, Responsibi-lity for duties )</th>
@@ -74,8 +74,8 @@
                                             <td>
                                                 <%# Eval("PersonCode") %>
                                             </td>
-                                            <td>
-                                                <%# Eval("EMPLOYEE_NAME_EN") %>
+                                            <td style="white-space: nowrap">
+                                                <%# Eval("EMPLOYEE_NAME_TH") %>
                                             </td>
                                             <td>
                                                 <input type="number" min="0" max="5" value='<%# Eval("SCORE_1") %>' class='<%# "form-control input__score input__score__1__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 1)' />
@@ -104,8 +104,8 @@
                 <div class="card-footer">
                     <div class="row justify-content-end">
                         <input type="hidden" runat="server" id="hiddenCourseId" />
-                        <button type="button" class="btn btn-warning" onclick="saved(true)">Save (Draft)</button>
-                        <button type="button" class="btn btn-success ml-2 w-25" onclick="saved(false)">Save</button>
+                        <button type="button" class="btn btn-warning" onclick="saved(true)">บันทึก (ร่าง)</button>
+                        <button type="button" class="btn btn-success ml-2 w-25" onclick="saved(false)">บันทึก</button>
                     </div>
                 </div>
             </div>
@@ -130,6 +130,18 @@
                     orderable: false,
                     targets: "no-sort"
                 }],
+                "oLanguage": {
+                    "sSearch": "ค้นหา :",
+                    "sLengthMenu": "แสดง _MENU_ รายการ"
+                },
+                "language": {
+                    searchPlaceholder: "รหัสพนักงาน/ชื่อ-สกุล",
+                    "info": "แสดง _START_-_END_ รายการ ทั้งหมด _TOTAL_ รายการ",
+                    "paginate": {
+                        "previous": "ย้อนกลับ",
+                        "next": "หน้าถัดไป"
+                    }
+                }
             });
         })();
 
