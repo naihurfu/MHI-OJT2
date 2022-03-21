@@ -209,5 +209,172 @@ namespace MHI_OJT2
 				return "{ error : '"+ ex.Message + "'}";
             }
         }
+		[WebMethod]
+		public static string GetAllCourseCountTable(int userId, string role)
+		{
+			try
+			{
+
+				string query = string.Empty;
+				SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+
+				if (role == "admin")
+				{
+					query = "SELECT DEPARTMENT_NAME,COURSE_NAME,CREATED_NAME,START_DATE FROM COURSE";
+				}
+				
+				if (role == "clerk")
+				{
+					query = "SELECT DEPARTMENT_NAME,COURSE_NAME,CREATED_NAME,START_DATE FROM COURSE WHERE CREATED_BY = @ID";
+				}
+				if (role == "user"){
+					query = "SELECT DEPARTMENT_NAME ,COURSE_NAME ,CREATED_NAME ,START_DATE FROM COURSE_AND_EMPLOYEE WHERE PersonID = @ID";
+				}
+
+				SqlCommand command = new SqlCommand(query, con);
+				con.Open();
+				command.Parameters.AddWithValue("ID", SqlDbType.Int).Value = userId;
+				command.CommandType = CommandType.Text;
+				SqlDataAdapter da = new SqlDataAdapter();
+				da.SelectCommand = command;
+				con.Close();
+
+				DataTable dt = new DataTable();
+				da.Fill(dt);
+
+				return DATA.DataTableToJSONWithJSONNet(dt);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return "{ error : '" + ex.Message + "'}";
+			}
+		}
+		[WebMethod]
+		public static string GetTrainedThisYearTable(int userId, string role)
+		{
+			try
+			{
+
+				string query = string.Empty;
+				SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+
+				if (role == "admin")
+				{
+					query = "SELECT DEPARTMENT_NAME,COURSE_NAME,CREATED_NAME,START_DATE FROM COURSE WHERE YEAR(START_DATE) = YEAR(GETDATE())";
+				}
+
+				if (role == "clerk")
+				{
+					query = "SELECT DEPARTMENT_NAME,COURSE_NAME,CREATED_NAME,START_DATE FROM COURSE WHERE CREATED_BY = @ID AND YEAR(START_DATE) = YEAR(GETDATE())";
+				}
+				if (role == "user")
+				{
+					query = "SELECT DEPARTMENT_NAME ,COURSE_NAME ,CREATED_NAME ,START_DATE FROM COURSE_AND_EMPLOYEE WHERE PersonID = @ID AND YEAR(START_DATE) = YEAR(GETDATE())";
+				}
+
+				SqlCommand command = new SqlCommand(query, con);
+				con.Open();
+				command.Parameters.AddWithValue("ID", SqlDbType.Int).Value = userId;
+				command.CommandType = CommandType.Text;
+				SqlDataAdapter da = new SqlDataAdapter();
+				da.SelectCommand = command;
+				con.Close();
+
+				DataTable dt = new DataTable();
+				da.Fill(dt);
+
+				return DATA.DataTableToJSONWithJSONNet(dt);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return "{ error : '" + ex.Message + "'}";
+			}
+		}
+		[WebMethod]
+		public static string GetWaitForEvaluationTable(int userId, string role)
+		{
+			try
+			{
+
+				string query = string.Empty;
+				SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+
+				if (role == "admin")
+				{
+					query = "SELECT DEPARTMENT_NAME,COURSE_NAME,CREATED_NAME,START_DATE FROM COURSE WHERE [STATUS_CODE] = 2";
+				}
+
+				if (role == "clerk")
+				{
+					query = "SELECT DEPARTMENT_NAME,COURSE_NAME,CREATED_NAME,START_DATE FROM COURSE WHERE CREATED_BY = @ID AND [STATUS_CODE] = 2";
+				}
+				if (role == "user")
+				{
+					query = "SELECT DEPARTMENT_NAME ,COURSE_NAME ,CREATED_NAME ,START_DATE FROM COURSE_AND_EMPLOYEE WHERE PersonID = @ID AND [STATUS_CODE] = 2";
+				}
+
+				SqlCommand command = new SqlCommand(query, con);
+				con.Open();
+				command.Parameters.AddWithValue("ID", SqlDbType.Int).Value = userId;
+				command.CommandType = CommandType.Text;
+				SqlDataAdapter da = new SqlDataAdapter();
+				da.SelectCommand = command;
+				con.Close();
+
+				DataTable dt = new DataTable();
+				da.Fill(dt);
+
+				return DATA.DataTableToJSONWithJSONNet(dt);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return "{ error : '" + ex.Message + "'}";
+			}
+		}
+		[WebMethod]
+		public static string GetWaitForApprovalTable(int userId, string role)
+		{
+			try
+			{
+
+				string query = string.Empty;
+				SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+
+				if (role == "admin")
+				{
+					query = "SELECT DEPARTMENT_NAME,COURSE_NAME,CREATED_NAME,START_DATE FROM COURSE WHERE YEAR(START_DATE) = YEAR(GETDATE()) AND [STATUS_CODE] > 2 AND [STATUS_CODE] <= 8";
+				}
+
+				if (role == "clerk")
+				{
+					query = "SELECT DEPARTMENT_NAME,COURSE_NAME,CREATED_NAME,START_DATE FROM COURSE WHERE CREATED_BY = @ID AND YEAR(START_DATE) = YEAR(GETDATE()) AND [STATUS_CODE] > 2 AND [STATUS_CODE] <= 8";
+				}
+				if (role == "user")
+				{
+					query = "SELECT DEPARTMENT_NAME ,COURSE_NAME ,CREATED_NAME ,START_DATE FROM COURSE_AND_EMPLOYEE WHERE PersonID = @ID AND YEAR(START_DATE) = YEAR(GETDATE()) AND [STATUS_CODE] > 2 AND [STATUS_CODE] <= 8";
+				}
+
+				SqlCommand command = new SqlCommand(query, con);
+				con.Open();
+				command.Parameters.AddWithValue("ID", SqlDbType.Int).Value = userId;
+				command.CommandType = CommandType.Text;
+				SqlDataAdapter da = new SqlDataAdapter();
+				da.SelectCommand = command;
+				con.Close();
+
+				DataTable dt = new DataTable();
+				da.Fill(dt);
+
+				return DATA.DataTableToJSONWithJSONNet(dt);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return "{ error : '" + ex.Message + "'}";
+			}
+		}
 	}
 }

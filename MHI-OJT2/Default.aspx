@@ -4,6 +4,7 @@
     <style>
         .info-box {
             height: 90px !important;
+         
         }
 
             .info-box .info-box-content {
@@ -15,13 +16,13 @@
                 font-size: 2rem !important;
             }
 
-
         .card {
             width: 100% !important;
         }
 
-        .cal-card-height, canvas {
-            /*min-height: calc(100vh - calc(7rem + (150px *2)))!important;*/
+        .info-box:hover {
+            background-color: rgba(18, 102, 241, 0.1);
+            cursor: pointer;
         }
     </style>
 </asp:Content>
@@ -45,40 +46,52 @@
 
             <div class="row">
                 <div class="col-lg-3 d-flex align-items-stretch">
-                    <div class="info-box">
+                    <div class="info-box" onclick="HandleCardClicked('all-course-count')">
                         <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">ทั้งหมด</span>
                             <span class="info-box-number"><%= allCourseCount %> <small>หลักสูตร</small></span>
                         </div>
+                        <div class="overlay" id="card-all-course-count">
+                          <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-3 d-flex align-items-stretch">
-                    <div class="info-box">
+                    <div class="info-box" onclick="HandleCardClicked('trained-this-year')">
                         <span class="info-box-icon bg-gradient-warning elevation-1"><i class="fas fa-cog"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">ที่อบรมในปีนี้</span>
                             <span class="info-box-number"><%= trainedThisYear %> <small>หลักสูตร</small></span>
                         </div>
+                        <div class="overlay" id="card-this-year-count">
+                          <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-3 d-flex align-items-stretch">
-                    <div class="info-box">
+                    <div class="info-box" onclick="HandleCardClicked('wait-for-evaluation')">
                         <span class="info-box-icon bg-success elevation-1"><i class="fas fa-cog"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">รอประเมินผล</span>
                             <span class="info-box-number"><%= waitingForEvaluation %> <small>หลักสูตร</small>
                             </span>
                         </div>
+                        <div class="overlay" id="card-wait-for-evaluation-count">
+                          <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-3 d-flex align-items-stretch">
-                    <div class="info-box">
+                    <div class="info-box" onclick="HandleCardClicked('wait-for-approval')">
                         <span class="info-box-icon bg-secondary elevation-1"><i class="fas fa-cog"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">รออนุมัติ</span>
                             <span class="info-box-number"><%= waitingForApproval %> <small>หลักสูตร</small>
                             </span>
+                        </div>
+                        <div class="overlay" id="card-wait-for-approval-count">
+                          <i class="fas fa-2x fa-sync-alt fa-spin"></i>
                         </div>
                     </div>
                 </div>
@@ -151,6 +164,45 @@
     </div>
     <!-- /.content -->
 </asp:Content>
+<asp:Content ID="ModalContent" ContentPlaceHolderID="modal" runat="server">
+    <div class="modal fade" id="ViewCardModal" tabindex="-1" aria-labelledby="ViewCardModal" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" style="box-shadow: none !important;">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-light" id="view-card-title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center my-5" id="view-card-loading">
+                      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="sr-only">โปรดรอ...</span>
+                      </div>
+                    </div>
+                    <div class="table-responsive" id="view-card-table-container">
+                        <table class="table m-0" id="view-card-table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">ลำดับ</th>
+                                    <th class="text-center">แผนก</th>
+                                    <th>ชื่อหลักสูตร</th>
+                                    <th class="text-center">ผู้จัดทำ</th>
+                                    <th class="text-center">วันที่เริ่มอบรม</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer" style="justify-content: end !important;">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</asp:Content>
 <asp:Content ID="ScriptContent" ContentPlaceHolderID="script" runat="server">
     <script type="text/javascript">
         (function () {
@@ -218,5 +270,160 @@
                 }
             });
         })();
+
+        var allCourseCountTable = []
+        var trainedThisYearTable = []
+        var waitForEvaluationTable = []
+        var waitForApprovalTable = []
+        function PreloadCardCountData() {
+            let id = `<%= Session["userId"] %>`
+            let role = `<%= Session["roles"].ToString().ToLower() %>`
+            let data = `{ 'userId': ${id}, 'role': '${role}' }`
+
+            // get all course count table
+            $.ajax({
+                type: "POST",
+                url: "/Default.aspx/GetAllCourseCountTable",
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (results) {
+                    var data = JSON.parse(results.d)
+                    allCourseCountTable = data
+                    $('#card-all-course-count').remove()
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            });
+
+            // get trained this year table
+            $.ajax({
+                type: "POST",
+                url: "/Default.aspx/GetTrainedThisYearTable",
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (results) {
+                    var data = JSON.parse(results.d)
+                    trainedThisYearTable = data
+                    $('#card-this-year-count').remove()
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            });
+
+            // get wait for evaluation table
+            $.ajax({
+                type: "POST",
+                url: "/Default.aspx/GetWaitForEvaluationTable",
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (results) {
+                    var data = JSON.parse(results.d)
+                    waitForEvaluationTable = data
+                    $('#card-wait-for-evaluation-count').remove()
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            });
+
+            // get wait for approval table
+            $.ajax({
+                type: "POST",
+                url: "/Default.aspx/GetWaitForApprovalTable",
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (results) {
+                    var data = JSON.parse(results.d)
+                    waitForApprovalTable = data
+                    $('#card-wait-for-approval-count').remove()
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            });
+        }
+        PreloadCardCountData()
+        function HandleCardClicked(cardName) {
+
+            // modal information
+            let modal = $('#ViewCardModal')
+            let title = $('#view-card-title')
+            let loading = $('#view-card-loading')
+            let container = $('#view-card-table-container')
+
+            // hide table and show loading icon
+            container.hide()
+            loading.show()
+
+            // remove tr in tbody
+            $('#view-card-table tbody tr').remove()
+            switch (cardName.toUpperCase()) {
+                case "ALL-COURSE-COUNT":
+                    title.text("หลักสูตรทั้งหมด")
+                    HandleDataShowInTable(allCourseCountTable)
+                    container.show()
+                    loading.hide()
+                    modal.modal('show')
+                    break;
+
+                case "TRAINED-THIS-YEAR":
+                    title.text("หลักสูตรที่จัดฝึกอบรมในปีนี้")
+                    HandleDataShowInTable(trainedThisYearTable)
+                    container.show()
+                    loading.hide()
+                    modal.modal('show')
+                    break
+
+                case "WAIT-FOR-EVALUATION":
+                    title.text("หลักสูตรที่รอการประเมินผล")
+                    HandleDataShowInTable(waitForEvaluationTable)
+                    container.show()
+                    loading.hide()
+                    modal.modal('show')
+                    break
+
+                case "WAIT-FOR-APPROVAL":
+                    title.text("หลักสูตรที่รอการอนุมัติ")
+                    HandleDataShowInTable(waitForApprovalTable)
+                    container.show()
+                    loading.hide()
+                    modal.modal('show')
+                    break
+
+                default: console.log('not found!')
+            }
+
+        }
+        function HandleDataShowInTable(items) {
+            let table = $('#view-card-table tbody')
+            items.forEach((item, index) => {
+                let startDate = new Date(item.START_DATE).toLocaleDateString("th-TH")
+                var tableRow = `<tr>
+                                            <td class="text-center">
+                                                ${index + 1}
+                                            </td>
+                                            <td class="text-center">
+                                                ${item.DEPARTMENT_NAME}
+                                            </td>
+                                            <td>
+                                                ${item.COURSE_NAME}
+                                            </td>
+                                            <td>
+                                                ${item.CREATED_NAME}
+                                            </td>
+                                            <td class="text-center">
+                                                ${startDate}
+                                            </td>
+                                        </tr>`
+                table.append(tableRow)
+            })
+        }
+
     </script>
 </asp:Content>
