@@ -28,7 +28,7 @@
                 <!-- /.col -->
                 <div class="col-sm-6">
                     <div class="float-sm-right">
-                        <button type="button" class="btn btn-primary" onclick="handleShowAddModal('add')">Create</button>
+                        <button type="button" class="btn btn-primary" onclick="handleShowAddModal('add')">สร้างหลักสูตร</button>
                     </div>
                 </div>
                 <!-- /.col -->
@@ -53,7 +53,7 @@
                                 <th>รหัสหลักสูตร</th>
                                 <th>ชื่อหลักสูตร</th>
                                 <th>ผู้จัดทำ</th>
-                                <th>วันที่ (Actual Date)</th>
+                                <th>วันที่เริ่มอบรม</th>
                                 <th class="text-center">สถานะ</th>
                                 <th class="text-center">ดาวโหลดรายงาน</th>
                             </tr>
@@ -245,8 +245,8 @@
                 <div class="modal-body" style="height: 575px !important;">
                     <div class="transfer"></div>
                 </div>
-                <div class="modal-footer" style="justify-content: space-between !important;">
-                    <button type="button" id="btnScanBarcode" runat="server" class="btn btn-warning" onserverclick="btnScanBarcode_ServerClick">Scan Barcode</button>
+                <div class="modal-footer" style="justify-content: end !important;">
+                    <button type="button" id="btnScanBarcode" runat="server" class="btn btn-warning d-none" onserverclick="btnScanBarcode_ServerClick">Scan Barcode</button>
                     <div class="action-button-area">
                         <input type="hidden" runat="server" id="hiddenCourseId_AddEmployeeModal" />
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
@@ -303,7 +303,21 @@
                 responsive: true,
                 scrollX: 500,
                 scrollCollapse: true,
-                scroller: true
+                scroller: true,
+                "order": [[3, "asc"]],
+                "oLanguage": {
+                    "sSearch": "ค้นหา :",
+                    "sLengthMenu": "แสดง _MENU_ รายการ"
+                },
+                "language": {
+                    searchPlaceholder: "ชื่อแผน/แผนก/วันที่",
+                    "info": "แสดง _START_-_END_ รายการ ทั้งหมด _TOTAL_ รายการ",
+                    "paginate": {
+                        "previous": "ย้อนกลับ",
+                        "next": "หน้าถัดไป"
+                    }
+                }
+
             });
             // hide select option value - 
             $("#<%= trainingPlan.ClientID %> option[value='-']").hide()
