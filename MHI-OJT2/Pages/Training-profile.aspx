@@ -8,7 +8,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Trining Profile</h1>
+                    <h1 class="m-0">ประวัติการฝึกอบรม</h1>
                 </div>
                 <!-- /.col -->
             </div>
@@ -26,11 +26,15 @@
                     <table class="hover nowrap" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th class="text-center">No.</th>
-                                <th>COURSE CODE</th>
-                                <th>COURSE NAME</th>
-                                <th>DEPARTMENT</th>
-                                <th>TRAINING DATE</th>
+                                <th class="text-center">ลำดับ</th>
+                                <th>รหัสหลักสูตร</th>
+                                <th>ชื่อหลักสูตร</th>
+                                <% if (roles != "user")
+                                            { %>
+                                <th>ชื่อผู้เข้าอบรม</th>
+                                        <%} %>
+                                <th class="text-center">แผนก</th>
+                                <th class="text-center">วันที่อบรม</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -40,8 +44,14 @@
                                         <th scope="row" class="text-center">
                                             <%# Container.ItemIndex + 1 %>
                                         </th>
-                                        <td><%# Eval("DEPARTMENT_NAME") %></td>
-                                        <td><%# Eval("SECTION_NAME") %></td>
+                                        <td><%# Eval("COURSE_NUMBER") %></td>
+                                        <td><%# Eval("COURSE_NAME") %></td>
+                                        <% if (roles != "user")
+                                            { %>
+                                            <td><%# Eval("InitialT") %> <%# Eval("FnameT") %> <%# Eval("LnameT") %></td>
+                                        <%} %>
+                                        <td class="text-center"><%# Eval("DEPARTMENT_NAME") %></td>
+                                        <td class="text-center"><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:d MMMM yyyy}", Eval("START_DATE")) %></td>
                                     </tr>
                                 </ItemTemplate>
                             </asp:Repeater>
@@ -64,7 +74,18 @@
                 responsive: true,
                 scrollX: 500,
                 scrollCollapse: true,
-                scroller: true
+                scroller: true,
+                "oLanguage": {
+                    "sSearch": "ค้นหา :",
+                    "sLengthMenu": "แสดง _MENU_ รายการ"
+                },
+                "language": {
+                    "info": "แสดง _START_-_END_ รายการ ทั้งหมด _TOTAL_ รายการ",
+                    "paginate": {
+                        "previous": "ย้อนกลับ",
+                        "next": "หน้าถัดไป"
+                    }
+                }
             });
         })();
     </script>

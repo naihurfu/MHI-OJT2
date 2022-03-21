@@ -304,13 +304,11 @@
                 scrollX: 500,
                 scrollCollapse: true,
                 scroller: true,
-                "order": [[3, "asc"]],
                 "oLanguage": {
                     "sSearch": "ค้นหา :",
                     "sLengthMenu": "แสดง _MENU_ รายการ"
                 },
                 "language": {
-                    searchPlaceholder: "ชื่อแผน/แผนก/วันที่",
                     "info": "แสดง _START_-_END_ รายการ ทั้งหมด _TOTAL_ รายการ",
                     "paginate": {
                         "previous": "ย้อนกลับ",

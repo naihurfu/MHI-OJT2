@@ -12,30 +12,37 @@ namespace MHI_OJT2.Pages
 {
     public partial class Training_profile : Page
     {
+        public static string roles = String.Empty;
         protected void Page_Load(object sender, EventArgs e)
         {
             Auth.CheckLoggedIn();
             if (!IsPostBack)
             {
                 string role = Session["roles"].ToString().ToLower();
-                CheckRoles(role);
-                GetTrainingHistory();
+                roles = role;
+                GetTrainingHistory(role);
             }
         }
-        protected void CheckRoles(string role)
-        {
-            if (role != "user")
-            {
-                Response.Redirect(Auth._403);
-            }
-        }
-        void GetTrainingHistory()
+        void GetTrainingHistory(string role)
         {
             SqlParameterCollection param = new SqlCommand().Parameters;
-            param.AddWithValue("PERSON_ID", SqlDbType.Int).Value = int.Parse(Session["userId"].ToString());
-            RepeatTable.DataSource = SQL.GetDataTableWithParams("SELECT * FROM COURSE_AND_EMPLOYEE WHERE PersonID=@PERSON_ID",
-                                                                WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString,
-                                                                param);
+            string query = "SELECT * FROM COURSE_AND_EMPLOYEE ";
+
+            if (role == "user")
+            {
+                param.AddWithValue("ID", SqlDbType.Int).Value = int.Parse(Session["userId"].ToString());
+                query += "WHERE PersonID=@ID";
+            }
+
+            if (role == "clerk")
+            {
+                param.AddWithValue("ID", SqlDbType.Int).Value = int.Parse(Session["userId"].ToString());
+                query += "WHERE CREATED_ID=@ID";
+            }
+
+
+            RepeatTable.DataSource = SQL.GetDataTableWithParams(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString, param);
+            RepeatTable.DataBind();
         }
     }
 }

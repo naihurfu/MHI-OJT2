@@ -16,15 +16,6 @@
         .dataTables_wrapper.no-footer .dataTables_scrollBody, table.dataTable thead th, table.dataTable thead td {
             border-bottom: 1px solid #ccc !important;
         }
-
-        .my-actions { margin: 0 2em; }
-        .order-1 { order: 1; }
-        .order-2 { order: 2; }
-        .order-3 { order: 3; }
-
-        .right-gap {
-          margin-right: auto !important;
-        }
     </style>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="~/Assets/plugins/fontawesome-free/css/all.min.css">
@@ -201,9 +192,6 @@
                                 </a>
                             </li>
 
-                            <% if (Session["roles"].ToString().ToLower() == "user")
-                                {%>
-                            <li class="nav-header">MENU</li>
                             <li class="nav-item">
                                 <a href="~/Pages/Training-profile.aspx" runat="server" class="nav-link">
                                     <i class="nav-icon fas fa-poll"></i>
@@ -212,7 +200,6 @@
                                     </p>
                                 </a>
                             </li>
-                            <% } %>
 
                             <% if (Session["roles"].ToString().ToLower() == "clerk")
                                 {%>
@@ -274,12 +261,12 @@
 
                             <% if (Session["roles"].ToString().ToLower() == "admin")
                                 {%>
-                            <li class="nav-header">SYSTEM SETTING</li>
+                            <li class="nav-header">ตั้งค่าระบบ</li>
                             <li class="nav-item">
                                 <a href="~/Pages/Systems/Users.aspx" runat="server" class="nav-link">
                                     <i class="nav-icon fas fa-users"></i>
                                     <p>
-                                        USERS 
+                                        จัดการผู้ใช้งาน 
                                     </p>
                                 </a>
                             </li>
@@ -379,12 +366,6 @@
                     denyButtonText: `ไม่อนุมัติ`,
                     cancelButtonText: `ยกเลิก`,
                     confirmButtonColor: '#28a745',
-                    customClass: {
-                        actions: 'my-actions',
-                        denyButton: 'order-1 right-gap',
-                        cancelButton: 'order-2 ',
-                        confirmButton: 'order-3',
-                    },
                     showLoaderOnConfirm: true
                 }).then((results) => {
                     const { isConfirmed, isDenied, isDismissed } = results
