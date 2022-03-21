@@ -1,7 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Auth.Master" AutoEventWireup="true" CodeBehind="Training-plans.aspx.cs" Inherits="MHI_OJT2.Pages.Management.Training_plans" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="body" runat="server">
     <!-- Content Header (Page header) -->
@@ -76,8 +75,8 @@
     <%-- Modal --%>
     <div class="modal fade" id="addModal" data-backdrop="static">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl" style="box-shadow: none !important;">
-            <div class="modal-content">
-                <div class="modal-header bg-danger">
+            <div class="modal-content dark-mode">
+                <div class="modal-header">
                     <h5 class="modal-title text-light">สร้างแผนการฝึกอบรม</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>

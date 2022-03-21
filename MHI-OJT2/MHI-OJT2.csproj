@@ -92,6 +92,7 @@
     <Content Include="Assets\dist\css\alt\adminlte.pages.min.css" />
     <Content Include="Assets\dist\css\alt\adminlte.plugins.css" />
     <Content Include="Assets\dist\css\alt\adminlte.plugins.min.css" />
+    <Content Include="Assets\dist\css\jquery.dataTables.min.css" />
     <Content Include="Assets\dist\img\AdminLTELogo.png" />
     <Content Include="Assets\dist\img\avatar.png" />
     <Content Include="Assets\dist\img\avatar2.png" />

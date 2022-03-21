@@ -1,6 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Auth.Master" AutoEventWireup="true" CodeBehind="Training-profile.aspx.cs" Inherits="MHI_OJT2.Pages.Training_profile" %>
 <asp:Content ID="HeadContent" ContentPlaceHolderID="head" runat="server">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="body" runat="server">
     <!-- Content Header (Page header) -->
@@ -21,7 +20,7 @@
     <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
-            <div class="card">
+            <div class="card ">
                 <div class="card-body">
                     <table class="hover nowrap" style="width: 100%;">
                         <thead>

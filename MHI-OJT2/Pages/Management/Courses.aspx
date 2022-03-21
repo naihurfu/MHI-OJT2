@@ -1,7 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Auth.Master" AutoEventWireup="true" CodeBehind="Courses.aspx.cs" Inherits="MHI_OJT2.Pages.Management.Courses" %>
 
 <asp:Content ID="HeadContent" ContentPlaceHolderID="head" runat="server">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
     <link href="https://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
     <style type="text/css">
@@ -99,8 +98,8 @@
     <%-- add course modal --%>
     <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModal" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-dialog-scrollable modal-xl">
-            <div class="modal-content">
-                <div class="modal-header bg-danger">
+            <div class="modal-content dark-mode">
+                <div class="modal-header">
                     <h5 class="modal-title" id="addModalTitle"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true" class="text-light">&times;</span>
@@ -235,8 +234,8 @@
     <%-- add employee modal --%>
     <div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addModal" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl" style="box-shadow: none !important;">
-            <div class="modal-content">
-                <div class="modal-header bg-danger">
+            <div class="modal-content dark-mode">
+                <div class="modal-header">
                     <h5 class="modal-title text-light">เลือกพนักงานเข้าฝึกอบรม</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
@@ -259,8 +258,8 @@
     </div>
     <div class="modal fade" id="viewStatusModal" tabindex="-1" aria-labelledby="viewStatusModal" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" style="box-shadow: none !important;">
-            <div class="modal-content">
-                <div class="modal-header bg-primary">
+            <div class="modal-content dark-mode">
+                <div class="modal-header">
                     <h5 class="modal-title text-light">ตรวจสอบสถานะการอนุมัติ</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
@@ -383,19 +382,19 @@
 
                             data.forEach(function (r) {
                                 let icon = '<i class="ml-2 fa fa-check"></i>'
-                                let statusText = 'APPROVED'
+                                let statusText = 'อนุมัติ'
                                 let badgeColor = 'success'
                                 let actionDate = r.ACTION_DATE !== null ? new Date(r.ACTION_DATE).toLocaleDateString("th-TH") : "รอผลการอนุมัติ"
 
                                 if (!r.IS_APPROVED) {
                                     icon = '<i class="ml-2 fa fa-spinner"></i>'
                                     badgeColor = 'warning'
-                                    statusText = 'PENDING'
+                                    statusText = 'รออนุมัติ'
                                 } else {
                                     if (!r.APPROVAL_RESULT) {
                                         icon = '<i class="ml-2 fa fa-times"></i>'
                                         badgeColor = 'danger'
-                                        statusText = 'REJECT'
+                                        statusText = 'ไม่อนุมัติ'
                                     }
                                 }
 

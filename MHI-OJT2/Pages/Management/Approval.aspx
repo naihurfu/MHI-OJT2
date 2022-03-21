@@ -1,6 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Auth.Master" AutoEventWireup="true" CodeBehind="Approval.aspx.cs" Inherits="MHI_OJT2.Pages.Management.Approval" %>
 <asp:Content ID="HeaderContent" ContentPlaceHolderID="head" runat="server">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="body" runat="server">
     <!-- Content Header (Page header) -->

@@ -4,24 +4,26 @@
     <style>
         .info-box {
             height: 90px !important;
-         
+            background-color: #343a40;
+            color: #fff;
+            box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
         }
 
-            .info-box .info-box-content {
-                line-height: 2.5;
-            }
+        .info-box .info-box-content {
+            line-height: 2.5;
+        }
 
-            .info-box .info-box-icon {
-                width: 30% !important;
-                font-size: 2rem !important;
-            }
+        .info-box .info-box-icon {
+            width: 30% !important;
+            font-size: 2rem !important;
+        }
 
         .card {
             width: 100% !important;
         }
 
         .info-box:hover {
-            background-color: rgba(18, 102, 241, 0.1);
+            background-color: rgba(69, 77, 85, 0.8);
             cursor: pointer;
         }
     </style>
@@ -84,7 +86,7 @@
                 </div>
                 <div class="col-lg-3 d-flex align-items-stretch">
                     <div class="info-box" onclick="HandleCardClicked('wait-for-approval')">
-                        <span class="info-box-icon bg-secondary elevation-1"><i class="fas fa-cog"></i></span>
+                        <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-cog"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">รออนุมัติ</span>
                             <span class="info-box-number"><%= waitingForApproval %> <small>หลักสูตร</small>
@@ -98,7 +100,7 @@
             </div>
             <div class="row cal-card-height">
                 <div class="col-lg-7 d-flex align-items-stretch">
-                    <div class="card">
+                    <div class="card text-light" style="background-color: #343a40;">
                         <div class="card-header border-0">
                             <h3 class="card-title">สถานะหลักสูตร</h3>
                         </div>
@@ -141,13 +143,13 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="card-footer text-center">
-                            <a href="~/Pages/Training-profile.aspx" runat="server">ดูเพิ่มเติม</a>
+                        <div class="card-footer text-center" style="background-color: rgba(69, 77, 85, 0.8);">
+                            <a href="~/Pages/Training-profile.aspx" runat="server" class="text-light">ดูเพิ่มเติม</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-5 d-flex align-items-stretch">
-                    <div class="card">
+                    <div class="card text-light" style="background-color: #343a40;">
                         <div class="card-header border-0">
                             <h3 class="card-title">
                                 <%= (string)Session["roles"] == "user" ? "คะแนนการอบรม (ปีปัจจุบัน)" : "จำนวนคนแต่ละหลักสูตร" %>
@@ -230,12 +232,12 @@
                             datasets: [{
                                 data: datas,
                                 backgroundColor: [
-                                    'rgba(255, 99, 132, 0.5)',
-                                    'rgba(54, 162, 235, 0.5)',
-                                    'rgba(255, 206, 86, 0.5)',
-                                    'rgba(75, 192, 192, 0.5)',
-                                    'rgba(153, 102, 255, 0.5)',
-                                    'rgba(255, 159, 64, 0.5)'
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)'
                                 ],
                                 borderColor: [
                                     'rgba(255, 99, 132, 1)',
@@ -245,7 +247,7 @@
                                     'rgba(153, 102, 255, 1)',
                                     'rgba(255, 159, 64, 1)'
                                 ],
-                                borderWidth: 1
+                                borderWidth: 0
                             }]
                         },
                         options: {
@@ -257,10 +259,16 @@
                                 yAxes: [{
                                     display: true,
                                     ticks: {
+                                        fontColor: 'white',
                                         beginAtZero: true,
                                         <%= (string)Session["roles"] == "user" ? "max: 100" : "" %>
                                     }
                                 }],
+                                xAxes: [{
+                                    ticks: {
+                                        fontColor: 'white'
+                                    },
+                                }]
                             },
                         }
                     });
