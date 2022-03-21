@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Auth.Master" AutoEventWireup="true" CodeBehind="Department.aspx.cs" Inherits="MHI_OJT2.Pages.Master.Department" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+<asp:Content ID="HeadContent" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
     <style type="text/css">
@@ -22,12 +22,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Department</h1>
+                    <h1 class="m-0">แผนก</h1>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-6">
                     <div class="float-sm-right">
-                        <button type="button" class="btn btn-primary" onclick="handleShowModal('add', {})">Create</button>
+                        <button type="button" class="btn btn-primary" onclick="handleShowModal('add', {})">เพิ่มแผนก</button>
                     </div>
                 </div>
                 <!-- /.col -->
@@ -46,11 +46,11 @@
                     <table class="hover nowrap" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th class="text-center">No.</th>
-                                <th>Department Name</th>
-                                <th>Section Name</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Tools</th>
+                                <th class="text-center">ลำดับ</th>
+                                <th>แผนก</th>
+                                <th>ฝ่าย</th>
+                                <th class="text-center">สถานะ</th>
+                                <th class="text-center">แก้ไข/ลบ</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -101,11 +101,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for='<%= departmentName.ClientID %>'>แผนก / Department name</label>
+                        <label for='<%= departmentName.ClientID %>'>แผนก</label>
                         <input type="text" class="form-control" id="departmentName" runat="server">
                     </div>
                     <div class="form-group">
-                        <label for='<%= sectionName.ClientID %>'>ชื่อสังกัด / Section name</label>
+                        <label for='<%= sectionName.ClientID %>'>ฝ่าย</label>
                         <select class="form-control selectpicker" data-live-search="true" id="sectionName" runat="server"></select>
                     </div>
                     <div class="pt-2 check-container">
@@ -121,10 +121,10 @@
                 </div>
                 <div class="modal-footer" style="justify-content: end !important;">
                     <input type="hidden" id="hiddenId" runat="server" />
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด/Close</button>
-                    <button type="button" class="btn btn-danger" id="btnDelete" runat="server" onserverclick="Delete">ลบ/Delete</button>
-                    <button type="button" class="btn btn-success" id="btnEdit" runat="server" onserverclick="Update">บันทึก/Save</button>
-                    <button type="button" class="btn btn-primary" id="btnAdd" runat="server" onserverclick="Create">บันทึก/Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                    <button type="button" class="btn btn-danger" id="btnDelete" runat="server" onserverclick="Delete">ลบ</button>
+                    <button type="button" class="btn btn-success" id="btnEdit" runat="server" onserverclick="Update">บันทึก</button>
+                    <button type="button" class="btn btn-primary" id="btnAdd" runat="server" onserverclick="Create">บันทึก</button>
                 </div>
             </div>
         </div>
@@ -138,7 +138,18 @@
                 responsive: true,
                 scrollX: 500,
                 scrollCollapse: true,
-                scroller: true
+                scroller: true,
+                "oLanguage": {
+                    "sSearch": "ค้นหา :",
+                    "sLengthMenu": "แสดง _MENU_ รายการ"
+                },
+                "language": {
+                    "info": "แสดง _START_-_END_ รายการ ทั้งหมด _TOTAL_ รายการ",
+                    "paginate": {
+                        "previous": "ย้อนกลับ",
+                        "next": "หน้าถัดไป"
+                    }
+                }
             });
         })();
 
@@ -162,14 +173,14 @@
             const crudModal = $('#crudModal')
             switch (action) {
                 case "add":
-                    modalTitle.text('เพิ่มข้อมูล / Add data')
+                    modalTitle.text('เพิ่มข้อมูล')
                     btnAdd.show()
                     checkActive.prop('checked', true)
                     crudModal.modal('show')
                     break
 
                 case "edit":
-                    modalTitle.text('แก้ไขข้อมูล / Edit data')
+                    modalTitle.text('แก้ไขข้อมูล')
                     sectionName.val(data.SECTION_ID)
                     departmentName.val(data.DEPARTMENT_NAME)
                     hiddenId.val(data.ID)
@@ -181,7 +192,7 @@
                     break
 
                 case "delete":
-                    modalTitle.text('ลบข้อมูล / Delete data ?')
+                    modalTitle.text('ลบข้อมูล')
                     departmentName.val(data.DEPARTMENT_NAME)
                     departmentName.prop('disabled', 'disabled')
                     sectionName.val(data.SECTION_ID)

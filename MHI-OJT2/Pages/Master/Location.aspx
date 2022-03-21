@@ -14,12 +14,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Location</h1>
+                    <h1 class="m-0">สถานที่ฝึกอบรม</h1>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-6">
                     <div class="float-sm-right">
-                        <button type="button" class="btn btn-primary" onclick="handleShowModal('add', {})">Create</button>
+                        <button type="button" class="btn btn-primary" onclick="handleShowModal('add', {})">เพิ่มสถานที่ฝึกอบรม</button>
                     </div>
                 </div>
                 <!-- /.col -->
@@ -38,10 +38,10 @@
                         <table class="hover nowrap" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th class="text-center">NO.</th>
-                                    <th>Location Name</th>
-                                    <th class="text-center">Status</th>
-                                    <th class="text-center">Tools</th>
+                                    <th class="text-center">ลำดับ</th>
+                                    <th>ชื่อสถานที่</th>
+                                    <th class="text-center">สถานะ</th>
+                                    <th class="text-center">ลบ/แก้ไข</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -91,26 +91,26 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>ชื่อสถานที่อบรม / Training location name</label>
+                        <label>ชื่อสถานที่อบรม</label>
                         <input type="text" class="form-control" id="locationName" runat="server">
                     </div>
                     <div class="pt-2 check-container">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="set-active" id="active" runat="server">
-                            <label class="form-check-label" for="<%= active.ClientID %>">ใช้งาน / active</label>
+                            <label class="form-check-label" for="<%= active.ClientID %>">ใช้งาน</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="set-active" id="inactive" runat="server">
-                            <label class="form-check-label" for="<%= inactive.ClientID %>">ไม่ใช้งาน/ inactive</label>
+                            <label class="form-check-label" for="<%= inactive.ClientID %>">ไม่ใช้งาน</label>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer" style="justify-content: end !important;">
                     <input type="hidden" id="hiddenId" runat="server" />
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด/Close</button>
-                    <button type="button" class="btn btn-danger" id="btnDelete" runat="server" onserverclick="Delete">ลบ/Delete</button>
-                    <button type="button" class="btn btn-success" id="btnEdit" runat="server" onserverclick="Update">บันทึก/Save</button>
-                    <button type="button" class="btn btn-primary" id="btnAdd" runat="server" onserverclick="Create">บันทึก/Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                    <button type="button" class="btn btn-danger" id="btnDelete" runat="server" onserverclick="Delete">ลบ</button>
+                    <button type="button" class="btn btn-success" id="btnEdit" runat="server" onserverclick="Update">บันทึก</button>
+                    <button type="button" class="btn btn-primary" id="btnAdd" runat="server" onserverclick="Create">บันทึก</button>
                 </div>
             </div>
         </div>
@@ -124,7 +124,18 @@
                 responsive: true,
                 scrollX: 500,
                 scrollCollapse: true,
-                scroller: true
+                scroller: true,
+                "oLanguage": {
+                    "sSearch": "ค้นหา :",
+                    "sLengthMenu": "แสดง _MENU_ รายการ"
+                },
+                "language": {
+                    "info": "แสดง _START_-_END_ รายการ ทั้งหมด _TOTAL_ รายการ",
+                    "paginate": {
+                        "previous": "ย้อนกลับ",
+                        "next": "หน้าถัดไป"
+                    }
+                }
             });
         })();
 
@@ -147,14 +158,14 @@
             const crudModal = $('#crudModal')
             switch (action) {
                 case "add":
-                    modalTitle.text('เพิ่มข้อมูล / Add data')
+                    modalTitle.text('เพิ่มข้อมูล')
                     btnAdd.show()
                     checkActive.prop('checked', true)
                     crudModal.modal('show')
                     break
 
                 case "edit":
-                    modalTitle.text('แก้ไขข้อมูล / Edit data')
+                    modalTitle.text('แก้ไขข้อมูล')
                     hiddenId.val(data.ID)
                     checkActive.prop('checked', data.IS_ACTIVE)
                     checkInActive.prop('checked', !data.IS_ACTIVE)
@@ -167,7 +178,7 @@
                     break
 
                 case "delete":
-                    modalTitle.text('ลบข้อมูล / Delete data ?')
+                    modalTitle.text('ลบข้อมูล ?')
                     hiddenId.val(data.ID)
                     checkActive.prop('checked', data.IS_ACTIVE)
                     checkInActive.prop('checked', !data.IS_ACTIVE)
