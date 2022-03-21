@@ -23,7 +23,7 @@
                 <div class="col-lg-6 col-md-6 col-12">
                    <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
-                    <div class="text-center my-4">
+                    <div class="text-center my-4 text-primary">
                         <i class="fa fa-user fa-4x"></i>
                     </div>
                     <h3 class="profile-username text-center">
@@ -34,18 +34,18 @@
                     </p>
                     <ul class="list-group list-group-unbordered mb-3">
                         <li class="list-group-item">
-                            <b>USERNAME </b> <span class="float-right"><%= Session["username"] %></span>
+                            <b>ชื่อผู้ใช้งาน </b> <span class="float-right"><%= Session["username"] %></span>
                         </li>
                         <li class="list-group-item">
-                            <b>FULL NAME</b> <span class="float-right"><%= Session["firstName"] + " " + Session["lastName"] %></span>
+                            <b>ชื่อ-สกุล</b> <span class="float-right"><%= Session["firstName"] + " " + Session["lastName"] %></span>
                         </li>
                         <li class="list-group-item">
-                            <b>POSITION</b> <span class="float-right"><%= Session["positionName"] %></span>
+                            <b>ตำแหน่ง</b> <span class="float-right"><%= Session["positionName"] %></span>
                         </li>
                          <li class="list-group-item">
-                            <b>PERMISSION</b> 
-                             <span class="float-right" style="text-transform: uppercase;">
-                                <%= Session["roles"] %>                       
+                            <b>สิทธิ์การใช้งานระบบ</b> 
+                             <span class="float-right">
+                                <%= Session["roles"].ToString().ToUpper() %>                       
                              </span>
                         </li>
                     </ul>
