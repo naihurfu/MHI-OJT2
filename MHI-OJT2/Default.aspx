@@ -23,8 +23,15 @@
         }
 
         .info-box:hover {
-            background-color: rgba(69, 77, 85, 0.8);
+            background-color: rgba(52, 58, 64, 0.3);
             cursor: pointer;
+        }
+
+        .swal2-popup,
+        .swal2-modal,
+        .swal2-show {
+           background-color: #343a40 !important;
+           color: #fff !important;
         }
     </style>
 </asp:Content>
@@ -49,7 +56,7 @@
             <div class="row">
                 <div class="col-lg-3 d-flex align-items-stretch">
                     <div class="info-box" onclick="HandleCardClicked('all-course-count')">
-                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-calendar-alt"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">ทั้งหมด</span>
                             <span class="info-box-number"><%= allCourseCount %> <small>หลักสูตร</small></span>
@@ -61,7 +68,7 @@
                 </div>
                 <div class="col-lg-3 d-flex align-items-stretch">
                     <div class="info-box" onclick="HandleCardClicked('trained-this-year')">
-                        <span class="info-box-icon bg-gradient-warning elevation-1"><i class="fas fa-cog"></i></span>
+                        <span class="info-box-icon bg-gradient-warning elevation-1"><i class="fas fa-calendar-check"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">ที่อบรมในปีนี้</span>
                             <span class="info-box-number"><%= trainedThisYear %> <small>หลักสูตร</small></span>
@@ -73,7 +80,7 @@
                 </div>
                 <div class="col-lg-3 d-flex align-items-stretch">
                     <div class="info-box" onclick="HandleCardClicked('wait-for-evaluation')">
-                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-cog"></i></span>
+                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-chart-bar"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">รอประเมินผล</span>
                             <span class="info-box-number"><%= waitingForEvaluation %> <small>หลักสูตร</small>
@@ -86,7 +93,7 @@
                 </div>
                 <div class="col-lg-3 d-flex align-items-stretch">
                     <div class="info-box" onclick="HandleCardClicked('wait-for-approval')">
-                        <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-cog"></i></span>
+                        <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-user-clock"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">รออนุมัติ</span>
                             <span class="info-box-number"><%= waitingForApproval %> <small>หลักสูตร</small>
@@ -143,7 +150,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="card-footer text-center" style="background-color: rgba(69, 77, 85, 0.8);">
+                        <div class="card-footer text-center dark-mode" >
                             <a href="~/Pages/Training-profile.aspx" runat="server" class="text-light">ดูเพิ่มเติม</a>
                         </div>
                     </div>
@@ -169,8 +176,8 @@
 <asp:Content ID="ModalContent" ContentPlaceHolderID="modal" runat="server">
     <div class="modal fade" id="ViewCardModal" tabindex="-1" aria-labelledby="ViewCardModal" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" style="box-shadow: none !important;">
-            <div class="modal-content">
-                <div class="modal-header bg-primary">
+            <div class="modal-content dark-mode">
+                <div class="modal-header border-0">
                     <h5 class="modal-title text-light" id="view-card-title"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
@@ -277,8 +284,9 @@
                     console.log(err)
                 }
             });
-        })();
 
+        })();
+        
         var allCourseCountTable = []
         var trainedThisYearTable = []
         var waitForEvaluationTable = []

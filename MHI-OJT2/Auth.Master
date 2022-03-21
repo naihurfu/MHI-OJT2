@@ -91,10 +91,10 @@
 
                         </a>
 
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right dark-mode">
                             <% if (notificationCount > 0)
                                 { %>
-                            <span class="dropdown-header">คุณมีคำขอ <span class="text-primary"><%= notificationCount %></span> รายการที่ต้องอนุมัติ</span>
+                            <span class="dropdown-header text-light">คุณมีคำขอ <%= notificationCount %> รายการที่ต้องอนุมัติ</span>
                             <div class="dropdown-divider"></div>
                             <asp:Repeater ID="RepeatNotification" runat="server">
                                 <ItemTemplate>
@@ -109,7 +109,7 @@
                             <% }
                                 else
                                 { %>
-                            <a href="#" class="dropdown-item text-center">No items
+                            <a href="#" class="dropdown-item text-center">ไม่มีรายการที่ต้องอนุมัติ
                             </a>
                             <% } %>
                         </div>
@@ -133,7 +133,7 @@
                             </span>
                             <% } %>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px; max-width: none; min-width: 310px !important;">
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right dark-mode" style="left: inherit; right: 0px; max-width: none; min-width: 310px !important;">
                             <% if (clerkNoticationCount > 0)
                                 { %>
                             <asp:Repeater ID="ClerkNotificationRepleter" runat="server">
@@ -176,11 +176,11 @@
                             <i class="far fa-user mr-3"></i>
                             <span><%= sessionProfileName %></span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a href="~/Pages/Profiles.aspx" runat="server" class="dropdown-item dropdown-footer" style="padding: 0  10px !important;">Profile
+                        <div class="dropdown-menu dropdown-menu-right dark-mode">
+                            <a href="~/Pages/Profiles.aspx" runat="server" class="dropdown-item dropdown-footer" style="padding: 0  10px !important;">บัญชีของฉัน
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer" style="padding: 0 !important;" runat="server" onserverclick="Logout">Logout
+                            <a href="#" class="dropdown-item dropdown-footer" style="padding: 0 !important;" runat="server" onserverclick="Logout">ออกจากระบบ
                             </a>
                         </div>
                     </li>
@@ -411,7 +411,7 @@
                     showDenyButton: true,
                     confirmButtonText: 'อนุมัติ',
                     denyButtonText: `ไม่อนุมัติ`,
-                    cancelButtonText: `ยกเลิก`,
+                    cancelButtonText: `ปิด`,
                     confirmButtonColor: '#28a745',
                     showLoaderOnConfirm: true
                 }).then((results) => {
