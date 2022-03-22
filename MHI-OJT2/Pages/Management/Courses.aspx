@@ -2,7 +2,6 @@
 
 <asp:Content ID="HeadContent" ContentPlaceHolderID="head" runat="server">
     <link href="https://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
     <style type="text/css">
         input[type=checkbox], input[type=radio] {
             width: 20px !important;
