@@ -175,7 +175,7 @@
                                 }
 
                                 tableRow += `<td style="text-align: center;">
-                                                <img src="../../Reports/Pic/${picName}.png" width="20" height="20"/>
+                                                <img src="../../Reports/Pic/${picName}.png" width="50" height="50"/>
                                              </td>`
 
                             } else {
@@ -198,7 +198,7 @@
                     // remove key columns
                     $('table tr').find('td:last-child').remove()
 
-                    // table footer 
+                    // table footer count plan and actual 
                     let rowFooter = `<tr>
                                         <td
                                             colspan="3"
@@ -212,7 +212,6 @@
                                             <hr style="margin: 2px 0 !important; border-top: 1px solid black;" />
                                             <span>Actual</span>
                                           </td>`
-
                     for (let i = 5; i > 4 && i <= (keyNames.length - 5); i++) {
                         let actualSummary = 0;
                         for (let k = 0; k < Object.keys(rowWithKey).length; k++) {
@@ -226,10 +225,31 @@
                                             <span>${actualSummary}</span>
                                       </td>`
                     }
+                    rowFooter += `<td></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>`
                     rowFooter += `</tr>
                                   <tr></tr>`
                     tableFooter.append(rowFooter)
 
+                    // row fix value
+                    let rowFixValue = `<tr>
+                                        <td colspan="5" style="text-align:center; padding: 0.25rem 0 !important; border: 1px solid black;">
+                                                คะแนนเต็ม (Full Scores)
+                                        </td>`
+                    
+                    for (let i = 5; i > 4 && i <= (keyNames.length - 5); i++) {
+                        rowFixValue += `<td style="text-align:center; padding: 0.25rem 0 !important; border: 1px solid black;">
+                                            4
+                                        </td>`
+                    }
+                    rowFixValue += `<td></td>
+                                  <td></td>
+                                  <td>100</td>
+                                  <td></td>`
+                    rowFixValue += `</tr>`
+                    tableFooter.append(rowFixValue)
 
                     // print 
                     $('table').printThis({
