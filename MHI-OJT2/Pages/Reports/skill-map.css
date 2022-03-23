@@ -1,0 +1,38 @@
+﻿@media print {
+    @page {
+        size: landscape
+    }
+}
+
+table.rotate-table-grid {
+    box-sizing: border-box;
+    border-collapse: collapse;
+    width: 100% !important;
+}
+
+.rotate-table-grid tr, .rotate-table-grid td, .rotate-table-grid th {
+    border: 1px solid black !important;
+    position: relative;
+    padding: 10px;
+}
+
+.rotate-table-grid th span {
+        transform-origin: 0 50%;
+        transform: rotate(-90deg);
+        white-space: nowrap;
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+}
+
+.td-footer {
+    padding: 0.25rem 0 !important;
+    text-align: center !important;
+    border: 1px solid #ccc !important;
+    vertical-align: middle !important;
+}
+
+hr {
+    margin: 2px 0 !important;
+}

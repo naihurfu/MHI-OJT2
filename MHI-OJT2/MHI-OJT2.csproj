@@ -137,6 +137,7 @@
     <Content Include="Assets\js\jquery.min.js" />
     <Content Include="Assets\js\jquery.transfer.js" />
     <Content Include="Assets\js\jspdf.umd.min.js" />
+    <Content Include="Assets\js\printThis.js" />
     <Content Include="Assets\js\sweetalert.all.min.js" />
     <Content Include="Assets\plugins\bootstrap-colorpicker\css\bootstrap-colorpicker.css" />
     <Content Include="Assets\plugins\bootstrap-colorpicker\css\bootstrap-colorpicker.min.css" />
@@ -2021,6 +2022,7 @@
     <Content Include="Pages\Master\Speaker.aspx" />
     <Content Include="Pages\Profiles.aspx" />
     <Content Include="Pages\Reports\Skill-map-report.aspx" />
+    <Content Include="Pages\Reports\skill-map.css" />
     <Content Include="Pages\Reports\Training-plan-report.aspx" />
     <Content Include="Pages\Reports\Training-profile-report.aspx" />
     <Content Include="Pages\Systems\Users.aspx" />
