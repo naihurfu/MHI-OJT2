@@ -11,7 +11,7 @@
         .rotate-table-grid tr, .rotate-table-grid td, .rotate-table-grid th {
             border: 1px solid black !important;
             position: relative;
-            padding: 10px;
+            padding: 5px;
         }
 
         .rotate-table-grid th span {
@@ -81,7 +81,7 @@
             </div>
             <div class="card">
                 <div class="card-body page" id="print_me">
-                    <table class="rotate-table-grid"  style="width: 100% !important; font-size: 8px !important;">
+                    <table class="rotate-table-grid" id="table-skill-map"  style="width: 100% !important; font-size: 8px !important;">
                         <thead>
                         </thead>
                         <tbody>
@@ -111,7 +111,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (results) {
-
+                    var promises = [];
                     let data = JSON.parse(results.d)
                     if (!data.length) {
                         Swal.fire("ไม่พบหลักสูตรการอบรม","", "error")
@@ -128,135 +128,200 @@
                     let tableFooter = $('table tfoot')
                     let keyNames = Object.keys(data[0]);
                     let rowWithKey = []
-                    let tableHeader = `<tr>`
-                    for (let i = 0; i < keyNames.length; i++) {
-                        if (i > 4) {
-                            tableHeader += `<th> 
+                    let departmentGroup = []
+
+                    let tableHeader = `<tr id="table-row-department">
+                                          <td colspan="3" style="height: 5px !important;">
+                                          </td>`
+
+                    for (let i = 4; i >= 4 && i <= (keyNames.length - 5); i++) {
+                        var request =  $.ajax({
+                            type: "POST",
+                            url: "/Pages/Reports/Skill-map-report.aspx/GetDepartmentName",
+                            data: `{ 'courseName': '${keyNames[i]}' }`,
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            async: false,
+                            success: (results) => {
+                                let department = results.d
+                                tableHeader += `<td class="${department}" style="text-align: center; height: 5px !important;">
+                                                    ${department}
+                                                </td>`
+                                departmentGroup.push(department)
+                            },
+                            error: function (err) {
+                                console.log(err)
+                            }
+                        })
+                        promises.push(request);
+                    }
+                    $.when.apply(null, promises).done(() => {
+                        tableHeader += `<td></td><td></td><td></td><td></td><td></td>`
+                        tableHeader += `</tr>`
+                        tableHeader += `<tr>`
+                        for (let i = 0; i < keyNames.length; i++) {
+                            if (i > 3) {
+                                tableHeader += `<th> 
                                                 <span>
                                                     ${keyNames[i]} 
                                                 </span>
                                             </th>`
-                        } else {
-                            tableHeader += `<th style="text-align: center"> ${keyNames[i]} </th>`
+                            } else if (i === 1) {
+                                tableHeader += `<th style="text-align: center; padding: 0 !important">
+                                                <div>Name</div>
+                                                <hr style="border-top: 1px solid black"/>
+                                                <div>Start working</div>
+                                            </th>`
+
+                            } else if (i === 2) { } else {
+                                tableHeader += `<th style="text-align: center">
+                                                ${keyNames[i]} 
+                                            </th>`
+                            }
+
                         }
-                        
-                    }
-                    tableHeader += `</tr>`
-                    tableThead.append(tableHeader)
+                        tableHeader += `</tr>`
+                        tableThead.append(tableHeader)
 
-                    for (let i = 0; i < data.length; i++) {
-                        let tableRow = `<tr style="vertical-align: middle;">`
-                        let row = data[i]
-                        row.key = function (n) {
-                            return this[Object.keys(this)[n]];
-                        }
+                        for (let i = 0; i < data.length; i++) {
+                            let tableRow = `<tr style="vertical-align: middle;">`
+                            let row = data[i]
+                            row.key = function (n) {
+                                return this[Object.keys(this)[n]];
+                            }
 
-                        rowWithKey.push(row)
+                            rowWithKey.push(row)
 
-                        for (let j = 0; j < Object.keys(row).length; j++) {
-                            if (j > 4 && j <= (keyNames.length - 5)) {
-                                let picName = ""
-                                let score = row.key(j) ?? 0
-                                if (score >= 20 && score <= 25) {
-                                    picName = "20_25"
+                            for (let j = 0; j < Object.keys(row).length; j++) {
+                                let name = row.key(1)
+                                let date = moment(row.key(2)).format("D/M/YY")
+                                if (j > 3 && j <= (keyNames.length - 5)) {
+                                    let picName = ""
+                                    let score = row.key(j) ?? 0
+                                    if (score >= 20 && score <= 25) {
+                                        picName = "20_25"
 
-                                } else if (score >= 26 && score <= 50) {
-                                    picName = "26_50"
+                                    } else if (score >= 26 && score <= 50) {
+                                        picName = "26_50"
 
-                                } else if (score >= 51 && score <= 75) {
-                                    picName = "51_75"
+                                    } else if (score >= 51 && score <= 75) {
+                                        picName = "51_75"
 
-                                } else if (score >= 76 && score <= 100) {
-                                    picName = "76_100"
+                                    } else if (score >= 76 && score <= 100) {
+                                        picName = "76_100"
 
-                                } else {
-                                    picName = "0_19"
+                                    } else {
+                                        picName = "0_19"
 
-                                }
+                                    }
 
-                                tableRow += `<td style="text-align: center;">
+                                    tableRow += `<td style="text-align: center;">
                                                 <img src="../../Reports/Pic/${picName}.png" width="50" height="50"/>
                                              </td>`
 
-                            } else {
-                                let date = j === 3 ? new Date(row.key(j)).toLocaleString("th-TH").toString().split(" ")[0] : ""
-                                tableRow += `<td class="${j > 4 || j === 3 ? 'text-center' : ''}" >${j === 3 ? date : (row.key(j) ?? 0)}</td>`
+                                } else if (j === 1) {
+                                    tableRow += `<td style="text-align: center; padding: 0 !important; vertical-align: middle;">
+                                                <div style="padding: 10px">${name}</div>
+                                                <hr style="border-top: 1px solid black; margin: 0;"/>
+                                                <div style="padding: 10px">${date}</div>
+                                             </td>`
+
+                                } else if (j === 2) { } else {
+                                    tableRow += `<td class="text-center" >${j === 2 ? date : (row.key(j) ?? 0)}</td>`
+                                }
                             }
+                            tableRow += `</tr>`
+                            tableBody.append(tableRow)
+
+                            var header_height = 0;
+                            $('.rotate-table-grid th span').each(function () {
+                                if ($(this).outerWidth() > header_height) header_height = $(this).outerWidth();
+                            });
+                            $('.rotate-table-grid th').height(header_height);
+
                         }
-                        tableRow += `</tr>`
-                        tableBody.append(tableRow)
 
-                        var header_height = 0;
-                        $('.rotate-table-grid th span').each(function () {
-                            if ($(this).outerWidth() > header_height) header_height = $(this).outerWidth();
-                        });
-                        $('.rotate-table-grid th').height(header_height);
+                        // remove key columns
+                        let tableTR = $('table tr')
+                        tableTR.find('td:last-child').remove()
 
-                    }
-                    console.log(rowWithKey)
-
-                    // remove key columns
-                    $('table tr').find('td:last-child').remove()
-
-                    // table footer count plan and actual 
-                    let rowFooter = `<tr>
+                        // table footer count plan and actual 
+                        let rowFooter = `<tr>
                                         <td
-                                            colspan="3"
+                                            colspan="2"
                                             rowspan="2"
                                             style="vertical-align: middle; text-align:center; padding: 0.25rem 0 !important; border: 1px solid black;"
                                           >
-                                            จำนวนคน
+                                            จำนวนคนทดแทน / งาน
+                                            <br/>
+                                            (Compensate Person / Job)
                                           </td>
-                                          <td rowspan="2" colspan="2" style="vertical-align: middle; text-align:center; padding: 0.25rem 0 !important; border: 1px solid black;">
+                                          <td rowspan="2" colspan="1" style="vertical-align: middle; text-align:center; padding: 0.25rem 0 !important; border: 1px solid black;">
                                             <span>Plan</span>
                                             <hr style="margin: 2px 0 !important; border-top: 1px solid black;" />
                                             <span>Actual</span>
                                           </td>`
-                    for (let i = 5; i > 4 && i <= (keyNames.length - 5); i++) {
-                        let actualSummary = 0;
-                        for (let k = 0; k < Object.keys(rowWithKey).length; k++) {
-                            if (rowWithKey[k].key(i) > 50) {
-                                actualSummary += 1
+                        for (let i = 4; i >= 4 && i <= (keyNames.length - 5); i++) {
+                            let actualSummary = 0;
+                            for (let k = 0; k < Object.keys(rowWithKey).length; k++) {
+                                if (rowWithKey[k].key(i) > 50) {
+                                    actualSummary += 1
+                                }
                             }
-                        }
-                        rowFooter += `<td style="text-align:center; padding: 0.25rem 0 !important; border: 1px solid black;">
+                            rowFooter += `<td style="text-align:center; padding: 0.25rem 0 !important; border: 1px solid black;">
                                             <span>${rowWithKey.length}</span>
                                             <hr style="margin: 2px 0 !important; border-top: 1px solid black;" />
                                             <span>${actualSummary}</span>
                                       </td>`
-                    }
-                    rowFooter += `<td></td>
+                        }
+                        rowFooter += `<td></td>
                                   <td></td>
-                                  <td></td>
-                                  <td></td>`
-                    rowFooter += `</tr>
+                                  <td></td><td></td>`
+                        rowFooter += `</tr>
                                   <tr></tr>`
-                    tableFooter.append(rowFooter)
+                        tableFooter.append(rowFooter)
 
-                    // row fix value
-                    let rowFixValue = `<tr>
-                                        <td colspan="5" style="text-align:center; padding: 0.25rem 0 !important; border: 1px solid black;">
+                        // row fix value
+                        let rowFixValue = `<tr>
+                                        <td colspan="3" style="text-align:center; padding: 0.1rem 0 !important; border: 1px solid black;">
                                                 คะแนนเต็ม (Full Scores)
                                         </td>`
-                    
-                    for (let i = 5; i > 4 && i <= (keyNames.length - 5); i++) {
-                        rowFixValue += `<td style="text-align:center; padding: 0.25rem 0 !important; border: 1px solid black;">
+
+                        for (let i = 5; i > 4 && i <= (keyNames.length - 4); i++) {
+                            rowFixValue += `<td style="text-align:center; padding: 0.25rem 0 !important; border: 1px solid black;">
                                             4
                                         </td>`
-                    }
-                    rowFixValue += `<td></td>
-                                  <td></td>
-                                  <td>100</td>
-                                  <td></td>`
-                    rowFixValue += `</tr>`
-                    tableFooter.append(rowFixValue)
+                        }
+                        rowFixValue += `<td></td>
+                                    <td></td>
+                                    <td>100</td>
+                                    <td></td>`
+                        rowFixValue += `</tr>`
+                        tableFooter.append(rowFixValue)
 
-                    // print 
-                    $('table').printThis({
-                        importCSS: true,
-                        importStyle: true,
-                        loadCSS: "skill-map.css"
-                    });
+
+
+                        // auto merge department
+                        $('#table-row-department').each(function () {
+                            $(this).children().each(function () {
+                                if ($(this).attr('class')) {
+                                    var cls = $(this).attr('class'),
+                                        nextCells = $(this).nextUntil('td:not(.' + cls + ')'),
+                                        colspan = nextCells.length + 1;
+                                    if (colspan > 1) {
+                                        $(this).attr('colspan', colspan);
+                                        nextCells.remove();
+                                    }
+                                }
+                            });
+                        });
+
+                        $('table').printThis({
+                            importCSS: true,
+                            importStyle: true,
+                            loadCSS: "skill-map.css"
+                        });
+                    })
                 }
             });
         }

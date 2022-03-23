@@ -130,6 +130,7 @@
     <Content Include="Assets\dist\js\adminlte.js" />
     <Content Include="Assets\dist\js\adminlte.min.js" />
     <Content Include="Assets\dist\js\demo.js" />
+    <Content Include="Assets\dist\js\moment.js" />
     <Content Include="Assets\dist\js\pages\dashboard.js" />
     <Content Include="Assets\dist\js\pages\dashboard2.js" />
     <Content Include="Assets\dist\js\pages\dashboard3.js" />

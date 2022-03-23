@@ -351,6 +351,7 @@
                 <asp:ScriptReference Path="~/Assets/plugins/jquery/jquery.min.js" />
                 <asp:ScriptReference Path="~/Assets/plugins/bootstrap/js/bootstrap.bundle.min.js" />
                 <asp:ScriptReference Path="~/Assets/dist/js/adminlte.js" />
+                <asp:ScriptReference Path="~/Assets/dist/js/moment.js" />
                 <asp:ScriptReference Path="~/Assets/plugins/chart.js/Chart.min.js" />
                 <asp:ScriptReference Path="~/Assets/js/jquery.transfer.js" />
                 <asp:ScriptReference Path="~/Assets/js/jquery.table2excel.min.js" />

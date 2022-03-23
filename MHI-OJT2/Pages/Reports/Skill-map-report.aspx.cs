@@ -57,5 +57,21 @@ namespace MHI_OJT2.Pages.Reports
             DataTable dt = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
             return DATA.DataTableToJSONWithJSONNet(dt);
         }
+        [WebMethod]
+        public static string GetDepartmentName(string courseName)
+        {
+            string result = "NULL";
+            string query = "SELECT " +
+                "DEP.DEPARTMENT_NAME " +
+                "FROM ADJUST_COURSE ADJ " +
+                "JOIN DEPARTMENT DEP ON DEP.ID = ADJ.DEPARTMENT_ID " +
+                $"WHERE COURSE_NAME = '{courseName}'";
+            DataTable dt = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+            if (dt.Rows.Count > 0)
+            {
+                result = dt.Rows[0]["DEPARTMENT_NAME"].ToString().ToUpper();
+            }
+            return result;
+        }
     }
 }
