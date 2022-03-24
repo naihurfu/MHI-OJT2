@@ -2035,6 +2035,8 @@
     <Content Include="Reports\Pic\76_100.png" />
     <Content Include="Reports\Pic\Actual.png" />
     <Content Include="Reports\Pic\No.png" />
+    <Content Include="Reports\Pic\OJTlogo-report.png" />
+    <Content Include="Reports\Pic\OJTlogo.png" />
     <Content Include="Reports\Pic\Plan.png" />
     <Content Include="Reports\Pic\Postponned.png" />
     <Content Include="Web.config" />

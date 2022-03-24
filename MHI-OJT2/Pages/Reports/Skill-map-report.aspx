@@ -7,7 +7,7 @@
             border-collapse: collapse;
             width: 100% !important;
         }
-        
+
         .rotate-table-grid tr, .rotate-table-grid td, .rotate-table-grid th {
             border: 1px solid black !important;
             position: relative;
@@ -16,20 +16,54 @@
 
         .rotate-table-grid th span {
             transform-origin: 0 50%;
-            transform: rotate(-90deg); 
-            white-space: nowrap; 
+            transform: rotate(-90deg);
+            white-space: nowrap;
             display: block;
             position: absolute;
             bottom: 0;
             left: 50%;
         }
 
+        .main__div {
+            display: flex;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .main__div div {
+            border: 1px solid black;
+            text-align: center;
+            padding: 0.5rem 0;
+            height: 145px;
+        }
+
+        .main__div div span {
+            text-align: center;
+            padding: 0.3rem;
+        }
+
+        .main__div div hr {
+            border-top: 1px solid black;
+        }
+
+        .main__div div:not(:first-child) hr {
+            border-bottom: 1px solid black;
+            height: 45px;
+        }
+
+        .div__footer {
+            padding-top: 15px;
+        }
+
+        ul li {
+            padding: 5px 0;
+        }
     </style>
-        
-        <style type="text/css" media="print">
-            @page{
-                size: landscape;
-            }
+    <style type="text/css" media="print">
+        @page {
+            size: landscape;
+            margin: 1.5rem 1.5rem;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="body" runat="server">
@@ -81,7 +115,42 @@
             </div>
             <div class="card">
                 <div class="card-body page" id="print_me">
-                    <table class="rotate-table-grid" id="table-skill-map"  style="width: 100% !important; font-size: 8px !important;">
+                    <div class="d-flex justify-content-between" style="padding-bottom: 15px; vertical-align: middle;">
+                        <img src="../../Reports/Pic/OJTlogo-report.png" />
+                        <h3>MHI Automotive climate control (Thailand) Co., Ltd.</h3>
+                        <span>(HR-T-05)</span>
+                    </div>
+                    <div class="d-flex justify-content-between" style="vertical-align: middle;">
+                        <div class="section__wrap d-flex align-items-end">
+                            <h5>แผนก(Section) : <%= section.Value %></h5>
+                        </div>
+                        <h4>รายงานผลแสดงความสามารถของพนักงาน (Skill Map Result Report)</h4>
+                        <div class="main__div">
+                            <div>
+                                <span>วันที่ประเมิน
+                                     Evaluate
+                                </span>
+                                <hr />
+                            </div>
+                            <div>
+                                <span>Prepared By 
+                                </span>
+                                <hr />
+
+                            </div>
+                            <div>
+                                <span>Reviewed By
+                                </span>
+                                <hr />
+                            </div>
+                            <div>
+                                <span>Approved By
+                                </span>
+                                <hr />
+                            </div>
+                        </div>
+                    </div>
+                    <table class="rotate-table-grid" id="table-skill-map" style="width: 100% !important; font-size: 8px !important;">
                         <thead>
                         </thead>
                         <tbody>
@@ -89,6 +158,36 @@
                         <tfoot>
                         </tfoot>
                     </table>
+                    <div class="div__footer">
+                        <div class="row">
+                            <div class="col-3">
+                                <ul style="list-style:none;">
+                                    <li><img src="~/Reports/Pic/0_19_NOT_STAR.png" width="50" height="47" runat="server" /> = (0 คะแนน) ยังไม่มีทักษะในการปฏิบัติ Unskillful.</li>
+                                    <li><img src="~/Reports/Pic/20_25_NOT_STAR.png" width="50" height="47" runat="server" /> = (20-25 คะแนน) ทราบทฤษฎีเบื้องต้นเท่านั้น Only theoretically.</li>
+                                    <li><img src="~/Reports/Pic/26_50_NOT_STAR.png" width="50" height="47" runat="server" /> = (26-50 คะแนน) สามารถปฏิบัติงานได้ภายใต้การควบคุมของหัวหน้างาน Can work under Leader.</li>
+                                </ul>
+                            </div>
+                            <div class="col-3">
+                                <ul style="list-style:none;">
+                                    <li><img src="~/Reports/Pic/51_75.png" width="50" height="47" runat="server" /> = (51-75 คะแนน) สามารถปฏิบัติงานได้ด้วยตัวเอง Can work by himself.</li>
+                                    <li><img src="~/Reports/Pic/76_100.png" width="50" height="47" runat="server" /> = (76-100 คะแนน) สามารถปฏิบัติงานได้ด้วยตนเองและถ่ายทอดให้ผู้อื่นได้ Can work by himself & Can teach others.</li>
+                                </ul>
+                            </div>
+                            <div class="col-3">
+                                <ul style="list-style:none;">
+                                    <li><img src="~/Reports/Pic/0_19_NOT_STAR.png"  width="50" height="47" runat="server" /> วงใน คือ เป้าหมาย อ้างอิงตามตารางมาตรฐานกำหนดความสามารถของพนักงาน (FR-HR01-019) Inside circle : Target  Ref.to Competency Mapping Standard (FR-HR01-019)</li>
+                                    <li><img src="~/Reports/Pic/WONG_NAI.png"  width="50" height="47" runat="server" /> วงนอก : ปฏิบัติได้จริง Outside circle : Actual</li>
+                                </ul>
+                            </div>
+                            <div class="col-3">
+                                <ul style="list-style:none;">
+                                    <li>1. ประเมินพนักงานใหม่ ต้องทำการประเมินภายในวันที่ 91 Probation period. The evaluation will do within 91st of Probation period since start working</li>
+                                    <li>2. ประเมินพนักงานหลังบรรจุเป็นพนักงานประจำแล้ว โดยต้องทำการประเมินทุก 6 เดือน After Passed Probation. Re-Evaluation every 6 months (2 times/year)</li>
+                                    <li>3. ต้นฉบับ --> ต้นสังกัด ,สำเนา --> HR Original --> For each setion, Copied --> For HR</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -114,7 +213,7 @@
                     var promises = [];
                     let data = JSON.parse(results.d)
                     if (!data.length) {
-                        Swal.fire("ไม่พบหลักสูตรการอบรม","", "error")
+                        Swal.fire("ไม่พบหลักสูตรการอบรม", "", "error")
                         return
                     }
 
@@ -135,7 +234,7 @@
                                           </td>`
 
                     for (let i = 4; i >= 4 && i <= (keyNames.length - 5); i++) {
-                        var request =  $.ajax({
+                        var request = $.ajax({
                             type: "POST",
                             url: "/Pages/Reports/Skill-map-report.aspx/GetDepartmentName",
                             data: `{ 'courseName': '${keyNames[i]}' }`,
@@ -215,8 +314,8 @@
 
                                     }
 
-                                    tableRow += `<td style="text-align: center;">
-                                                <img src="../../Reports/Pic/${picName}.png" width="50" height="50"/>
+                                    tableRow += `<td style="padding: 0; margin: 0; text-align: center;">
+                                                <img src="../../Reports/Pic/${picName}.png" width="50" height="47"/>
                                              </td>`
 
                                 } else if (j === 1) {
@@ -294,12 +393,10 @@
                         }
                         rowFixValue += `<td></td>
                                     <td></td>
-                                    <td>100</td>
+                                    <td style="text-align: center;">100</td>
                                     <td></td>`
                         rowFixValue += `</tr>`
                         tableFooter.append(rowFixValue)
-
-
 
                         // auto merge department
                         $('#table-row-department').each(function () {
@@ -316,7 +413,7 @@
                             });
                         });
 
-                        $('table').printThis({
+                        $('#print_me').printThis({
                             importCSS: true,
                             importStyle: true,
                             loadCSS: "skill-map.css"
