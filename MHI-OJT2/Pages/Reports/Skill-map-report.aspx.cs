@@ -38,22 +38,39 @@ namespace MHI_OJT2.Pages.Reports
             {
                 query = "SELECT DISTINCT SECTION_NAME FROM COURSE WHERE CREATED_BY = " + int.Parse(Session["userId"].ToString());
             }
-            section.DataSource = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+            DataTable dt = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+
+            if (dt.Rows.Count <= 0)
+            {
+                Session.Add("alert", "skill-map-not-found");
+                Response.Redirect("~/Default.aspx");
+            }
+
+            section.DataSource = dt;
             section.DataTextField = "SECTION_NAME";
             section.DataValueField = "SECTION_NAME";
             section.DataBind();
         }
 
+        public static string DateToSQLDateString(string d)
+        {
+            string[] split = d.Split('/');
+            string day = split[0];
+            string month = split[1];
+            int year = int.Parse(split[2]);
+            if (year > 2100)
+            {
+                year = year - 543;
+            }
+
+            string result = $"{year}-{month}-{day}";
+            return result;
+        }
+
         [WebMethod]
         public static string GetReportData(string sectionName, string startDate, string endDate)
         {
-            string query = $"EXEC SKILL_MAP_FOR_ADMIN '{sectionName}'";
-
-            if (role == "clerk")
-            {
-                query = $"EXEC SKILL_MAP_FOR_CLERK '{sectionName}', '{DATA.DateTimeToSQL(startDate)}', '{DATA.DateTimeToSQL(endDate)}'";
-            }
-
+            string query = $"EXEC SP_SKILL_MAP '{sectionName}', '{DateToSQLDateString(startDate)}', '{DateToSQLDateString(endDate)}'";
             DataTable dt = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
             return DATA.DataTableToJSONWithJSONNet(dt);
         }

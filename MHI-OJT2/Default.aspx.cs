@@ -13,6 +13,8 @@ namespace MHI_OJT2
 {
     public partial class Default : System.Web.UI.Page
     {
+		string _sessionAlert;
+
 		public static int allCourseCount = 0;
 		public static int trainedThisYear = 0;
 		public static int waitingForEvaluation = 0;
@@ -27,8 +29,28 @@ namespace MHI_OJT2
 			if (!IsPostBack) {
 				GetCourseTable(userId, connectionString);
 				GetCountCard(userId, connectionString);
+				CheckAlertSession();
 			}
         }
+		void Alert(string type, string title, string message)
+		{
+			Page.ClientScript.RegisterStartupScript(this.GetType(), "SweetAlert", $"sweetAlert('{type}','{title}','{message}')", true);
+		}
+		protected void CheckAlertSession()
+		{
+			_sessionAlert = null;
+			if (Session["alert"] != null)
+			{
+				_sessionAlert = Session["alert"] as string;
+
+				if (_sessionAlert == "skill-map-not-found")
+				{
+					Alert("warning", "ล้มเหลว!", "ไม่พบหลักสูตรที่สามารถเรียกดูรายงานได้ กรุณาตรวจสอบข้อมูลหลักสูตรใหม่อีกครั้ง");
+				}
+
+				Session.Remove("alert");
+			}
+		}
 		protected void GetCountCard(int userId, string connectionString)
         {
 			allCourseCount = 0;

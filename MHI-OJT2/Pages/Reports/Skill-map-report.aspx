@@ -27,14 +27,21 @@
         .main__div {
             display: flex;
             justify-content: center;
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .main__div div {
             border: 1px solid black;
+            border-right: 0;
+            border-bottom: 0;
             text-align: center;
             padding: 0.5rem 0;
-            height: 145px;
+            height: 140px;
+            width: 120px;
+        }
+
+        .main__div div:last-child {
+            border-right: 1px solid black;
         }
 
         .main__div div span {
@@ -46,18 +53,35 @@
             border-top: 1px solid black;
         }
 
-        .main__div div:not(:first-child) hr {
-            border-bottom: 1px solid black;
-            height: 45px;
+        .main__div div pre {
+            padding: 0 10px;
+            border: 0;
         }
 
         .div__footer {
             padding-top: 15px;
         }
 
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
         ul li {
             padding: 5px 0;
+            display: flex;
+            align-items: center;
         }
+
+
+/*=============================================================================================*/
+.l{width:200px;}
+.daigonal{width:300px;}
+svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
     </style>
     <style type="text/css" media="print">
         @page {
@@ -96,21 +120,60 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
-                                <label for='<%= section.ClientID %>'>วันที่เริ่มอบรม</label>
+                                <label for='<%= section.ClientID %>'>ช่วงวันที่เริ่มอบรม</label>
                                 <input type="tel" id="startDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
-                                <label for='<%= section.ClientID %>'>วันที่สิ้นสุดการอบรม</label>
+                                <label for='<%= section.ClientID %>'>ถึง</label>
                                 <input type="tel" id="endDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border-top: 1px solid #6c757d" />
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>วันที่ประเมินผล Evaluate</label>
+                                <input type="tel" id="evaluate_date" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Prepared By</label>
+                                <input type="text" id="prepared_by" class="form-control" placeholder="Prepared By" value="" />
+                            </div>
+                            <div class="form-group">
+                                <label>Prepared Date</label>
+                                <input type="tel" id="prepared_date" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Reviewed By</label>
+                                <input type="text" id="revieweb_by" class="form-control" placeholder="Reviewed By" />
+                            </div>
+                            <div class="form-group">
+                                <label>Reviewed Date</label>
+                                <input type="tel" id="revieweb_date" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Approved By</label>
+                                <input type="text" id="approved_by" class="form-control" placeholder="Approved By" />
+                            </div>
+                            <div class="form-group">
+                                <label>Approved Date</label>
+                                <input type="tel" id="approved_date" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="card-footer">
-                    <button type="button" id="btnDownloadReport" class="btn btn-primary btn-block" onclick="GetReportData()">ดาวน์โหลดรายงาน</button>
+                    <button type="button" id="btnDownloadReport" class="btn btn-primary btn-block" onclick="GetReportData()">พิมพ์รายงาน</button>
                 </div>
             </div>
             <div class="card">
@@ -122,7 +185,7 @@
                     </div>
                     <div class="d-flex justify-content-between" style="vertical-align: middle;">
                         <div class="section__wrap d-flex align-items-end">
-                            <h5>แผนก(Section) : <%= section.Value %></h5>
+                            <h5>แผนก(Section) : <span id="report_section"></span></h5>
                         </div>
                         <h4>รายงานผลแสดงความสามารถของพนักงาน (Skill Map Result Report)</h4>
                         <div class="main__div">
@@ -131,22 +194,31 @@
                                      Evaluate
                                 </span>
                                 <hr />
+                                <pre style="margin-top: 2.6rem;" id="report_evaluate_date"> </pre>
                             </div>
                             <div>
                                 <span>Prepared By 
                                 </span>
                                 <hr />
-
+                                <pre id="report_prepared_by"> </pre>
+                                <hr />
+                                <pre id="report_prepared_date"> </pre>
                             </div>
                             <div>
                                 <span>Reviewed By
                                 </span>
                                 <hr />
+                                <pre id="report_reviewed_by"> </pre>
+                                <hr />
+                                <pre id="report_reviewed_date"> </pre>
                             </div>
                             <div>
                                 <span>Approved By
                                 </span>
                                 <hr />
+                                <pre id="report_approved_by"> </pre>
+                                <hr />
+                                <pre id="report_approved_date"> </pre>
                             </div>
                         </div>
                     </div>
@@ -158,19 +230,34 @@
                         <tfoot>
                         </tfoot>
                     </table>
-                    <div class="div__footer">
+                    <div class="div__footer" style="font-size: 12px;">
                         <div class="row">
                             <div class="col-3">
                                 <ul style="list-style:none;">
-                                    <li><img src="~/Reports/Pic/0_19_NOT_STAR.png" width="50" height="47" runat="server" /> = (0 คะแนน) ยังไม่มีทักษะในการปฏิบัติ Unskillful.</li>
-                                    <li><img src="~/Reports/Pic/20_25_NOT_STAR.png" width="50" height="47" runat="server" /> = (20-25 คะแนน) ทราบทฤษฎีเบื้องต้นเท่านั้น Only theoretically.</li>
-                                    <li><img src="~/Reports/Pic/26_50_NOT_STAR.png" width="50" height="47" runat="server" /> = (26-50 คะแนน) สามารถปฏิบัติงานได้ภายใต้การควบคุมของหัวหน้างาน Can work under Leader.</li>
+                                    <li>
+                                        <img src="~/Reports/Pic/0_19_NOT_STAR.png" width="50" height="47" runat="server" />
+                                        <span>= (0 คะแนน) ยังไม่มีทักษะในการปฏิบัติ Unskillful.</span>
+                                    </li>
+                                    <li>
+                                        <img src="~/Reports/Pic/20_25_NOT_STAR.png" width="50" height="47" runat="server" />
+                                        <span>= (20-25 คะแนน) ทราบทฤษฎีเบื้องต้นเท่านั้น Only theoretically.</span>
+                                    </li>
+                                    <li>
+                                        <img src="~/Reports/Pic/26_50_NOT_STAR.png" width="50" height="47" runat="server" />
+                                        <span>= (26-50 คะแนน) สามารถปฏิบัติงานได้ภายใต้การควบคุมของหัวหน้างาน Can work under Leader.</span>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="col-3">
                                 <ul style="list-style:none;">
-                                    <li><img src="~/Reports/Pic/51_75.png" width="50" height="47" runat="server" /> = (51-75 คะแนน) สามารถปฏิบัติงานได้ด้วยตัวเอง Can work by himself.</li>
-                                    <li><img src="~/Reports/Pic/76_100.png" width="50" height="47" runat="server" /> = (76-100 คะแนน) สามารถปฏิบัติงานได้ด้วยตนเองและถ่ายทอดให้ผู้อื่นได้ Can work by himself & Can teach others.</li>
+                                    <li>
+                                        <img src="~/Reports/Pic/51_75.png" width="50" height="47" runat="server" />
+                                        <span>= (51-75 คะแนน) สามารถปฏิบัติงานได้ด้วยตัวเอง Can work by himself.</span>
+                                    </li>
+                                    <li>
+                                        <img src="~/Reports/Pic/76_100.png" width="50" height="47" runat="server" />
+                                        <span> = (76-100 คะแนน) สามารถปฏิบัติงานได้ด้วยตนเองและถ่ายทอดให้ผู้อื่นได้ Can work by himself & Can teach others.</span>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="col-3">
@@ -198,11 +285,32 @@
 <asp:Content ID="ScriptContent" ContentPlaceHolderID="script" runat="server">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.1/html2pdf.bundle.min.js" integrity="sha512-vDKWohFHe2vkVWXHp3tKvIxxXg0pJxeid5eo+UjdjME3DBFBn2F8yWOE0XmiFcFbXxrEOR1JriWEno5Ckpn15A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript">
+        (function () {
+            let today = moment()
+            $('#<%= endDate.ClientID %>').val(today.format("DD/MM/YYYY"))
+            $('#<%= startDate.ClientID %>').val(today.subtract(30, 'days').format("DD/MM/YYYY"))
+        })();
+
         function GetReportData() {
             let startDate = $('#<%= startDate.ClientID %>').val()
             let endDate = $('#<%= endDate.ClientID %>').val()
             let section = $('#<%= section.ClientID %>').val()
             let body = `{ 'sectionName': '${section}', 'startDate' : '${startDate}', 'endDate': '${endDate}'}`
+
+
+            $('#report_section').text(section)
+
+            $('#report_evaluate_date').text($('#evaluate_date').val() === "" ? "  " : $('#evaluate_date').val())
+
+            $('#report_prepared_by').text($('#prepared_by').val() === "" ? "  " : $('#prepared_by').val())
+            $('#report_prepared_date').text($('#prepared_date').val() === "" ? "  " : $('#prepared_date').val())
+
+            $('#report_reviewed_by').text($('#revieweb_by').val() === "" ? "  " : $('#revieweb_by').val())
+            $('#report_reviewed_date').text($('#revieweb_date').val() === "" ? "  " : $('#revieweb_date').val())
+
+            $('#report_approved_by').text($('#approved_by').val() === "" ? "  " : $('#approved_by').val())
+            $('#report_approved_date').text($('#approved_date').val() === "" ? "  " : $('#approved_date').val())
+
             $.ajax({
                 type: "POST",
                 url: "/Pages/Reports/Skill-map-report.aspx/GetReportData",
@@ -229,8 +337,14 @@
                     let rowWithKey = []
                     let departmentGroup = []
 
-                    let tableHeader = `<tr id="table-row-department">
-                                          <td colspan="3" style="height: 5px !important;">
+                    let tableHeader = `<tr id="table-row-department" style="height: 70px !important; padding: 0; margin: 0;">
+                                          <th class="text-center" rowspan="2" style="width: 10px;">No.</th>
+                                          <td class="diagonal" colspan="3" style="padding: 0; margin: 0;">
+                                            <span style="position: absolute; top: 0; left: 0; margin: 10px; font-size: 14px;">Process Description</span>
+                                            <span style="position: absolute; bottom: 0; right: 0; margin: 10px; font-size: 14px;">Employee</span>
+                                            <svg viewBox="0 0 10 10" preserveAspectRatio="none" style="top: 0">
+                                                <line x1="10" y1="0" x2="0" y2="10" stroke="black" stroke-width="0.05"></line>
+                                            </svg>
                                           </td>`
 
                     for (let i = 4; i >= 4 && i <= (keyNames.length - 5); i++) {
@@ -243,7 +357,7 @@
                             async: false,
                             success: (results) => {
                                 let department = results.d
-                                tableHeader += `<td class="${department}" style="text-align: center; height: 5px !important;">
+                                tableHeader += `<td class="${department}" style="text-align: center; height: 5px !important; font-size: 14px;">
                                                     ${department}
                                                 </td>`
                                 departmentGroup.push(department)
@@ -268,7 +382,7 @@
                             } else if (i === 1) {
                                 tableHeader += `<th style="text-align: center; padding: 0 !important">
                                                 <div>Name</div>
-                                                <hr style="border-top: 1px solid black"/>
+                                                <hr style="border-top: 1px solid black; margin-top: 1.5rem; margin-bottom: 1.5rem;"/>
                                                 <div>Start working</div>
                                             </th>`
 
@@ -282,17 +396,21 @@
                         tableHeader += `</tr>`
                         tableThead.append(tableHeader)
 
+                            console.log(data)
                         for (let i = 0; i < data.length; i++) {
                             let tableRow = `<tr style="vertical-align: middle;">`
                             let row = data[i]
                             row.key = function (n) {
                                 return this[Object.keys(this)[n]];
                             }
-
                             rowWithKey.push(row)
-
                             for (let j = 0; j < Object.keys(row).length; j++) {
-                                let name = row.key(1)
+                                // for No.
+                                if (j === 0) {
+                                    tableRow += `<td class="text-center">${i+1}</td>`
+                                }
+                                let nameIsNull = row.key(1) === ""
+                                let name = nameIsNull === true ? "0" : row.key(1)
                                 let date = moment(row.key(2)).format("D/M/YY")
                                 if (j > 3 && j <= (keyNames.length - 5)) {
                                     let picName = ""
@@ -320,12 +438,13 @@
 
                                 } else if (j === 1) {
                                     tableRow += `<td style="text-align: center; padding: 0 !important; vertical-align: middle;">
-                                                <div style="padding: 10px">${name}</div>
+                                                ${nameIsNull === true ? `<pre style="margin-bottom: unset; padding: 10.77px;"> </pre>` : `<div style="padding: 10px;">${name}</div>`}
                                                 <hr style="border-top: 1px solid black; margin: 0;"/>
                                                 <div style="padding: 10px">${date}</div>
                                              </td>`
 
-                                } else if (j === 2) { } else {
+                                } else if (j === 2) {
+                                } else {
                                     tableRow += `<td class="text-center" >${j === 2 ? date : (row.key(j) ?? 0)}</td>`
                                 }
                             }
@@ -347,7 +466,7 @@
                         // table footer count plan and actual 
                         let rowFooter = `<tr>
                                         <td
-                                            colspan="2"
+                                            colspan="3"
                                             rowspan="2"
                                             style="vertical-align: middle; text-align:center; padding: 0.25rem 0 !important; border: 1px solid black;"
                                           >
@@ -382,7 +501,7 @@
 
                         // row fix value
                         let rowFixValue = `<tr>
-                                        <td colspan="3" style="text-align:center; padding: 0.1rem 0 !important; border: 1px solid black;">
+                                        <td colspan="4" style="text-align:center; padding: 0.1rem 0 !important; border: 1px solid black;">
                                                 คะแนนเต็ม (Full Scores)
                                         </td>`
 
@@ -399,8 +518,8 @@
                         tableFooter.append(rowFixValue)
 
                         // auto merge department
-                        $('#table-row-department').each(function () {
-                            $(this).children().each(function () {
+                        $('#table-row-department td').each(function () {
+                            $(this).each(function () {
                                 if ($(this).attr('class')) {
                                     var cls = $(this).attr('class'),
                                         nextCells = $(this).nextUntil('td:not(.' + cls + ')'),
@@ -412,6 +531,7 @@
                                 }
                             });
                         });
+
 
                         $('#print_me').printThis({
                             importCSS: true,

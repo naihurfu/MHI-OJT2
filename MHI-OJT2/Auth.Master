@@ -220,7 +220,7 @@
                                 </a>
                             </li>
 
-                            <% if (Session["roles"].ToString().ToLower() == "clerk")
+                            <% if (Session["roles"].ToString().ToLower() != "user")
                                 {%>
                             <li class="nav-header">เมนูจัดการ</li>
                             <li class="nav-item">
