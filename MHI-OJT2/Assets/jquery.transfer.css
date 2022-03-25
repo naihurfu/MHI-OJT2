@@ -9,6 +9,7 @@
 .checkbox-group {
     display: inline-block;
     position: relative;
+    letter-spacing: 0.2px;
 }
 
 .checkbox-group label {
@@ -16,6 +17,7 @@
     position: relative;
     padding-left: 25px;
     cursor: pointer;
+    color: #fff;
 }
 
 .checkbox-group + .checkbox-group label {
@@ -148,32 +150,33 @@
 .transfer-double {
     /*width: 640px;*/
     height: 390px;
-    background-color: #fff;
+    /*background-color: #fff;*/
     border: 0;
     z-index: 1000;
 }
 
 .transfer-double-header {
     padding: 10px
-}
+}                                                   
 
 .transfer-double-content {
-    display:flex;
+    background-color: #454d55 !important;
+    display: flex;
     justify-content: space-between;
 }
 
 .transfer-double-content-left {
     display: inline-block;
     width: 500px;
-    height: 512px;
-    border: 1px solid #eee;
-    border-radius: 2px;
+    height: 519px;
+    border: 1px solid grey;
+    border-radius: 10px;
     float: left;
 }
 
 .transfer-double-content-middle {
     display: inline-block;
-    width: 35px;
+    width: 75px;
     float: left;
     margin: 20% 15px 0 15px;
     text-align: center;
@@ -182,9 +185,9 @@
 .transfer-double-content-right {
     display: inline-block;
     width: 500px;
-    height: 512px;
-    border: 1px solid #eee;
-    border-radius: 2px;
+    height: 519px;
+    border: 1px solid grey;
+    border-radius: 10px;
 }
 
 .transfer-double-content-param {
@@ -192,7 +195,6 @@
     width: 100%;
     height: 36px;
     line-height: 36px;
-    border-bottom: 1px solid #eee;
     text-align: center;
 }
 
@@ -213,12 +215,14 @@
 }
 
 .transfer-double-list-search-input {
-    width: 100%;
+    width: 445px;
     height: auto;
     line-height: 24px;
-    border: 1px solid #ddd;
-    padding: 5px 0 4px 8px;
-    border-radius: 2px;
+    border-color: #6c757d;
+    background-color: #474c52;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 8px;
 }
 
 .transfer-double-list-content {
@@ -236,9 +240,11 @@
     margin: 0;
 }
 
-.transfer-double-list-main .transfer-double-list-ul .transfer-double-list-li {
-    margin-top: 5px;
-}
+    .transfer-double-list-main .transfer-double-list-ul .transfer-double-list-li {
+        margin-top: 10px;
+        margin-right: 20px;
+        border-bottom: 1px solid gray;
+    }
 
 .transfer-double-list-main .transfer-double-list-ul .transfer-double-list-li input {
     margin-right: 10px;
@@ -268,12 +274,14 @@
 }
 
 .transfer-double-selected-list-search-input {
-    width: 100%;
+    width: 445px;
     height: auto;
     line-height: 24px;
-    border: 1px solid #ddd;
-    padding: 5px 0 4px 8px;
-    border-radius: 2px;
+    border-color: #6c757d;
+    background-color: #474c52;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 8px;
 }
 
 .transfer-double-selected-list-content {
@@ -292,9 +300,11 @@
     margin: 0;
 }
 
-.transfer-double-selected-list-main .transfer-double-selected-list-ul .transfer-double-selected-list-li {
-    margin-top: 5px;
-}
+    .transfer-double-selected-list-main .transfer-double-selected-list-ul .transfer-double-selected-list-li {
+        margin-top: 10px;
+        margin-right: 20px;
+        border-bottom: 1px solid gray;
+    }
 
 .transfer-double-selected-list-main .transfer-double-selected-list-ul .transfer-double-selected-list-li .checkbox-group {
     width: 65%;
@@ -317,7 +327,7 @@
     border-top: 1px solid #ddd;
     padding-left: 18px;
     color: #999;
-    padding-top: 1px;
+    padding-top: 4px;
 }
 
 .transfer-double-list-footer span {
@@ -346,14 +356,24 @@
     text-align: right;
 }
 
-.btn-select-arrow {
+.btn-select-arrow:first-child {
     display: inline-block;
-    width: 34px;
-    height: 28px;
-    line-height: 28px;
-    color: #bbb;
-    background: #e0e0e0;
-    border-radius: 50px
+    width: 75px;
+    height: 45px;
+    line-height: 45px;
+    color: #fff;
+    background: #009670;
+    border-radius: 25px;
+}
+
+.btn-select-arrow:last-child {
+    display: inline-block;
+    width: 75px;
+    height: 45px;
+    line-height: 45px;
+    color: #fff;
+    background: #e12e1c;
+    border-radius: 25px;
 }
 
 .btn-select-arrow + .btn-select-arrow {

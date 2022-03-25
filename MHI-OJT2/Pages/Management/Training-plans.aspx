@@ -272,12 +272,12 @@
             })
         }
         function clearInput() {
-            $('#<%= hiddenIdAddModal.ClientID %>').val()
-            $('#<%= planName.ClientID %>').val()
-            $('#<%= refDocument.ClientID %>').val()
-            $('#<%= department.ClientID %>').val()
-            $('#<%= frequency.ClientID %>').val()
-            $('#<%= hours.ClientID %>').val()
+            $('#<%= hiddenIdAddModal.ClientID %>').val('')
+            $('#<%= planName.ClientID %>').val('')
+            $('#<%= refDocument.ClientID %>').val('')
+            $('#<%= department.ClientID %>').val('')
+            $('#<%= frequency.ClientID %>').val('')
+            $('#<%= hours.ClientID %>').val('')
             $('#<%= SM_MG.ClientID %>').prop('checked', 0)
             $('#<%= SAM_AM.ClientID %>').prop('checked', 0)
             $('#<%= SEG_SV.ClientID %>').prop('checked', 0)
@@ -285,8 +285,8 @@
             $('#<%= FM.ClientID %>').prop('checked', 0)
             $('#<%= LD_SEP_EP.ClientID %>').prop('checked', 0)
             $('#<%= OP.ClientID %>').prop('checked', 0)
-            $('#<%= trainer.ClientID %>').val()
-            $('#<%= date.ClientID %>').val()
+            $('#<%= trainer.ClientID %>').val('')
+            $('#<%= date.ClientID %>').val('')
         }
     </script>
 </asp:Content>

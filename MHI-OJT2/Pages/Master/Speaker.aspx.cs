@@ -19,8 +19,8 @@ namespace MHI_OJT2.Pages.Master
 			Auth.CheckLoggedIn();
              if (!IsPostBack)
             {
-				string role = Session["roles"].ToString().ToLower();
-				if (role == "user")
+				bool havePermisstion = (bool)Session["isEditMaster"];
+				if (havePermisstion == false)
 				{
 					Response.Redirect(Auth._403);
 				}

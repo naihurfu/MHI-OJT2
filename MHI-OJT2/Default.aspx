@@ -213,8 +213,10 @@
     </div>
 </asp:Content>
 <asp:Content ID="ScriptContent" ContentPlaceHolderID="script" runat="server">
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-autocolors"></script>
     <script type="text/javascript">
         (function () {
+            const autocolors = window['chartjs-plugin-autocolors'];
             // call chart data
             let id = `<%= Session["userId"] %>`
             let role = `<%= Session["roles"].ToString().ToLower() %>`
@@ -230,6 +232,7 @@
 
                     let labels = data.map((item) => item.labels);
                     let datas = data.map((item) => item.datas);
+
                     // create chart 
                     const ctx = document.getElementById('score-chart').getContext('2d');
                     new Chart(ctx, {
@@ -238,22 +241,10 @@
                             labels: labels,
                             datasets: [{
                                 data: datas,
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 1)',
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                    'rgba(75, 192, 192, 1)',
-                                    'rgba(153, 102, 255, 1)',
-                                    'rgba(255, 159, 64, 1)'
-                                ],
-                                borderColor: [
-                                    'rgba(255, 99, 132, 1)',
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                    'rgba(75, 192, 192, 1)',
-                                    'rgba(153, 102, 255, 1)',
-                                    'rgba(255, 159, 64, 1)'
-                                ],
+                                backgroundColor: Array.from({ length: datas.length }, (x, i) => {
+                                    return getColor()
+                                }),
+                                borderColor: [],
                                 borderWidth: 0
                             }]
                         },
@@ -284,7 +275,11 @@
                     console.log(err)
                 }
             });
-
+            function getColor() {
+                return "hsla(" + ~~(360 * Math.random()) + "," +
+                    "70%," +
+                    "80%,1)"
+            }
         })();
         
         var allCourseCountTable = []

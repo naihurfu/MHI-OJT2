@@ -26,7 +26,7 @@
         }
 
         table.dataTable thead .sorting_asc {
-           background-image: none !important;
+            background-image: none !important;
         }
 
         .dataTables_wrapper {
@@ -53,58 +53,67 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body" style="padding: 1.25rem 1.25rem 0 !important">
-                        <table class="hover" id="evaluateTable"  style="width: 100%; border-top: 1px solid #ccc; margin-top: 20px 0 !important;">
-                            <thead>
-                                <tr>
-                                    <th scope="col" class="no-sort">รหัสพนักงาน</th>
-                                    <th scope="col" class="no-sort">ชื่อ-สกุล</th>
-                                    <th scope="col" class="topic-score no-sort">1.ความรู้ในงานและหน้าที่ (Knowledge in work and duties)</th>
-                                    <th scope="col" class="topic-score no-sort">2.คุณภาพของงาน (Quality of work)</th>
-                                    <th scope="col" class="topic-score no-sort">3.ความไว้วางใจ ความรับผิดชอบต่อหน้าที่ (Reliability, Responsibi-lity for duties )</th>
-                                    <th scope="col" class="topic-score no-sort">4.ความสามารถในการทำงานตามระยะเวลาที่กำหนด (Ability to work on time)</th>
-                                    <th scope="col" class="topic-score no-sort">5.การปฎิบัติงานตามขั้นตอนเอกสารที่กำหนด (Working follow documents procedure to define)</th>
-                                    <th scope="col" class="topic-score no-sort">ผลการฝึกอบรม (Training Result)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <asp:Repeater ID="RepeatCourseTable" runat="server">
-                                    <ItemTemplate>
-                                        <tr class="row__data" data-personId='<%# Eval("PersonID") %>'>
-                                            <td>
-                                                <%# Eval("PersonCode") %>
-                                            </td>
-                                            <td style="white-space: nowrap">
-                                                <%# Eval("EMPLOYEE_NAME_TH") %>
-                                            </td>
-                                            <td>
-                                                <input type="number" min="0" max="5" value='<%# Eval("SCORE_1") %>' class='<%# "form-control input__score input__score__1__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 1)' />
-                                            </td>
-                                            <td>
-                                                <input type="number" min="0" max="5" value='<%# Eval("SCORE_2") %>' class='<%# "form-control input__score input__score__2__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 2)' />
-                                            </td>
-                                            <td>
-                                                <input type="number" min="0" max="5" value='<%# Eval("SCORE_3") %>' class='<%# "form-control input__score input__score__3__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 3)' />
-                                            </td>
-                                            <td>
-                                                <input type="number" min="0" max="5" value='<%# Eval("SCORE_4") %>' class='<%# "form-control input__score input__score__4__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 4)' />
-                                            </td>
-                                            <td>
-                                                <input type="number" min="0" max="5" value='<%# Eval("SCORE_5") %>' class='<%# "form-control input__score input__score__5__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 5)' />
-                                            </td>
-                                            <td>
-                                                <input type="number" value='<%# Eval("TOTAL_SCORE") %>' class='<%# "form-control total__score__" + Eval("EVALUATE_ID").ToString() %>' disabled="disabled" />
-                                            </td>
-                                        </tr>
-                                    </ItemTemplate>
-                                </asp:Repeater>
-                            </tbody>
-                        </table>
+                    <table class="hover" id="evaluateTable" style="width: 100%; border-top: 1px solid #ccc; margin-top: 20px 0 !important;">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="no-sort">รหัสพนักงาน</th>
+                                <th scope="col" class="no-sort">ชื่อ-สกุล</th>
+                                <th scope="col" class="topic-score no-sort">1.ความรู้ในงานและหน้าที่ (Knowledge in work and duties)</th>
+                                <th scope="col" class="topic-score no-sort">2.คุณภาพของงาน (Quality of work)</th>
+                                <th scope="col" class="topic-score no-sort">3.ความไว้วางใจ ความรับผิดชอบต่อหน้าที่ (Reliability, Responsibi-lity for duties )</th>
+                                <th scope="col" class="topic-score no-sort">4.ความสามารถในการทำงานตามระยะเวลาที่กำหนด (Ability to work on time)</th>
+                                <th scope="col" class="topic-score no-sort">5.การปฎิบัติงานตามขั้นตอนเอกสารที่กำหนด (Working follow documents procedure to define)</th>
+                                <th scope="col" class="topic-score no-sort">ผลการฝึกอบรม (Training Result)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <asp:Repeater ID="RepeatCourseTable" runat="server">
+                                <ItemTemplate>
+                                    <tr class="row__data" data-personid='<%# Eval("PersonID") %>'>
+                                        <td>
+                                            <%# Eval("PersonCode") %>
+                                        </td>
+                                        <td style="white-space: nowrap">
+                                            <%# Eval("EMPLOYEE_NAME_TH") %>
+                                        </td>
+                                        <td>
+                                            <input type="number" min="0" max="5" value='<%# Eval("SCORE_1") %>' class='<%# "form-control input__score input__score__1__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 1)' />
+                                        </td>
+                                        <td>
+                                            <input type="number" min="0" max="5" value='<%# Eval("SCORE_2") %>' class='<%# "form-control input__score input__score__2__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 2)' />
+                                        </td>
+                                        <td>
+                                            <input type="number" min="0" max="5" value='<%# Eval("SCORE_3") %>' class='<%# "form-control input__score input__score__3__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 3)' />
+                                        </td>
+                                        <td>
+                                            <input type="number" min="0" max="5" value='<%# Eval("SCORE_4") %>' class='<%# "form-control input__score input__score__4__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 4)' />
+                                        </td>
+                                        <td>
+                                            <input type="number" min="0" max="5" value='<%# Eval("SCORE_5") %>' class='<%# "form-control input__score input__score__5__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 5)' />
+                                        </td>
+                                        <td>
+                                            <input type="number" value='<%# Eval("TOTAL_SCORE") %>' class='<%# "form-control total__score__" + Eval("EVALUATE_ID").ToString() %>' disabled="disabled" />
+                                        </td>
+                                    </tr>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="card-footer">
                     <div class="row justify-content-end">
                         <input type="hidden" runat="server" id="hiddenCourseId" />
+
+                        <% if (_isEvaluation == 1)
+                            { %>
                         <button type="button" class="btn btn-warning" onclick="saved(true)">บันทึก (ร่าง)</button>
                         <button type="button" class="btn btn-success ml-2 w-25" onclick="saved(false)">บันทึก</button>
+                        <% }
+                            else
+                            { %>
+                        <button type="button" class="btn btn-success mr-2 w-25" onclick="handleApprove(1)">อนุมัติ</button>
+                        <button type="button" class="btn btn-danger " onclick="handleApprove(0)">ไม่อนุมัติ</button>
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -142,6 +151,9 @@
                     }
                 }
             });
+            if (!<%= _isEvaluation %>) {
+                $('.input__score').attr('disabled', 'disabled');
+            }
         })();
 
         function calculate(id, inputNumber) {
@@ -163,6 +175,7 @@
             }
         }
 
+        // hidden function if is evaluation !== 1
         function saved(isDraft) {
             var row = $('.row__data')
             var evaluatedList = []
@@ -196,6 +209,8 @@
                 evaluatedList.push(person)
             }
 
+            <% if (_isEvaluation == 1)
+            { %>
             if (evaluatedList.length > 0) {
                 $.ajax({
                     url: "/Pages/Management/Evaluation.aspx/SaveEvaluateResults",
@@ -208,6 +223,36 @@
                     }
                 });
             }
+            <% } %>
+        }
+        function handleApprove(isApprove) {
+            let body = {}
+            body.APPROVE_ID = `${<%= _approveId %>}`
+            body.COURSE_ID = `${<%= _courseId %>}`
+            body.APPROVAL_SEQUENCE = `${<%= _approveSequence %>}`
+            body.IS_APPROVE = isApprove
+
+            $.ajax({
+                type: "POST",
+                url: "/Pages/Management/Approval.aspx/HandleApprove",
+                data: "{ '_ApproveResult': " + JSON.stringify(body) + " }",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (results) {
+                    switch (results.d) {
+                        case "ERROR":
+                            Swal.fire('Error!', 'Network connection encountered a problem. Please try again later.', 'error')
+                            break
+
+                        default:
+                            window.location.href = window.location.protocol + "//" + window.location.host + "/Pages/Management/Approval.aspx"
+
+                    }
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            });
         }
     </script>
 </asp:Content>

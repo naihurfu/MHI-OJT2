@@ -14,18 +14,39 @@ namespace MHI_OJT2.Pages.Management
     public partial class Evaluation : System.Web.UI.Page
     {
         public static int _courseId = 0;
+        public static int _isEvaluation = 0;
+        public static int _approveId = 0;
+        public static int _approveSequence = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
 			Auth.CheckLoggedIn();
             if (!IsPostBack)
             {
+                GetCourseIdFromSession();
                 string role = Session["roles"].ToString().ToLower();
                 if (role == "user")
                 {
-                    Response.Redirect(Auth._403);
+                    int personId = int.Parse(Session["userId"].ToString());
+                    if (CheckIsApprover(_courseId, personId) == 0)
+                    {
+                        Response.Redirect(Auth._403);
+                    }
                 }
 
-                GetCourseIdFromSession();
+            }
+        }
+        static int CheckIsApprover(int courseId, int personId)
+        {
+            try
+            {
+                string query = $"SELECT * FROM APPROVAL WHERE COURSE_ID = {courseId} AND PERSON_ID = {personId}";
+                DataTable dt = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return 0;
             }
         }
         void GetCourseIdFromSession()
@@ -35,9 +56,15 @@ namespace MHI_OJT2.Pages.Management
                 if (Session["EVALUATE_COURSE_ID"] != null)
                 {
                     int courseId = int.Parse(Session["EVALUATE_COURSE_ID"].ToString());
+                    int approveId = int.Parse(Session["EVALUATE_APPROVE_ID"].ToString());
+                    int approveSequence = int.Parse(Session["EVALUATE_APPROVAL_SEQUENCE"].ToString());
+                    int isEvaluation = int.Parse(Session["IS_EVALUATION"].ToString());
                     if (courseId > 0)
                     {
+                        _isEvaluation = isEvaluation;
                         _courseId = courseId;
+                        _approveId = approveId;
+                        _approveSequence = approveSequence;
 
                         string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
                         SqlParameterCollection param = new SqlCommand().Parameters;
@@ -54,14 +81,17 @@ namespace MHI_OJT2.Pages.Management
                             RepeatCourseTable.DataBind();
 
                             Session.Remove("EVALUATE_COURSE_ID");
+                            Session.Remove("EVALUATE_APPROVE_ID");
+                            Session.Remove("EVALUATE_APPROVAL_SEQUENCE");
+                            Session.Remove("IS_EVALUATION");
                         } else
                         {
-                            throw new Exception("Not found employee in training course, Please choose employee into training course.");
+                            throw new Exception("ไม่พนักงานในหลักสูตร กรุณาตรวจสอบรายชื่อที่เข้าร่วมอบรมอีกครั้ง");
                         }
                     };
                 } else
                 {
-                    Response.Redirect("~/Pages/Management/Courses.aspx");
+                    Response.Redirect("~/Pages/Error/403.aspx");
                 }
             } catch(Exception ex)
             {

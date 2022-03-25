@@ -305,8 +305,9 @@ table.dataTable {
             border: 1px solid #aaa;
             border-radius: 3px;
             padding: 5px;
-            background-color: transparent;
-            padding: 4px
+            background-color: #343a40;
+            padding: 4px;
+            color: #fff;
         }
 
     .dataTables_wrapper .dataTables_filter {

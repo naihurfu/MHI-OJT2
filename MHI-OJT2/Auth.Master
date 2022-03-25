@@ -54,6 +54,18 @@
                 Swal.fire(title, message, type);
             }
 
+            function toasts(title, body, className = "bg-warning", icon = "fas fa-exclamation-triangle", delay = 3000) {
+                $(document).Toasts('create', {
+                    title: title,
+                    body: body,
+                    icon: icon,
+                    class: className,
+                    delay: delay,
+                    autoremove: true,
+                    autohide: true,
+                    fade: true
+                })
+            }
             function SQLDateToInput(date) {
                 let yyyyMMdd = date.split('T')[0].split('-')
                 let year = yyyyMMdd[0]
@@ -64,7 +76,7 @@
             }
         </script>
 
-        <div class="wrapper">                                     
+        <div class="wrapper"> 
             <!-- Navbar -->
             <nav class="main-header navbar navbar-expand navbar-dark ">
                 <!-- Left navbar links -->
@@ -95,13 +107,12 @@
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right dark-mode">
                             <% if (notificationCount > 0)
                                 { %>
-                            <span class="dropdown-header text-light">คุณมีคำขอ <%= notificationCount %> รายการที่ต้องอนุมัติ</span>
+                            <span class="dropdown-header text-light">คุณมีคำขอ <%= notificationCount >= 10 ? $" มากกว่า {notificationCount.ToString()} " : notificationCount.ToString() %> รายการที่ต้องอนุมัติ</span>
                             <div class="dropdown-divider"></div>
                             <asp:Repeater ID="RepeatNotification" runat="server">
                                 <ItemTemplate>
                                     <a href="#" class="dropdown-item list__approval" data-course-id='<%# Eval("COURSE_ID") %>' data-approval-id='<%# Eval("APPROVAL_ID") %>' data-approval-sequence='<%# Eval("APPROVAL_SEQUENCE") %>' data-course-number='<%# Eval("COURSE_NUMBER") %>' data-course-department='<%# Eval("DEPARTMENT_NAME") %>' data-course-name='<%# Eval("COURSE_NAME") %>'>
                                         <%# Eval("COURSE_NAME") %>
-                                        <span class="float-right text-muted text-sm"><%# Eval("COURSE_NUMBER") %></span>
                                     </a>
                                     <div class="dropdown-divider"></div>
                                 </ItemTemplate>
@@ -270,7 +281,7 @@
                                 </a>
                             </li>
 
-                            <% if (Session["roles"].ToString().ToLower() != "user")
+                            <% if (Session["isEditMaster"].ToString() == "1")
                                 {%>
                             <li class="nav-header">ตั้งค่าข้อมูลหลัก</li>
                             <li class="nav-item">
@@ -379,7 +390,6 @@
 
                 return newValue.split('').map((v, i) => dayOrMonth(i) ? v + '/' : v).join('');;
             }
-
             $('.mark__read').on('click', function (e) {
                 e.preventDefault();
                 $.ajax({
@@ -398,7 +408,31 @@
                     }
                 });
             })
-            //data-course-number='<%# Eval("COURSE_NUMBER") %>' data-course-department='<%# Eval("DEPARTMENT") %>'
+
+            function ShowScore(data) {
+                console.log(JSON.stringify(data))
+                $.ajax({
+                    type: "POST",
+                    url: "/Pages/Management/Approval.aspx/ShowScore",
+                    data: "{ '_ApproveResult': " + JSON.stringify(data) + " }",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (results) {
+                        switch (results.d) {
+                            case "ERROR":
+                                Swal.fire('Error!', 'Network connection encountered a problem. Please try again later.', 'error')
+                                break
+
+                            default:
+                                window.location.href = window.location.protocol + "//" + window.location.host + "/Pages/Management/Evaluation.aspx"
+
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                });
+            }
             $('.list__approval').on('click', function (e) {
                 e.preventDefault();
                 Swal.fire({
@@ -413,6 +447,7 @@
                                <p class='text-left'>
                                   <b>ชื่อหลักสูตร : </b> ${$(this).data("course-name")}
                                </p>
+                               <button type="button" class="btn btn-sm btn-block btn-info my-2" onclick="ShowScore({'APPROVE_ID': ${$(this).data('approval-id')},'COURSE_ID': ${$(this).data('course-id')},'APPROVAL_SEQUENCE': ${$(this).data('approval-sequence')}})">ดูผลประเมิน</button>
                            </div>`,
                     showCancelButton: true,
                     showConfirmButton: true,
@@ -450,14 +485,15 @@
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (results) {
+                                console.log(results.d)
                                 switch (results.d) {
                                     case "ERROR":
                                         Swal.fire('Error!', 'Network connection encountered a problem. Please try again later.', 'error')
                                         break
 
-                                    default:
+                                    case "APPROVED":
                                         window.location.href = window.location.href;
-
+                                        break
                                 }
                             },
                             error: function (err) {

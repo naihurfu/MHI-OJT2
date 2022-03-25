@@ -14,7 +14,7 @@ namespace MHI_OJT2
 {
     public partial class Auth : MasterPage
     {
-        string _sessionAlert = String.Empty;
+        string _sessionAlert = null;
 		public static string _403 = "~/Pages/Error/403.aspx";
 		static string _firstName = String.Empty;
 		static string _lastName = String.Empty;
@@ -25,10 +25,16 @@ namespace MHI_OJT2
 
 		protected void Page_Load(object sender, EventArgs e)
 			{
+				CheckLoggedIn();
+				CheckAlertSession();
 				if (!IsPostBack)
 				{
-					CheckLoggedIn();
-					CheckAlertSession();
+					if (Request.Cookies["alert"] != null)
+					{
+						ClearCookie("alert");
+						Alert("success", "สำเร็จ!", "บันทึกข้อมูลการอนุมัติเรียบร้อยแล้ว");
+					}
+
 					int userId = int.Parse(Session["userId"].ToString());
 					CheckPermissionAndRedirect();
 					if (Session["roles"].ToString().ToLower() == "user")
@@ -42,7 +48,15 @@ namespace MHI_OJT2
 
 					}
 				}
-			}
+		}
+		public void	ClearCookie(string name)
+        {
+			HttpCookie cookie = HttpContext.Current.Request.Cookies[name];
+			HttpContext.Current.Response.Cookies.Remove(name);
+			cookie.Expires = DateTime.Now.AddDays(-10);
+			cookie.Value = null;
+			HttpContext.Current.Response.SetCookie(cookie);
+		}
 		void CheckAlertSession()
 		{
 			_sessionAlert = null;
@@ -65,7 +79,7 @@ namespace MHI_OJT2
 		void GetNotification(int userId)
 		{
 				
-			DataTable dt = Approval.GetApproveList(userId);
+			DataTable dt = SQL.GetDataTable($"EXEC SP_APPROVAL_LIST {userId}, 10", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
 			notificationCount = dt.Rows.Count;
 			
 			RepeatNotification.DataSource = dt;

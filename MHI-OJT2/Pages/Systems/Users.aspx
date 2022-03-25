@@ -14,12 +14,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Users</h1>
+                    <h1 class="m-0">จัดการผู้ใช้ระบบ</h1>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-6">
                     <div class="float-sm-right">
-                        <button type="button" class="btn btn-primary" onclick="handleShowModal('add', {})">Create</button>
+                        <button type="button" class="btn btn-primary" onclick="handleShowModal('add', {})">เพิ่มผู้ใช้งาน</button>
                     </div>
                 </div>
                 <!-- /.col -->
@@ -38,14 +38,14 @@
                     <table class="hover nowrap" style="width: 100%">
                         <thead>
                             <tr>
-                                <th class="text-center">No.</th>
-                                <th>Username</th>
-                                <th>Full Name</th>
-                                <th class="text-center">Position</th>
-                                <th class="text-center">Permission</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Created At</th>
-                                <th class="text-center">Tools</th>
+                                <th class="text-center">ลำดับ</th>
+                                <th>ชื่อผู้ใช้งาน</th>
+                                <th>ชื่อ-สกุล</th>
+                                <th>ตำแหน่ง</th>
+                                <th class="text-center">สิทธิ์การใช้งาน</th>
+                                <th class="text-center">สถานะใช้งาน</th>
+                                <th class="text-center">สร้างเมื่อ</th>
+                                <th class="text-center">เครื่องมือ</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -57,8 +57,8 @@
                                         </th>
                                         <td><%# Eval("USERNAME") %></td>
                                         <td><%# (string)Eval("INITIAL_NAME") + ' ' + (string)Eval("FIRST_NAME") + ' ' + (string)Eval("LAST_NAME") %></td>
-                                        <td class="text-center"><%# Eval("POSITION_NAME") %></td>
-                                        <td class="text-center"><%# Eval("ROLES") %></td>
+                                        <td><%# Eval("POSITION_NAME") %></td>
+                                        <td class="text-center"><%# Eval("ROLES").ToString().ToUpper() %></td>
                                         <td class="text-center">
                                             <span class='<%# (Boolean)Eval("IS_ACTIVE") == true ? "badge badge-success" : "badge badge-danger" %>'>
                                                 <%# (Boolean)Eval("IS_ACTIVE") == true ? "ACTIVE" : "INACTIVE" %> 
@@ -70,10 +70,10 @@
                                                 <button type="button" class="btn btn-success" onclick="handleShowModal('change-password', { ID:<%# Eval("ID") %>,USERNAME: '<%# Eval("USERNAME") %>', INITIAL_NAME: '<%# Eval("INITIAL_NAME") %>', FIRST_NAME : '<%# Eval("FIRST_NAME") %>', LAST_NAME : '<%# Eval("LAST_NAME") %>', POSITION_NAME : '<%# Eval("POSITION_NAME") %>', ROLES : '<%# Eval("ROLES") %>' })">
                                                     <i class="fas fa-key"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-warning" onclick="handleShowModal('edit', { ID:<%# Eval("ID") %>,USERNAME: '<%# Eval("USERNAME") %>', INITIAL_NAME: '<%# Eval("INITIAL_NAME") %>', FIRST_NAME : '<%# Eval("FIRST_NAME") %>', LAST_NAME : '<%# Eval("LAST_NAME") %>', POSITION_NAME : '<%# Eval("POSITION_NAME") %>', ROLES : '<%# Eval("ROLES") %>' })">
+                                                <button type="button" class="btn btn-warning" onclick="handleShowModal('edit', { ID:<%# Eval("ID") %>,USERNAME: '<%# Eval("USERNAME") %>', INITIAL_NAME: '<%# Eval("INITIAL_NAME") %>', FIRST_NAME : '<%# Eval("FIRST_NAME") %>', LAST_NAME : '<%# Eval("LAST_NAME") %>', POSITION_NAME : '<%# Eval("POSITION_NAME") %>', ROLES : '<%# Eval("ROLES") %>', IS_EDIT_MASTER : <%# (Boolean)Eval("IS_EDIT_MASTER") == true ? 1 : 0 %> })">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-danger" onclick="handleShowModal('delete', { ID:<%# Eval("ID") %>,USERNAME: '<%# Eval("USERNAME") %>', INITIAL_NAME: '<%# Eval("INITIAL_NAME") %>', FIRST_NAME : '<%# Eval("FIRST_NAME") %>', LAST_NAME : '<%# Eval("LAST_NAME") %>', POSITION_NAME : '<%# Eval("POSITION_NAME") %>', ROLES : '<%# Eval("ROLES") %>'  })">
+                                                <button type="button" class="btn btn-danger" onclick="handleShowModal('delete', { ID:<%# Eval("ID") %>,USERNAME: '<%# Eval("USERNAME") %>', INITIAL_NAME: '<%# Eval("INITIAL_NAME") %>', FIRST_NAME : '<%# Eval("FIRST_NAME") %>', LAST_NAME : '<%# Eval("LAST_NAME") %>', POSITION_NAME : '<%# Eval("POSITION_NAME") %>', ROLES : '<%# Eval("ROLES") %>', IS_EDIT_MASTER : <%# (Boolean)Eval("IS_EDIT_MASTER") == true ? 1 : 0 %>  })">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>
@@ -92,7 +92,7 @@
 </asp:Content>
 <asp:Content ID="ModalContent" ContentPlaceHolderID="modal" runat="server">
     <div class="modal fade" id="crudModal" tabindex="-1" aria-labelledby="crudModal" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="box-shadow: none !important;">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered" style="box-shadow: none !important;">
             <div class="modal-content dark-mode">
                 <div class="modal-header">
                     <h5 class="modal-title text-light" id="titleModal"></h5>
@@ -103,54 +103,81 @@
                 <div class="modal-body">
                     <div id="crud-container">
                         <div class="form-group">
-                            <label>ชื่อผู้ใช้งาน / Username</label>
-                            <input type="text" class="form-control" id="username" runat="server">
+                            <label>ชื่อผู้ใช้งาน</label>
+                            <input type="text" class="form-control" id="username" runat="server" autocomplete="off">
                         </div>
-                        <div class="add-password">
-                            <div class="form-group">
-                                <label>รหัสผ่าน / Password</label>
-                                <input type="password" class="form-control" id="addPassword" runat="server" autocomplete="off">
+                        <div class="add-password row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>รหัสผ่าน</label>
+                                    <input type="password" class="form-control" id="addPassword" runat="server" autocomplete="off">
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>ยืนยันรหัสผ่าน / Password Confirm</label>
-                                <input type="password" class="form-control" id="addConfirmPassword" runat="server" autocomplete="off">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>ยืนยันรหัสผ่าน</label>
+                                    <input type="password" class="form-control" id="addConfirmPassword" runat="server" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <hr style="border-top: 1px solid rgba(255,255,255,0.3)" />
+                        <div class="row">
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label>คำนำหน้าชื่อ</label>
+                                    <input type="text" class="form-control" id="initialName" runat="server" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <label>ชื่อ</label>
+                                    <input type="text" class="form-control" id="firstName" runat="server" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <label>นามสกุล</label>
+                                    <input type="text" class="form-control" id="lastName" runat="server" autocomplete="off">
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>คำนำหน้าชื่อ / Initial name</label>
-                            <input type="text" class="form-control" id="initialName" runat="server">
+                            <label>ตำแหน่ง</label>
+                            <input type="text" class="form-control" id="positionName" runat="server" autocomplete="off">
                         </div>
-                        <div class="form-group">
-                            <label>ชื่อ / First name</label>
-                            <input type="text" class="form-control" id="firstName" runat="server">
-                        </div>
-                        <div class="form-group">
-                            <label>นามสกุล / Last name</label>
-                            <input type="text" class="form-control" id="lastName" runat="server">
-                        </div>
-                        <div class="form-group">
-                            <label>ตำแหน่ง / Position name</label>
-                            <input type="text" class="form-control" id="positionName" runat="server">
-                        </div>
-                        <div class="form-group">
-                            <label>สิทธ์การใช้งาน / Permission</label>
-                            <select class="form-control" id="roleName" runat="server">
-                                <option value="CLERK">CLERK</option>
-                                <option value="ADMIN">ADMIN</option>
-                            </select>
+                        <hr style="border-top: 1px solid rgba(255,255,255,0.3); margin-top: 2rem;" />
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>สิทธ์การใช้งาน</label>
+                                    <select class="form-control" id="roleName" runat="server">
+                                        <option value="CLERK">CLERK</option>
+                                        <option value="ADMIN">ADMIN</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>สิทธิ์ในการ เพิ่ม/ลบ/แก้ไข ข้อมูล Master</label>
+                                    <select class="form-control" id="editMaster" runat="server">
+                                        <option value="1">อนุญาต</option>
+                                        <option value="0">ไม่อนุญาต</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div id="change-password-container">
                         <div class="form-group">
-                            <label>รหัสผ่านเก่า / Old Password</label>
+                            <label>รหัสผ่านเก่า</label>
                             <input type="password" class="form-control" id="oldPassword" runat="server" autocomplete="off">
                         </div>
                         <div class="form-group">
-                            <label>รหัสผ่านใหม่ / New Password</label>
+                            <label>รหัสผ่านใหม่</label>
                             <input type="password" class="form-control" id="password" runat="server" autocomplete="off">
                         </div>
                         <div class="form-group">
-                            <label>ยืนยันรหัสผ่าน / New Password Confirm</label>
+                            <label>ยืนยันรหัสผ่าน</label>
                             <input type="password" class="form-control" id="confirmPassword" runat="server" autocomplete="off">
                         </div>
                     </div>
@@ -158,11 +185,11 @@
                 <div class="modal-footer" style="justify-content: end !important;">
                     <input type="hidden" id="oldUsername" runat="server">
                     <input type="hidden" id="hiddenId" runat="server" />
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด/Close</button>
-                    <button type="button" class="btn btn-success" id="btnChangePassword" runat="server" onserverclick="ChangePassword">เปลี่ยนรหัสผ่าน/Change password</button>
-                    <button type="button" class="btn btn-danger" id="btnDelete" runat="server" onserverclick="Delete">ลบ/Delete</button>
-                    <button type="button" class="btn btn-success" id="btnEdit" runat="server" onserverclick="Update">บันทึก/Save</button>
-                    <button type="button" class="btn btn-primary" id="btnAdd" runat="server" onserverclick="Create">บันทึก/Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                    <button type="button" class="btn btn-success" id="btnChangePassword" runat="server" onserverclick="ChangePassword">เปลี่ยนรหัสผ่าน</button>
+                    <button type="button" class="btn btn-danger" id="btnDelete" runat="server" onserverclick="Delete">ลบ</button>
+                    <button type="button" class="btn btn-success" id="btnEdit" runat="server" onserverclick="Update">บันทึก</button>
+                    <button type="button" class="btn btn-primary" id="btnAdd" runat="server" onserverclick="Create">บันทึก</button>
                 </div>
             </div>
         </div>
@@ -176,15 +203,27 @@
                 responsive: true,
                 scrollX: 500,
                 scrollCollapse: true,
-                scroller: true
+                scroller: true,
+                "oLanguage": {
+                    "sSearch": "ค้นหา :",
+                    "sLengthMenu": "แสดง _MENU_ รายการ"
+                },
+                "language": {
+                    "info": "แสดง _START_-_END_ รายการ ทั้งหมด _TOTAL_ รายการ",
+                    "paginate": {
+                        "previous": "ย้อนกลับ",
+                        "next": "หน้าถัดไป"
+                    }
+                }
             });
 
             $('.dataTables_filter label input').attr('autocomplete', 'off');
 
             setTimeout(function () {
                 $('.dataTables_filter label input').val('');
-            }, 1000)
+            }, 2000)
         })();
+
 
 
         // modal title
@@ -192,6 +231,8 @@
 
         // input variable
         var username = $('#<%= username.ClientID %>')
+        var addPassword = $('#<%= addPassword.ClientID %>')
+        var addConfirmPassword = $('#<%= addConfirmPassword.ClientID %>')
         var password = $('#<%= password.ClientID %>')
         var confirmPassword = $('#<%= confirmPassword.ClientID %>')
         var initialName = $('#<%= initialName.ClientID %>')
@@ -199,6 +240,7 @@
         var lastName = $('#<%= lastName.ClientID %>')
         var positionName = $('#<%= positionName.ClientID %>')
         var roleName = $('#<%= roleName.ClientID %>')
+        var editMaster = $('#<%= editMaster.ClientID %>')
 
         var oldUsername = $('#<%= oldUsername.ClientID %>')
         var hiddenId = $('#<%= hiddenId.ClientID %>')
@@ -216,15 +258,17 @@
             switch (action) {
                 case "add":
                     $('#crud-container').show()
-                    modalTitle.text('เพิ่มข้อมูล / Add data')
+                    modalTitle.text('เพิ่มผู้ใช้งาน')
                     btnAdd.show()
                     crudModal.modal('show')
+                    password.val('')
+                    confirmPassword.val('')
                     $('.add-password').show()
                     break
 
                 case "edit":
                     $('#crud-container').show()
-                    modalTitle.text('แก้ไขข้อมูล / Edit data')
+                    modalTitle.text('แก้ไขข้อมูล')
                     btnEdit.show()
 
                     username.val(data.USERNAME)
@@ -233,6 +277,7 @@
                     lastName.val(data.LAST_NAME)
                     positionName.val(data.POSITION_NAME)
                     roleName.val(data.ROLES.toUpperCase())
+                    editMaster.val(data.IS_EDIT_MASTER)
 
                     oldUsername.val(data.USERNAME)
                     hiddenId.val(data.ID)
@@ -243,7 +288,7 @@
 
                 case "delete":
                     $('#crud-container').show()
-                    modalTitle.text('ลบข้อมูล / Delete data ?')
+                    modalTitle.text('ลบข้อมูล?')
                     hiddenId.val(data.ID)
                     btnDelete.show()
 
@@ -265,6 +310,9 @@
                     roleName.val(data.ROLES.toUpperCase())
                     roleName.prop("disabled", "disabled")
 
+                    editMaster.val(data.IS_EDIT_MASTER)
+                    editMaster.prop("disabled", "disabled")
+
                     oldUsername.val(data.USERNAME)
                     hiddenId.val(data.ID)
 
@@ -272,7 +320,7 @@
                     break
 
                 case "change-password":
-                    modalTitle.text('เปลี่ยนรหัสผ่าน / Change password data')
+                    modalTitle.text('เปลี่ยนรหัสผ่าน')
                     $('#change-password-container').show()
                     hiddenId.val(data.ID)
                     crudModal.modal('show')
@@ -297,7 +345,8 @@
             firstName.val("")
             lastName.val("")
             positionName.val("")
-            roleName.val("")
+            roleName.val("CLERK")
+            editMaster.val(1)
             oldPassword.val("")
             password.val("")
             confirmPassword.val("")

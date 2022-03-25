@@ -98,6 +98,7 @@ namespace MHI_OJT2
             HttpContext.Current.Session["firstName"] = userData.Rows[0]["FIRST_NAME"];
             HttpContext.Current.Session["lastName"] = userData.Rows[0]["LAST_NAME"];
             HttpContext.Current.Session["roles"] = userData.Rows[0]["ROLES"];
+            HttpContext.Current.Session["isEditMaster"] = userData.Rows[0]["IS_EDIT_MASTER"]; 
 
             if (isUser == true)
             {
@@ -116,20 +117,20 @@ namespace MHI_OJT2
 
             SqlParameterCollection param = new SqlCommand().Parameters;
             param.AddWithValue("@username", SqlDbType.VarChar).Value = username;
-            string queryString = "SELECT person.PersonID ID";
-            queryString += ",person.PersonCode USERNAME";
-            queryString += ",usr.Pws [password]";
-            queryString += ",person.FnameT FIRST_NAME";
-            queryString += ",person.LnameT LAST_NAME";
-            queryString += ",'user' ROLES ";
-            queryString += ",position.PositionNameT positionNameTH ";
-            queryString += ",position.PositionNameE positionNameEN ";
-            queryString += "FROM PNT_Person person ";
-            queryString += "JOIN ADM_UserPws as usr ON person.PersonID = usr.PersonID ";
-            queryString += "JOIN PNM_Position position ON person.PositionID = position.PositionID ";
-            queryString += "WHERE person.PersonCode = @username ";
-            // where resign and delete person
-            queryString += "AND person.ResignStatus = 1 AND person.ChkDeletePerson = 1";
+            string queryString = "SELECT person.PersonID ID" +
+                ",person.PersonCode USERNAME" +
+                ",usr.Pws [password]" +
+                ",person.FnameT FIRST_NAME" +
+                ",person.LnameT LAST_NAME" +
+                ",'user' ROLES" +
+                ",0 IS_EDIT_MASTER" +
+                ",position.PositionNameT positionNameTH" +
+                ",position.PositionNameE positionNameEN " +
+                "FROM PNT_Person person " +
+                "JOIN ADM_UserPws as usr ON person.PersonID = usr.PersonID " +
+                "JOIN PNM_Position position ON person.PositionID = position.PositionID " +
+                "WHERE person.PersonCode = @username " +
+                "AND person.ResignStatus = 1 AND person.ChkDeletePerson = 1";
 
             DataTable dt = SQL.GetDataTableWithParams(queryString, TigerDB, param);
             return dt;

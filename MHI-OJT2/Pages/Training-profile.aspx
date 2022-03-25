@@ -33,6 +33,7 @@
                                 <th>ชื่อผู้เข้าอบรม</th>
                                         <%} %>
                                 <th class="text-center">แผนก</th>
+                                <th class="text-center">คะแนน</th>
                                 <th class="text-center">วันที่อบรม</th>
                             </tr>
                         </thead>
@@ -50,6 +51,8 @@
                                             <td><%# Eval("InitialT") %> <%# Eval("FnameT") %> <%# Eval("LnameT") %></td>
                                         <%} %>
                                         <td class="text-center"><%# Eval("DEPARTMENT_NAME") %></td>
+                                        <td class="text-center"><%# Eval("TOTAL_SCORE") %></td>
+
                                         <td class="text-center"><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:d MMMM yyyy}", Eval("START_DATE")) %></td>
                                     </tr>
                                 </ItemTemplate>

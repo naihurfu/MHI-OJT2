@@ -102,7 +102,7 @@ namespace MHI_OJT2
 
 				if (Session["roles"].ToString().ToLower() == "user")
                 {
-					query = $"SELECT " +
+					query = $"SELECT TOP 10 " +
 					" v.COURSE_NAME " +
 					",v.TIMES " +
 					",v.START_DATE " +
@@ -116,7 +116,7 @@ namespace MHI_OJT2
 				
 				if (Session["roles"].ToString().ToLower() == "clerk")
                 {
-					query = $"SELECT DISTINCT" +
+					query = $"SELECT DISTINCT TOP 10 " +
 					" v.COURSE_NAME " +
 					",v.TIMES " +
 					",v.START_DATE " +
@@ -130,7 +130,7 @@ namespace MHI_OJT2
 
 				if (Session["roles"].ToString().ToLower() == "admin")
 				{
-					query = $"SELECT DISTINCT" +
+					query = $"SELECT DISTINCT TOP 10" +
 					" v.COURSE_NAME " +
 					",v.TIMES " +
 					",v.START_DATE " +

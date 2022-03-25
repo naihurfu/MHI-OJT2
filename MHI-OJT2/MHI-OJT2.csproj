@@ -2013,6 +2013,7 @@
     <Content Include="Login.aspx" />
     <Content Include="Pages\Error\403.aspx" />
     <Content Include="Pages\Management\Approval.aspx" />
+    <Content Include="Pages\Management\Course-score.aspx" />
     <Content Include="Pages\Management\Courses.aspx" />
     <Content Include="Pages\Management\Evaluation.aspx" />
     <Content Include="Pages\Management\scan-barcode.aspx" />
@@ -2080,6 +2081,13 @@
     </Compile>
     <Compile Include="Pages\Management\Approval.aspx.designer.cs">
       <DependentUpon>Approval.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Management\Course-score.aspx.cs">
+      <DependentUpon>Course-score.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Management\Course-score.aspx.designer.cs">
+      <DependentUpon>Course-score.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Management\Courses.aspx.cs">
       <DependentUpon>Courses.aspx</DependentUpon>

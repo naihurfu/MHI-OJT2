@@ -13,6 +13,10 @@
             border: 1px solid #ced4da !important;
             border-radius: .25rem !important;
         }
+
+        label:not(.form-check-label):not(.custom-file-label) {
+             font-weight: 400 !important; 
+        }
     </style>
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="body" runat="server">
@@ -64,10 +68,10 @@
                                             <%# Container.ItemIndex + 1 %>
                                         </th>
                                         <td class="text-center">
-                                            <button class="btn btn-sm btn-primary btn__edit__course" data-id="<%# Eval("COURSE_ID") %>">แก้ไข</button>
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="handleEditCourse(<%# Eval("COURSE_ID") %>)">แก้ไข</button>
                                         </td>
                                         <td class="text-center">
-                                            <button class="btn btn-sm btn-link btn__view__course" data-id="<%# Eval("COURSE_ID") %>">แสดง</button>
+                                            <button type="button" class="btn btn-sm btn-link" onclick="handleViewCourseDetail(<%# Eval("COURSE_ID") %>)">แสดง</button>
                                         </td>
                                         <td><%# Eval("COURSE_NUMBER") %></td>
                                         <td><%# Eval("COURSE_NAME") %></td>
@@ -399,7 +403,7 @@
 
                                 var tableRow = `<tr>
                                                     <td class="text-center">${r.APPROVAL_SEQUENCE}</td>
-                                                    <td>${r.InitialE} ${r.FnameE} ${r.LnameE}</td>
+                                                    <td>${r.InitialT} ${r.FnameT} ${r.LnameT}</td>
                                                     <td class="text-center">
                                                         <span class="badge badge-${badgeColor}">${statusText} ${icon}</span>
                                                     </td>
@@ -439,6 +443,8 @@
                     employeeList.push(employee)
                 }
 
+                if (!employeeList.length) throw new Error('กรุณาเลือกพนักงานก่อนกดบันทึก')
+
                 $.ajax({
                     type: "POST",
                     url: "/Pages/Management/Courses.aspx/InsertEmployee",
@@ -446,6 +452,7 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: (res) => {
+                        $('#addEmployeeModal').modal('hide')
                         window.location.href = window.location.href;
                     },
                     error: function (err) {
@@ -453,10 +460,8 @@
                         sweetAlert("error", "Error!", err)
                     }
                 });
-            } catch (e) {
-                sweetAlert("error", "ผิดพลาด", "การเชื่อมต่อกับเครือข่ายล้มเหลว กรุณาลองใหม่อีกครั้ง.")
-            } finally {
-                $('#addEmployeeModal').modal('hide')
+            } catch (err) {
+                toasts("แจ้งเตือน", err.message)
             }
         };
 
@@ -498,15 +503,12 @@
                 $('.select-plan-container').find('div').find('button').addClass('disabled')
             }
         });
-        function validate() {
 
-        }
-        $('.btn__edit__course').on('click', function (e) {
-            e.preventDefault();
+        function handleEditCourse(courseId) {
             $.ajax({
                 type: "POST",
                 url: "/Pages/Management/Courses.aspx/GetCourseDetailById",
-                data: "{'courseId': " + $(this).attr('data-id') + "}",
+                data: "{'courseId': " + courseId + "}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (results) {
@@ -517,13 +519,13 @@
                     console.log(err)
                 }
             });
-        })
-        $('.btn__view__course').on('click', function (e) {
-            e.preventDefault();
+        }
+
+         function handleViewCourseDetail(id) {
             $.ajax({
                 type: "POST",
                 url: "/Pages/Management/Courses.aspx/GetCourseDetailById",
-                data: "{'courseId': " + $(this).attr('data-id') + "}",
+                data: "{'courseId': " + id + "}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (results) {
@@ -534,7 +536,7 @@
                     console.log(err)
                 }
             });
-        })
+        }
         function OpenModalViewOrEdit(type, data) {
             ClearInputValue()
             $('#addModal').modal('show')

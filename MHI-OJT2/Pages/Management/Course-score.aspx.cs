@@ -7,11 +7,11 @@ using System.Web.UI.WebControls;
 
 namespace MHI_OJT2.Pages.Management
 {
-    public partial class scan_barcode : System.Web.UI.Page
+    public partial class Course_score : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            Response.Redirect("~/Pages/Error/403.aspx");
+
         }
     }
 }

@@ -23,12 +23,13 @@ namespace MHI_OJT2.Pages.Management
             if (!IsPostBack)
             {
                 string role = Session["roles"].ToString().ToLower();
+                int userId = int.Parse(Session["userId"].ToString());
                 if (role == "user")
                 {
                     Response.Redirect(Auth._403);
                 }
 
-                GetMasterData();
+                GetMasterData(userId, role);
                 CheckAlertSession();
             }
         }
@@ -56,7 +57,7 @@ namespace MHI_OJT2.Pages.Management
                 Session.Remove("alert");
             }
         }
-        void GetMasterData()
+        void GetMasterData(int userId, string role)
         {
             // get connection string from web.config file
             string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
@@ -68,7 +69,17 @@ namespace MHI_OJT2.Pages.Management
             department.Items.Insert(0, new ListItem("-", "0"));
             department.SelectedIndex = 0;
 
-            RepeatTrainingPlanTable.DataSource = SQL.GetDataTable("SELECT p.* ,d.DEPARTMENT_NAME FROM TRAINING_PLAN p JOIN DEPARTMENT d ON d.ID = p.DEPARTMENT_ID", mainDb);
+            string query = "SELECT " +
+                "p.* ," +
+                "d.DEPARTMENT_NAME " +
+                "FROM TRAINING_PLAN p " +
+                "JOIN DEPARTMENT d ON d.ID = p.DEPARTMENT_ID ";
+
+            if (role == "clerk")
+            {
+                query += $"WHERE p.CREATED_BY = {userId}";
+            }
+            RepeatTrainingPlanTable.DataSource = SQL.GetDataTable(query, mainDb);
             RepeatTrainingPlanTable.DataBind();
         }
         void Alert(string type, string title, string message)

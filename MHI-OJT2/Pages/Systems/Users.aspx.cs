@@ -97,11 +97,14 @@ namespace MHI_OJT2.Pages.Systems
         }
 		protected void Create(object sender, EventArgs e)
 		{
+			
 			try
 			{
+				if (String.IsNullOrWhiteSpace(username.Value) == true) throw new Exception("กรุณากรอกชื่อผู้ใช้งานให้ถูกต้อง");
+
 				int checkDup = CheckUsernameDuplicate(username.Value);
-				if (checkDup > 0) throw new Exception("Username is already in use.");
-				if (addPassword.Value != addConfirmPassword.Value) throw new Exception("Password is not match.");
+				if (checkDup > 0) throw new Exception("ชื่อผู้ใช้ถูกใช้งานแล้ว กรุณาลองใหม่อีกครั้ง");
+				if (addPassword.Value != addConfirmPassword.Value) throw new Exception("รหัสผ่านไม่ตรงกัน กรุณาลองอีกครั้ง");
 
 				string MainDB = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
 				string query = "INSERT INTO SYSTEM_USERS (" +
@@ -112,6 +115,7 @@ namespace MHI_OJT2.Pages.Systems
 					",[LAST_NAME] " +
 					",[POSITION_NAME] " +
 					",[ROLES] " +
+					",[IS_EDIT_MASTER] " +
 					",[IS_ACTIVE]" +
 					") VALUES (" +
 					" @USERNAME " +
@@ -121,6 +125,7 @@ namespace MHI_OJT2.Pages.Systems
 					",@LAST_NAME " +
 					",@POSITION_NAME " +
 					",@ROLES " +
+					",@IS_EDIT_MASTER " +
 					",1)";
 				SqlParameterCollection param = new SqlCommand().Parameters;
 				param.AddWithValue("USERNAME", SqlDbType.VarChar).Value = username.Value;
@@ -130,6 +135,7 @@ namespace MHI_OJT2.Pages.Systems
 				param.AddWithValue("LAST_NAME", SqlDbType.VarChar).Value = lastName.Value;
 				param.AddWithValue("POSITION_NAME", SqlDbType.VarChar).Value = positionName.Value;
 				param.AddWithValue("ROLES", SqlDbType.VarChar).Value = roleName.Value;
+				param.AddWithValue("IS_EDIT_MASTER", SqlDbType.Bit).Value = editMaster.Value;
 				SQL.ExecuteWithParams(query, MainDB, param);
 
 				Session.Add("alert", "inserted");
@@ -137,7 +143,7 @@ namespace MHI_OJT2.Pages.Systems
 			}
 			catch (Exception ex)
 			{
-				Alert("error", "Failed!", DATA.RemoveSpecialCharacters(ex.Message));
+				Alert("error", "ผิดพลาด!", DATA.RemoveSpecialCharacters(ex.Message));
 			}
 		}
 		protected void Update(object sender, EventArgs e)
@@ -152,6 +158,7 @@ namespace MHI_OJT2.Pages.Systems
 					",[LAST_NAME]=@LAST_NAME " +
 					",[POSITION_NAME]=@POSITION_NAME " +
 					",[ROLES]=@ROLES " +
+					",[IS_EDIT_MASTER]=@IS_EDIT_MASTER " +
 					",[CREATED_AT]=GETDATE() " +
 					"WHERE ID=@ID";
 				SqlParameterCollection param = new SqlCommand().Parameters;
@@ -162,6 +169,7 @@ namespace MHI_OJT2.Pages.Systems
 				param.AddWithValue("LAST_NAME", SqlDbType.VarChar).Value = lastName.Value;
 				param.AddWithValue("POSITION_NAME", SqlDbType.VarChar).Value = positionName.Value;
 				param.AddWithValue("ROLES", SqlDbType.VarChar).Value = roleName.Value;
+				param.AddWithValue("IS_EDIT_MASTER", SqlDbType.Bit).Value = editMaster.Value;
 				SQL.ExecuteWithParams(query, MainDB, param);
 
 				Session.Add("alert", "updated");
