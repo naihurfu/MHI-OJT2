@@ -73,15 +73,14 @@
             align-items: center;
         }
 
-
-/*=============================================================================================*/
-.l{width:200px;}
-.daigonal{width:300px;}
-svg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
+        .daigonal {
+            width:300px;
+        }
+        svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
     </style>
     <style type="text/css" media="print">
         @page {
@@ -176,7 +175,7 @@ svg {
                     <button type="button" id="btnDownloadReport" class="btn btn-primary btn-block" onclick="GetReportData()">พิมพ์รายงาน</button>
                 </div>
             </div>
-            <div class="card">
+            <div class="card d-none">
                 <div class="card-body page" id="print_me">
                     <div class="d-flex justify-content-between" style="padding-bottom: 15px; vertical-align: middle;">
                         <img src="../../Reports/Pic/OJTlogo-report.png" />
@@ -286,9 +285,12 @@ svg {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.1/html2pdf.bundle.min.js" integrity="sha512-vDKWohFHe2vkVWXHp3tKvIxxXg0pJxeid5eo+UjdjME3DBFBn2F8yWOE0XmiFcFbXxrEOR1JriWEno5Ckpn15A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript">
         (function () {
-            let today = moment()
-            $('#<%= endDate.ClientID %>').val(today.format("DD/MM/YYYY"))
-            $('#<%= startDate.ClientID %>').val(today.subtract(30, 'days').format("DD/MM/YYYY"))
+            let today = moment();
+            let currentYears = today.year();
+            let startDate = moment(`${currentYears}-01-01`);
+            let endDate = moment(`${currentYears}-12-31`);
+            $('#<%= startDate.ClientID %>').val(startDate.format("DD/MM/YYYY"))
+            $('#<%= endDate.ClientID %>').val(endDate.format("DD/MM/YYYY"))
         })();
 
         function GetReportData() {
