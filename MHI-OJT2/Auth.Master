@@ -275,14 +275,6 @@
                                 {%>
                             <li class="nav-header">รายงาน</li>
                             <li class="nav-item">
-                                <a href="~/Pages/Reports/Training-plan-report.aspx" runat="server" class="nav-link">
-                                    <i class="nav-icon fas fa-calendar-alt"></i>
-                                    <p>
-                                        แผนการฝึกอบรม
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a href="~/Pages/Reports/Skill-map-report.aspx" runat="server" class="nav-link">
                                     <i class="nav-icon fas fa-pen-square"></i>
                                     <p>
