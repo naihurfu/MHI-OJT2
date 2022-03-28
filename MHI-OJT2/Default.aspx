@@ -26,13 +26,6 @@
             background-color: rgba(52, 58, 64, 0.3);
             cursor: pointer;
         }
-
-        .swal2-popup,
-        .swal2-modal,
-        .swal2-show {
-           background-color: #343a40 !important;
-           color: #fff !important;
-        }
     </style>
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="body" runat="server">
@@ -232,9 +225,9 @@
 
                     let labels = data.map((item) => item.labels);
                     let datas = data.map((item) => item.datas);
-
                     // create chart 
                     const ctx = document.getElementById('score-chart').getContext('2d');
+                    let delayed;
                     new Chart(ctx, {
                         type: 'bar',
                         data: {
@@ -245,29 +238,44 @@
                                     return getColor()
                                 }),
                                 borderColor: [],
-                                borderWidth: 0
+                                borderWidth: 0,
+                                borderRadius: 15,
                             }]
                         },
                         options: {
-                            responsive: true,
-                            legend: {
-                                display: false
-                            },
-                            scales: {
-                                yAxes: [{
-                                    display: true,
-                                    ticks: {
-                                        fontColor: 'white',
-                                        beginAtZero: true,
-                                        <%= (string)Session["roles"] == "user" ? "max: 100" : "" %>
+                            animation: {
+                                onComplete: () => {
+                                    delayed = true;
+                                },
+                                delay: (context) => {
+                                    let delay = 0;
+                                    if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                                        delay = context.dataIndex * 300 + context.datasetIndex * 100;
                                     }
-                                }],
-                                xAxes: [{
-                                    ticks: {
-                                        fontColor: 'white'
-                                    },
-                                }]
+                                    return delay;
+                                },
                             },
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            responsive: true,
+                            scales: {
+                                xAxis: {
+                                    ticks: {
+                                        color: 'rgba(255, 255, 255, 1)'
+                                    },
+                                },
+                                yAxis: {
+                                    precision: 0,
+                                    min: 0,
+                                    max: parseInt(`${<%= (string)Session["roles"] == "user" ? "100" : "Math.max(...datas) + 5" %>}`),
+                                    ticks: {
+                                        color: 'rgba(255, 255, 255, 1)'
+                                    },
+                                }
+                            }
                         }
                     });
                 },

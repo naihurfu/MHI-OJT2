@@ -30,7 +30,7 @@ namespace MHI_OJT2.Pages.Management
 
 				CheckAlertSession();
 				GetGridViewData();
-				GetMasterOfCourse();
+				GetMasterOfCourse(role);
 				GetAssessor();
 			}
 		}
@@ -141,13 +141,13 @@ namespace MHI_OJT2.Pages.Management
 			Assessor6.Items.Insert(0, new ListItem("-", "0"));
 			Assessor6.SelectedIndex = 0;
 		}
-		void GetMasterOfCourse()
+		void GetMasterOfCourse(string role)
 		{
 			string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
 
 			department.DataSource = SQL.GetDataTable("SELECT ID,DEPARTMENT_NAME FROM DEPARTMENT WHERE IS_ACTIVE=1", mainDb);
 			department.DataValueField = "ID";
-			department.DataTextField = "DEPARTMENT_NAME";
+			department.DataTextField = "DEPARTMENT_NAME";			
 			department.DataBind();
 
 			location.DataSource = SQL.GetDataTable("SELECT ID,LOCATION_NAME FROM LOCATION WHERE IS_ACTIVE=1", mainDb);
@@ -160,7 +160,18 @@ namespace MHI_OJT2.Pages.Management
 			teacher.DataTextField = "FULLNAME";
 			teacher.DataBind();
 
-			trainingPlan.DataSource = SQL.GetDataTable("SELECT ID,CONCAT('[', IIF(LEN(REF_DOCUMENT) > 0, REF_DOCUMENT, '-'), '] - ', PLAN_NAME) AS NAME FROM TRAINING_PLAN", mainDb);
+
+			string query = "SELECT ID," +
+				"CONCAT('[', IIF(LEN(REF_DOCUMENT) > 0, REF_DOCUMENT, '-'), '] - ', PLAN_NAME) AS NAME " +
+				"FROM TRAINING_PLAN " +
+				"WHERE ID NOT IN (SELECT PLAN_ID FROM PLAN_AND_COURSE) ";
+
+			if (role == "clerk")
+            {
+				query += "AND CREATED_BY = " + (int)Session["userId"];
+            }
+
+			trainingPlan.DataSource = SQL.GetDataTable(query, mainDb);
 			trainingPlan.DataValueField = "ID";
 			trainingPlan.DataTextField = "NAME";
 			trainingPlan.DataBind();
@@ -322,6 +333,46 @@ namespace MHI_OJT2.Pages.Management
 		{
 			Page.ClientScript.RegisterStartupScript(this.GetType(), "SweetAlert", $"sweetAlert('{type}','{title}','{message}')", true);
 		}
+		protected void ExportReportEvaluationOJT(object sender, EventArgs e)
+        {
+			try
+            {
+				int courseId = int.Parse(EXPORT_REPORT_COURSE_ID.Value.ToString());
+				string exportName = "unname report";
+
+				SqlParameterCollection param = new SqlCommand().Parameters;
+				param.AddWithValue("ID", SqlDbType.Int).Value = courseId;
+				DataTable dt = SQL.GetDataTableWithParams("SELECT COURSE_NAME,TIMES FROM COURSE WHERE COURSE_ID=@ID", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString, param);
+
+				if (dt.Rows.Count > 0)
+				{
+					string courseName = dt.Rows[0]["COURSE_NAME"].ToString();
+					string times = dt.Rows[0]["TIMES"].ToString();
+
+					exportName = $"รายงานประเมินผล {courseName} ครั้งที่ {times}";
+				}
+
+				ReportDocument rpt = new ReportDocument();
+				ExportFormatType expType = ExportFormatType.PortableDocFormat;
+
+				rpt.Load(filename: Server.MapPath($"~/Reports/rpt_Manage_Course.rpt"));
+				rpt.RecordSelectionFormula = "{COURSE_AND_EMPLOYEE.COURSE_ID}=" + courseId;
+				//rpt.SetParameterValue("COMMANDER_NAME", commanderName.Value);
+				//rpt.SetParameterValue("COMMANDER_DATE", commanderDate.Value);
+				//rpt.SetParameterValue("SECTION_MANAGER_NAME", sectionManagerName.Value);
+				//rpt.SetParameterValue("SECTION_MANAGER_DATE", sectionManagerDate.Value);
+				//rpt.SetParameterValue("TRAINING_OFFICER_NAME", trainingOfficerName.Value);
+				//rpt.SetParameterValue("TRAINING_OFFICER_DATE", trainingOfficerDate.Value);
+
+				rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+				rpt.ExportToHttpResponse(expType, Response, true, exportName);
+			}	
+			catch (Exception ex)
+            {
+				Console.WriteLine(ex.Message);
+				Alert("error", "Error!", DATA.RemoveSpecialCharacters(ex.Message));
+            }
+        }
 		protected void RepleaterItemCommand(object sender, RepeaterCommandEventArgs e)
 		{
 			switch (e.CommandName)
@@ -536,5 +587,15 @@ namespace MHI_OJT2.Pages.Management
     {
         public int PersonID { get; set; }
         public int CourseID { get; set; }
+    }
+	public class ExportReportParameter
+    {
+        public int COURSE_ID { get; set; }
+        public string COMMANDER_NAME { get; set; }
+        public string COMMANDER_DATE { get; set; }
+        public string SECTION_MANAGER_NAME { get; set; }
+        public string SECTION_MANAGER_DATE { get; set; }
+        public string TRAINING_OFFICER_NAME { get; set; }
+        public string TRAINING_OFFICER_DATE { get; set; }
     }
 }

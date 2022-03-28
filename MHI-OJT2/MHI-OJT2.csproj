@@ -2013,7 +2013,6 @@
     <Content Include="Login.aspx" />
     <Content Include="Pages\Error\403.aspx" />
     <Content Include="Pages\Management\Approval.aspx" />
-    <Content Include="Pages\Management\Course-score.aspx" />
     <Content Include="Pages\Management\Courses.aspx" />
     <Content Include="Pages\Management\Evaluation.aspx" />
     <Content Include="Pages\Management\scan-barcode.aspx" />
@@ -2026,7 +2025,6 @@
     <Content Include="Pages\Reports\Skill-map-report.aspx" />
     <Content Include="Pages\Reports\skill-map.css" />
     <Content Include="Pages\Reports\Training-plan-report.aspx" />
-    <Content Include="Pages\Reports\Training-profile-report.aspx" />
     <Content Include="Pages\Systems\Users.aspx" />
     <Content Include="Pages\Training-profile.aspx" />
     <Content Include="Reports\Pic\0_19.png" />
@@ -2081,13 +2079,6 @@
     </Compile>
     <Compile Include="Pages\Management\Approval.aspx.designer.cs">
       <DependentUpon>Approval.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Management\Course-score.aspx.cs">
-      <DependentUpon>Course-score.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Pages\Management\Course-score.aspx.designer.cs">
-      <DependentUpon>Course-score.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Management\Courses.aspx.cs">
       <DependentUpon>Courses.aspx</DependentUpon>
@@ -2166,13 +2157,6 @@
     <Compile Include="Pages\Reports\Training-plan-report.aspx.designer.cs">
       <DependentUpon>Training-plan-report.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Reports\Training-profile-report.aspx.cs">
-      <DependentUpon>Training-profile-report.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Pages\Reports\Training-profile-report.aspx.designer.cs">
-      <DependentUpon>Training-profile-report.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Pages\Systems\Users.aspx.cs">
       <DependentUpon>Users.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2192,6 +2176,24 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>rpt_Manage_Course.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rpt_Training_Plan.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rpt_Training_Plan.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Training_Profile_Clerk.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Training_Profile_Clerk.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Training_Profile_Emp.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Training_Profile_Emp.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Settings.cs" />
@@ -2340,13 +2342,25 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Reports\rpt_Manage_Course.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rpt_Manage_Course.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
+    <EmbeddedResource Include="Reports\rpt_Training_Plan.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rpt_Training_Plan.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Training_Profile_Clerk.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Training_Profile_Clerk.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Training_Profile_Emp.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Training_Profile_Emp.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

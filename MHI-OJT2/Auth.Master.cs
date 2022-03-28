@@ -8,6 +8,8 @@ using System.Web.Configuration;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
 using MHI_OJT2.Pages.Management;
 
 namespace MHI_OJT2
@@ -36,7 +38,6 @@ namespace MHI_OJT2
 					}
 
 					int userId = int.Parse(Session["userId"].ToString());
-					CheckPermissionAndRedirect();
 					if (Session["roles"].ToString().ToLower() == "user")
 					{
 						GetNotification(userId);
@@ -125,10 +126,38 @@ namespace MHI_OJT2
 			Session.RemoveAll();
 			Response.Redirect("~/login.aspx");
 		}
-		protected void CheckPermissionAndRedirect()
+		protected void DownloadReportTrainingEvaluationOJT(object sender, EventArgs e)
 		{
-			string currentPath = String.Empty;
-			_ = HttpContext.Current.Request.Url.AbsolutePath;
+			int courseId = int.Parse(downloadReportId.Value.ToString());
+			string exportName = "unname report";
+
+			SqlParameterCollection param = new SqlCommand().Parameters;
+			param.AddWithValue("ID", SqlDbType.Int).Value = courseId;
+			DataTable dt = SQL.GetDataTableWithParams("SELECT COURSE_NAME,TIMES FROM COURSE WHERE COURSE_ID=@ID", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString, param);
+
+			if (dt.Rows.Count > 0)
+			{
+				string courseName = dt.Rows[0]["COURSE_NAME"].ToString();
+				string times = dt.Rows[0]["TIMES"].ToString();
+
+				exportName = $"รายงานประเมินผล {courseName} ครั้งที่ {times}";
+			}
+
+			ReportDocument rpt = new ReportDocument();
+			ExportFormatType expType = ExportFormatType.PortableDocFormat;
+
+			rpt.Load(filename: Server.MapPath($"~/Reports/rpt_Manage_Course.rpt"));
+			rpt.RecordSelectionFormula = "{COURSE_AND_EMPLOYEE.COURSE_ID}=" + courseId;
+			//rpt.SetParameterValue("COMMANDER_NAME", commanderName.Value);
+			//rpt.SetParameterValue("COMMANDER_DATE", commanderDate.Value);
+			//rpt.SetParameterValue("SECTION_MANAGER_NAME", sectionManagerName.Value);
+			//rpt.SetParameterValue("SECTION_MANAGER_DATE", sectionManagerDate.Value);
+			//rpt.SetParameterValue("TRAINING_OFFICER_NAME", trainingOfficerName.Value);
+			//rpt.SetParameterValue("TRAINING_OFFICER_DATE", trainingOfficerDate.Value);
+
+			rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+			rpt.ExportToHttpResponse(expType, Response, true, exportName);
+			downloadReportId.Value = "0";
 		}
     }
 }

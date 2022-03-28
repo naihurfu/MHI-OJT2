@@ -13,7 +13,12 @@
                 <!-- /.col -->
                 <div class="col-sm-6">
                     <div class="float-sm-right">
-                        <button type="button" class="btn btn-primary" onclick="handleShowAddModal('add')">เพิ่มแผนฝึกอบรม</button>
+                        <button type="button" class="btn btn-primary" onclick="handleShowAddModal('add')">
+                            <i class="fa fa-plus-circle mr-2"></i>
+                            เพิ่มแผนฝึกอบรม</button>
+                        <button type="button" class="btn btn-success ml-2" onclick="handleShowExportReportModal()">
+                            <i class="fa fa-file-pdf mr-2"></i>
+                            พิมพ์รายงาน</button>
                     </div>
                 </div>
                 <!-- /.col -->
@@ -159,6 +164,42 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="ExportReportModal" tabindex="-1" aria-labelledby="ExportReportModal" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="box-shadow: none !important;">
+            <div class="modal-content dark-mode">
+                <div class="modal-header">
+                    <h5 class="modal-title text-light">เลือกเงื่อนไขเพื่อพิมพ์รายงาน</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row section__container">
+                        <div class="col-12">
+                            <label>ฝ่าย</label>
+                             <select class="form-control selectpicker" id="section" runat="server" data-live-search="true">
+                                <option selected>-</option>
+                             </select> 
+                        </div>
+                    </div>
+                    <div class="row date__range__container mt-2">
+                        <div class="col-6 form-group">
+                            <label>วันที่เริ่มอบรม</label>
+                            <input type="tel" id="startDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
+                        </div>
+                        <div class="col-6 form-group">
+                            <label>ถึง</label>
+                            <input type="tel" id="endDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
+                        </div>
+                    </div>
+                </div> 
+                <div class="modal-footer">
+                    <asp:Button ID="btnExportReport" Text="พิมพ์รายงาน" runat="server" CssClass="btn btn-block btn-success" OnClick="btnExportReport_Click" OnClientClick="return validationFilters()" />
+                </div>
+            </div>
+        </div>
+    </div>
 </asp:Content>
 <asp:Content ID="ScriptContent" ContentPlaceHolderID="script" runat="server">
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
@@ -183,6 +224,30 @@
                 }
             });
         })();
+
+        function handleShowExportReportModal() {
+            let modal = $('#ExportReportModal')
+            let today = moment();
+            let currentYears = today.year();
+            let startDate = moment(`${currentYears}-01-01`);
+            let endDate = moment(`${currentYears}-12-31`);
+            $('#<%= startDate.ClientID %>').val(startDate.format("DD/MM/YYYY"))
+            $('#<%= endDate.ClientID %>').val(endDate.format("DD/MM/YYYY"))
+            modal.modal('show')
+        }
+
+        function validationFilters() {
+            let title = "แจ้งเตือน"
+            let startDate = $('#<%= startDate.ClientID %>').val().length
+            let endDate = $('#<%= endDate.ClientID %>').val().length
+
+            if (startDate !== 10 && endDate !== 10) {
+                toasts(title, "กรุณาระบุข้อมูลให้ถูกต้อง")
+                return false
+            }
+
+            return true
+        }
 
         function handleShowAddModal(action, data) {
             try {

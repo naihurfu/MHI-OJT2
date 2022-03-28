@@ -81,6 +81,10 @@
             width: 100%;
             height: 100%;
         }
+
+        #print_me * {
+            font-family: 'AngsanaUPC' !important;
+        }
     </style>
     <style type="text/css" media="print">
         @page {

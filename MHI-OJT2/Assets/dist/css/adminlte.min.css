@@ -2867,36 +2867,56 @@ a.btn.disabled, fieldset:disabled a.btn {
             box-shadow: 0 0 0 0 rgba(225,83,97,.5)
         }
 
+/* 
+    border-color : #6c757d; 
+    color: #fff;
+    background-color: #343a40; 
+*/
 .btn-light {
-    color: #1f2d3d;
+    border-color: #6c757d;
+    color: #fff;
+    background-color: #343a40;
+    /* color: #1f2d3d;
     background-color: #f8f9fa;
-    border-color: #f8f9fa;
+    border-color: #f8f9fa;*/
     box-shadow: none
 }
 
     .btn-light:hover {
-        color: #1f2d3d;
+        /*color: #1f2d3d;
         background-color: #e2e6ea;
-        border-color: #dae0e5
+        border-color: #dae0e5*/
+        border-color: #6c757d;
+        color: #fff;
+        background-color: #343a40;
     }
 
     .btn-light.focus, .btn-light:focus {
-        color: #1f2d3d;
+        /*color: #1f2d3d;
         background-color: #e2e6ea;
-        border-color: #dae0e5;
+        border-color: #dae0e5;*/
+        border-color: #6c757d;
+        color: #fff;
+        background-color: #343a40;
         box-shadow: 0 0 0 0 rgba(215,218,222,.5)
     }
 
     .btn-light.disabled, .btn-light:disabled {
-        color: #1f2d3d;
+        border-color: #6c757d;
+        color: #fff;
+        background-color: #343a40;
+        /*color: #1f2d3d;
         background-color: #f8f9fa;
-        border-color: #f8f9fa
+        border-color: #f8f9fa*/
     }
 
     .btn-light:not(:disabled):not(.disabled).active, .btn-light:not(:disabled):not(.disabled):active, .show > .btn-light.dropdown-toggle {
-        color: #1f2d3d;
+        border-color: #6c757d;
+        color: #fff;
+        background-color: #343a40;
+        /*color: #1f2d3d;
         background-color: #dae0e5;
-        border-color: #d3d9df
+        border-color: #d3d9df*/
     }
 
         .btn-light:not(:disabled):not(.disabled).active:focus, .btn-light:not(:disabled):not(.disabled):active:focus, .show > .btn-light.dropdown-toggle:focus {

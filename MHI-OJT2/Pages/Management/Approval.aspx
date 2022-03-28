@@ -1,5 +1,10 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Auth.Master" AutoEventWireup="true" CodeBehind="Approval.aspx.cs" Inherits="MHI_OJT2.Pages.Management.Approval" %>
 <asp:Content ID="HeaderContent" ContentPlaceHolderID="head" runat="server">
+    <style>
+        div.swal2-popup.swal2-modal.swal2-show {
+            min-width: 560px !important;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="body" runat="server">
     <!-- Content Header (Page header) -->
@@ -29,11 +34,12 @@
                                 <th>ชื่อหลักสูตร</th>
                                 <th class="text-center">แผนก</th>
                                 <th class="text-center">คะแนน</th>
+                                <th class="text-center">ดาวโหลดรายงาน</th>
                                 <th class="text-center">อนุมัติ/ไม่อนุมัติ</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <asp:Repeater ID="RepeatTable" runat="server">
+                            <asp:Repeater ID="RepeatTable" runat="server" OnItemCommand="RepeatTable_ItemCommand">
                                 <ItemTemplate>
                                     <tr>
                                         <th scope="row" class="text-center">
@@ -50,6 +56,9 @@
                                         </td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-success btn-sm ml-2" onclick="handleShowScore({courseId: <%# Eval("COURSE_ID") %>, aprovalId: <%# Eval("APPROVAL_ID") %>, approvalSequence: <%# Eval("APPROVAL_SEQUENCE") %>})">ดูคะแนน</button>
+                                        </td>
+                                        <td class="text-center">
+                                            <asp:Button ID="btnExportReportApproval" CommandName="DOWNLOAD_REPORT_OJT" Text="Training/Evaluation OJT" runat="server" CommandArgument='<%# Eval("COURSE_ID") %>' CssClass="btn btn-sm btn-info"/>
                                         </td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-danger btn-sm" onclick="handleApprove({courseId: <%# Eval("COURSE_ID") %>, aprovalId: <%# Eval("APPROVAL_ID") %>, isApprove: 0, approvalSequence: <%# Eval("APPROVAL_SEQUENCE") %>})">ไม่อนุมัติ</button>
@@ -122,17 +131,21 @@
 
         function handleApprove(data) {
             const { aprovalId, courseId, isApprove, approvalSequence } = data
-            let body = "{'APPROVE_ID': " + aprovalId + ",'COURSE_ID': " + courseId + ",'IS_APPROVE': " + isApprove + ",'APPROVAL_SEQUENCE': " + approvalSequence + "}"
-            console.log(body)
             Swal.fire({
-                title: isApprove ? 'Do you want to approve?' : 'Would you like to reject the request?',
+                title: isApprove ? 'คุณต้องการ <b class="text-success">อนุมัติ</b> ใช่หรือไม่?' : 'คุณต้องการ <b class="text-danger">ปฏิเสธการอนุมัติ</b> ใช่หรือไม่?',
+                html: `<div class="form-group text-left">
+                            <textarea type="text" id="remark" class="form-control dark-mode text-light" rows="3" placeholder="หมายเหตุ"></textarea>
+                       </div>`,
                 showConfirmButton: true,
                 confirmButtonColor: isApprove ? '#28a745' : '#dc3545',
                 showCancelButton: true,
-                confirmButtonText: isApprove ? 'Approve' : 'Reject',
-                cancelButtonText: `Cancel`
+                confirmButtonText: isApprove ? 'อนุมัติ' : 'ยืนยัน',
+                cancelButtonText: `ปิด`,
+
             }).then((result) => {
                 if (result.isConfirmed) {
+                    let remark = $('#remark').val()
+                    let body = "{'APPROVE_ID': " + aprovalId + ",'COURSE_ID': " + courseId + ",'IS_APPROVE': " + isApprove + ",'APPROVAL_SEQUENCE': " + approvalSequence + ", 'REMARK': '" + remark + "'}"
                     $.ajax({
                         type: "POST",
                         url: "/Pages/Management/Approval.aspx/HandleApprove",

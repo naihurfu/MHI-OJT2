@@ -8,14 +8,8 @@
             height: 20px !important;
         }
 
-        .bootstrap-select > .dropdown-toggle {
-            background-color: #fff !important;
-            border: 1px solid #ced4da !important;
-            border-radius: .25rem !important;
-        }
-
         label:not(.form-check-label):not(.custom-file-label) {
-             font-weight: 400 !important; 
+            font-weight: 400 !important;
         }
     </style>
 </asp:Content>
@@ -83,7 +77,9 @@
                                             </button>
                                         </td>
                                         <td class="text-center">
-                                            <asp:Button ID="btnExportReport" CommandName="EXPORT_REPORT_MANAGE_COURSE" Text="Training/Evaluation OJT" runat="server" CommandArgument='<%# Eval("COURSE_ID") %>' CssClass="btn btn-sm btn-success" Enabled='<%# (int)Eval("STATUS_CODE") >= 3 ? true : false %>' />
+                                            <button type="button" class='btn btn-success' onclick="handleExportReport({COURSE_ID: <%# Eval("COURSE_ID") %>, COURSE_CODE : '<%# Eval("COURSE_NUMBER") %>' , COURSE_NAME : '<%# Eval("COURSE_NAME") %>', COURSE_TIMES: '<%# Eval("TIMES") %>' , COURSE_START_DATE : '<%# Eval("START_DATE") %>', CREATED_NAME : '<%# Eval("CREATED_NAME") %>'})" <%# (int)Eval("STATUS_CODE") >= 3 ? "" : "disabled" %>>
+                                                Training/Evaluation OJT
+                                            </button>
                                         </td>
                                     </tr>
                                 </ItemTemplate>
@@ -219,8 +215,8 @@
                         <div class="form-group assessor-container-6">
                             <label>ผู้อนุมัติคนที่ 6</label>
                             <select class="form-control selectpicker" id="Assessor6" runat="server" data-live-search="true">
-                        </select>
-                    </div>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -270,9 +266,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="text-center my-5" id="approval-loading">
-                      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                        <span class="sr-only">โปรดรอ...</span>
-                      </div>
+                        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="sr-only">โปรดรอ...</span>
+                        </div>
                     </div>
                     <div class="table-responsive" id="approval-table-container">
                         <table class="table m-0" id="approval-table">
@@ -282,6 +278,7 @@
                                     <th>ชื่อผู้อนุมัติ</th>
                                     <th class="text-center">สถานะ</th>
                                     <th class="text-center">วันที่</th>
+                                    <th>หมายเหตุ</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -295,6 +292,66 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="ExportReportModal" tabindex="-1" aria-labelledby="ExportReportModal" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" style="box-shadow: none !important;">
+            <div class="modal-content dark-mode">
+                <div class="modal-header">
+                    <h5 class="modal-title text-light">ลงชื่อผู้ทำการฝึกอบรมและประเมิน</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-center my-3">
+                        <h5>
+                            [<span id="export-report-code"></span>] - 
+                            <span id="export-report-title"></span>
+                        </h5>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>วันที่อบรม : <b id="export-report-start-date"></b></span>
+                        <span>ผู้จัดทำ : <b id="export-report-created-name"></b></span>
+                    </div>
+                    <div class="row mb-3 mt-4 pt-2">
+                        <div class="col-8 form-group">
+                            <label>ชื่อหัวหน้างาน (Commander)</label>
+                            <input type="text" runat="server" id="commanderName" class="form-control" />
+                        </div>
+                        <div class="col-4 form-group mb-2">
+                            <label>ลงวันที่</label>
+                            <input type="tel" id="commanderDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-8 form-group">
+                            <label>ชื่อผู้จัดการฝ่าย (Section Manager)</label>
+                            <input type="text" runat="server" id="sectionManagerName" class="form-control" />
+                        </div>
+                        <div class="col-4 form-group">
+                            <label>ลงวันที่</label>
+                            <input type="tel" id="sectionManagerDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-8 form-group">
+                            <label>เจ้าหน้าที่ฝึกอบรม (Training Officer)</label>
+                            <input type="text" runat="server" id="trainingOfficerName" class="form-control" />
+                        </div>
+                        <div class="col-4 form-group">
+                            <label>ลงวันที่</label>
+                            <input type="tel" id="trainingOfficerDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer" style="justify-content: end !important;">
+                <input type="hidden" id="EXPORT_REPORT_COURSE_ID" runat="server" />
+                <asp:Button ID="btnExportReport" Text="พิมพ์รายงาน" runat="server" CssClass="btn btn-block btn-success" OnClick="ExportReportEvaluationOJT" />
+            </div>
+        </div>
+    </div>
+</div>
 </asp:Content>
 <asp:Content ID="ScriptContent" ContentPlaceHolderID="script" runat="server">
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
@@ -323,6 +380,25 @@
             $("#<%= trainingPlan.ClientID %> option[value='-']").hide()
             $("#<%= trainingPlan.ClientID %>").prop("disabled", "disabled")
         })();
+
+        function handleExportReport(d) {
+            console.log(d)
+            if (d.COURSE_ID) {
+                let modal = $('#ExportReportModal')
+                let hiddenId = $('#<%= EXPORT_REPORT_COURSE_ID.ClientID %>')
+                $('#export-report-title').text(d.COURSE_NAME)
+                $('#export-report-code').text(d.COURSE_CODE)
+                $('#export-report-start-date').text(d.COURSE_START_DATE.split(' ')[0] ?? "")
+                $('#export-report-created-name').text(d.CREATED_NAME)
+
+                hiddenId.val(d.COURSE_ID)
+                modal.modal('show')
+
+            } else {
+                toasts("ผิดพลาด", "พบข้อผิดพลาดขณะเตรียมข้อมูล กรุณาตรวจสอบการเชื่อมต่อเครือข่าย และลองใหม่ภายหลัง", "bg-danger")
+            }
+
+        }
 
         function handleShowAddModal() {
             $('#<%= btnInserted.ClientID %>').show()
@@ -410,6 +486,9 @@
                                                     <td class="text-center">
                                                         ${actionDate}
                                                     </td>
+                                                    <td>
+                                                        ${r.REMARK ?? "-"}
+                                                    </td>
                                                 </tr>`;
                                 tableBody.append(tableRow);
                             });
@@ -464,7 +543,6 @@
                 toasts("แจ้งเตือน", err.message)
             }
         };
-
         function iniTransferBox(courseId) {
             $(".transfer-double").remove()
             var allEmployee = []
@@ -503,7 +581,6 @@
                 $('.select-plan-container').find('div').find('button').addClass('disabled')
             }
         });
-
         function handleEditCourse(courseId) {
             $.ajax({
                 type: "POST",
@@ -520,8 +597,7 @@
                 }
             });
         }
-
-         function handleViewCourseDetail(id) {
+        function handleViewCourseDetail(id) {
             $.ajax({
                 type: "POST",
                 url: "/Pages/Management/Courses.aspx/GetCourseDetailById",
@@ -698,10 +774,16 @@
                 assorContainer5.show()
             }
         })
-        assessor5.on
+        assessor5.on('change', function (e) {
+            var value = parseInt($(this).val())
+            if (value === 0) {
+                assessor6.val(0).change()
+                assorContainer6.hide()
+            } else {
+                assorContainer6.show()
+            }
+        })
         function isDisabledInput(isDisabled) {
-            let readOnlyColor = "background-color: #e9ecef !important;"
-            let openInputColor = "background-color: #fff !important;"
             if (isDisabled === true) {
                 $('#<%= trainingPlan.ClientID %>').prop("disabled", 'disabled')
                 $('#<%= courseNumber.ClientID %>').prop('disabled', 'disabled')
@@ -723,14 +805,15 @@
                 $('#<%= Assessor4.ClientID %>').prop('disabled', 'disabled')
                 $('#<%= Assessor5.ClientID %>').prop('disabled', 'disabled')
                 $('#<%= Assessor6.ClientID %>').prop('disabled', 'disabled')
-                $('#<%= hiddenId.ClientID %>').prop('disabled', 'disabled')
-                $('.select-plan-container').find('div').find('button').css("cssText", readOnlyColor);
-                $('.assessor-container-1').find('div').find('button').css("cssText", readOnlyColor);
-                $('.assessor-container-2').find('div').find('button').css("cssText", readOnlyColor);
-                $('.assessor-container-3').find('div').find('button').css("cssText", readOnlyColor);
-                $('.assessor-container-4').find('div').find('button').css("cssText", readOnlyColor);
-                $('.assessor-container-5').find('div').find('button').css("cssText", readOnlyColor);
-                $('.assessor-container-6').find('div').find('button').css("cssText", readOnlyColor);
+                $('#<%= hiddenId.ClientID %>').prop('disabled', 'disabled') 
+                $('.select-plan-container').find('div').find('button').prop("disabled", "disabled");
+                $('.assessor-container-1').find('div').find('button').prop("disabled", "disabled");
+                $('.assessor-container-2').find('div').find('button').prop("disabled", "disabled");
+                $('.assessor-container-3').find('div').find('button').prop("disabled", "disabled");
+                $('.assessor-container-4').find('div').find('button').prop("disabled", "disabled");
+                $('.assessor-container-5').find('div').find('button').prop("disabled", "disabled");
+                $('.assessor-container-6').find('div').find('button').prop("disabled", "disabled");
+
             } else {
                 $('#<%= trainingPlan.ClientID %>').prop("disabled", false)
                 $('#<%= courseNumber.ClientID %>').prop('disabled', false)
@@ -753,13 +836,13 @@
                 $('#<%= Assessor5.ClientID %>').prop('disabled', false)
                 $('#<%= Assessor6.ClientID %>').prop('disabled', false)
                 $('#<%= hiddenId.ClientID %>').prop('disabled', false)
-                $('.select-plan-container').find('div').find('button').css("cssText", openInputColor);
-                $('.assessor-container-1').find('div').find('button').css("cssText", openInputColor);
-                $('.assessor-container-2').find('div').find('button').css("cssText", openInputColor);
-                $('.assessor-container-3').find('div').find('button').css("cssText", openInputColor);
-                $('.assessor-container-4').find('div').find('button').css("cssText", openInputColor);
-                $('.assessor-container-5').find('div').find('button').css("cssText", openInputColor);
-                $('.assessor-container-6').find('div').find('button').css("cssText", openInputColor);
+                $('.select-plan-container').find('div').find('button').removeProp("disabled", "disabled");
+                $('.assessor-container-1').find('div').find('button').removeProp("disabled", "disabled");
+                $('.assessor-container-2').find('div').find('button').removeProp("disabled", "disabled");
+                $('.assessor-container-3').find('div').find('button').removeProp("disabled", "disabled");
+                $('.assessor-container-4').find('div').find('button').removeProp("disabled", "disabled");
+                $('.assessor-container-5').find('div').find('button').removeProp("disabled", "disabled");
+                $('.assessor-container-6').find('div').find('button').removeProp("disabled", "disabled");
             }
         }
     </script>

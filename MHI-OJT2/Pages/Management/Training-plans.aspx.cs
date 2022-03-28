@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -16,6 +18,7 @@ namespace MHI_OJT2.Pages.Management
     {
         string _sessionAlert = null;
         string _selfPathName = "~/Pages/Management/Training-plans.aspx";
+        string _roles = "";
         protected void Page_Load(object sender, EventArgs e)
         {
             Auth.CheckLoggedIn();
@@ -23,6 +26,7 @@ namespace MHI_OJT2.Pages.Management
             if (!IsPostBack)
             {
                 string role = Session["roles"].ToString().ToLower();
+                _roles = role;
                 int userId = int.Parse(Session["userId"].ToString());
                 if (role == "user")
                 {
@@ -30,6 +34,7 @@ namespace MHI_OJT2.Pages.Management
                 }
 
                 GetMasterData(userId, role);
+                GetSection(userId, role);
                 CheckAlertSession();
             }
         }
@@ -57,6 +62,25 @@ namespace MHI_OJT2.Pages.Management
                 Session.Remove("alert");
             }
         }
+        void GetSection(int userId, string role)
+        {
+            if (role != "user")
+            {
+                string query = "SELECT DISTINCT SECTION_NAME,SECTION_ID FROM COURSE_AND_EMPLOYEE ";
+
+                if (role == "clerk")
+                {
+                    query += $"WHERE CREATED_ID = {userId}";
+                }
+
+                section.DataSource = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+                section.DataTextField = "SECTION_NAME";
+                section.DataValueField = "SECTION_NAME";
+                section.DataBind();
+                section.Items.Insert(0, new ListItem("ทั้งหมด", "0"));
+                section.SelectedIndex = 0;
+            }
+        } 
         void GetMasterData(int userId, string role)
         {
             // get connection string from web.config file
@@ -262,6 +286,31 @@ namespace MHI_OJT2.Pages.Management
                 Console.WriteLine(ex.Message);
                 return "ERROR";
             }
+        }
+
+        protected void btnExportReport_Click(object sender, EventArgs e)
+        {
+            ReportDocument rpt = new ReportDocument();
+            ExportFormatType expType = ExportFormatType.PortableDocFormat;
+            int id = int.Parse(Session["userId"].ToString());
+            string exportName = "TRAINING PLAN REPORT";
+
+            rpt.Load(filename: Server.MapPath("~/Reports/rpt_Training_Plan.rpt"));
+            rpt.SetParameterValue("Section", section.Value.ToString());
+            string formula = "cDate(ToText(cDate({VIEW_PLAN_AND_COURSE.PLAN_DATE}),'dd/MM/yyyy')) >= " +
+            $"cDate(ToText(cDate('{startDate.Value}'),'dd/MM/yyyy')) " +
+            "AND cDate(ToText(cDate({VIEW_PLAN_AND_COURSE.PLAN_DATE}),'dd/MM/yyyy')) <= " +
+            $"cDate(ToText(cDate('{endDate.Value}'),'dd/MM/yyyy'))";
+
+            if (_roles == "clerk")
+            {
+                formula += " AND " +
+                        "{VIEW_PLAN_AND_COURSE.CREATED_ID} = " + id + " ";
+            }
+
+            rpt.RecordSelectionFormula = formula;
+            rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+            rpt.ExportToHttpResponse(expType, Response, true, exportName);
         }
     }
 }

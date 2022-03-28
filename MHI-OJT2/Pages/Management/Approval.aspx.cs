@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -57,10 +59,10 @@ namespace MHI_OJT2.Pages.Management
         public static string HandleApprove(ApproveResult _ApproveResult)
         {
             HttpCookie approveCookie = new HttpCookie("alert");
-            approveCookie.Expires = DateTime.Now.AddSeconds(5);
+            approveCookie.Expires = DateTime.Now.AddSeconds(20);
             if (_ApproveResult.IS_APPROVE == 0)
             {
-                RejectApprovalUpdate(_ApproveResult.COURSE_ID);
+                RejectApprovalUpdate(_ApproveResult.COURSE_ID, _ApproveResult.REMARK);
                 SetCourseApproveNotify(_ApproveResult.COURSE_ID, false);
                 approveCookie.Value = "rejected";
                 return "REJECTED";
@@ -68,11 +70,18 @@ namespace MHI_OJT2.Pages.Management
 
 			string connectionString = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
             SqlConnection connection = new SqlConnection(connectionString);
-            
-            using (SqlCommand command = new SqlCommand("UPDATE APPROVAL SET APPROVAL_RESULT=@IS_APPROVE,IS_APPROVED=1,ACTION_DATE=GETDATE() WHERE ID=@APPROVE_ID", connection))
+
+            string qry = "UPDATE APPROVAL " +
+                "SET APPROVAL_RESULT=@IS_APPROVE," +
+                "IS_APPROVED=1," +
+                "ACTION_DATE=GETDATE(), " +
+                "REMARK=@REMARK " +
+                "WHERE ID=@APPROVE_ID";
+            using (SqlCommand command = new SqlCommand(qry, connection))
             {
                 command.Parameters.AddWithValue("APPROVE_ID", SqlDbType.Int).Value = _ApproveResult.APPROVE_ID;
                 command.Parameters.AddWithValue("IS_APPROVE", SqlDbType.Bit).Value = _ApproveResult.IS_APPROVE;
+                command.Parameters.AddWithValue("REMARK", SqlDbType.VarChar).Value = _ApproveResult.REMARK;
 
                 connection.Open();
                 command.ExecuteNonQuery();
@@ -151,7 +160,7 @@ namespace MHI_OJT2.Pages.Management
             }
         }
 
-        public static int RejectApprovalUpdate(int courseId)
+        public static int RejectApprovalUpdate(int courseId, string remark)
         {
             try
             {
@@ -159,8 +168,9 @@ namespace MHI_OJT2.Pages.Management
 
                 SqlParameterCollection param = new SqlCommand().Parameters;
                 param.AddWithValue("COURSE_ID", SqlDbType.Int).Value = courseId;
+                param.AddWithValue("REMARK", SqlDbType.VarChar).Value = remark;
                 SQL.ExecuteWithParams("UPDATE ADJUST_COURSE SET STATUS=10 WHERE ID=@COURSE_ID", connectionString, param);
-                SQL.ExecuteWithParams("UPDATE APPROVAL SET APPROVAL_RESULT=0,IS_APPROVED=1,ACTION_DATE=GETDATE() WHERE COURSE_ID=@COURSE_ID AND IS_APPROVED=0", connectionString, param);
+                SQL.ExecuteWithParams("UPDATE APPROVAL SET APPROVAL_RESULT=0,IS_APPROVED=1,ACTION_DATE=GETDATE(),REMARK=@REMARK WHERE COURSE_ID=@COURSE_ID AND IS_APPROVED=0", connectionString, param);
 
                 return 1;
             }
@@ -170,6 +180,42 @@ namespace MHI_OJT2.Pages.Management
                 return 0;
             }
         }
+
+        protected void RepeatTable_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "DOWNLOAD_REPORT_OJT")
+            {
+                int courseId = int.Parse(e.CommandArgument.ToString());
+                string exportName = "unname report";
+
+                SqlParameterCollection param = new SqlCommand().Parameters;
+                param.AddWithValue("ID", SqlDbType.Int).Value = courseId;
+                DataTable dt = SQL.GetDataTableWithParams("SELECT COURSE_NAME,TIMES FROM COURSE WHERE COURSE_ID=@ID", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString, param);
+
+                if (dt.Rows.Count > 0)
+                {
+                    string courseName = dt.Rows[0]["COURSE_NAME"].ToString();
+                    string times = dt.Rows[0]["TIMES"].ToString();
+
+                    exportName = $"รายงานประเมินผล {courseName} ครั้งที่ {times}";
+                }
+
+                ReportDocument rpt = new ReportDocument();
+                ExportFormatType expType = ExportFormatType.PortableDocFormat;
+
+                rpt.Load(filename: Server.MapPath($"~/Reports/rpt_Manage_Course.rpt"));
+                rpt.RecordSelectionFormula = "{COURSE_AND_EMPLOYEE.COURSE_ID}=" + courseId;
+                //rpt.SetParameterValue("COMMANDER_NAME", commanderName.Value);
+                //rpt.SetParameterValue("COMMANDER_DATE", commanderDate.Value);
+                //rpt.SetParameterValue("SECTION_MANAGER_NAME", sectionManagerName.Value);
+                //rpt.SetParameterValue("SECTION_MANAGER_DATE", sectionManagerDate.Value);
+                //rpt.SetParameterValue("TRAINING_OFFICER_NAME", trainingOfficerName.Value);
+                //rpt.SetParameterValue("TRAINING_OFFICER_DATE", trainingOfficerDate.Value);
+
+                rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+                rpt.ExportToHttpResponse(expType, Response, true, exportName);
+            }
+        }
     }
     public class ApproveResult
     {
@@ -177,5 +223,6 @@ namespace MHI_OJT2.Pages.Management
         public int COURSE_ID { get; set; }
         public int IS_APPROVE { get; set; }
         public int APPROVAL_SEQUENCE { get; set; }
+        public string REMARK { get; set; }
     }
 }

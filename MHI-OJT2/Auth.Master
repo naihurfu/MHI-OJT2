@@ -33,6 +33,25 @@
         .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover{
             background: #454d55 !important;
         }
+
+        .dark-mode .btn-light {
+            background-color: #343a40 !important;
+            border-color: #6c757d !important;
+            color:#fff !important;
+        }
+
+        
+
+        input[type="time"]::-webkit-calendar-picker-indicator{
+          filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%);
+        }
+
+        .swal2-popup,
+        .swal2-modal,
+        .swal2-show {
+           background-color: #343a40 !important;
+           color: #fff !important;
+        }
     </style>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="~/Assets/plugins/fontawesome-free/css/all.min.css">
@@ -252,9 +271,9 @@
                             </li>
                             <% } %>
 
-                            <li class="nav-header">รายงาน</li>
                              <% if (Session["roles"].ToString().ToLower() != "user")
                                 {%>
+                            <li class="nav-header">รายงาน</li>
                             <li class="nav-item">
                                 <a href="~/Pages/Reports/Training-plan-report.aspx" runat="server" class="nav-link">
                                     <i class="nav-icon fas fa-calendar-alt"></i>
@@ -272,14 +291,6 @@
                                 </a>
                             </li>
                             <% } %>
-                            <li class="nav-item">
-                                <a href="~/Pages/Reports/Training-profile-report.aspx" runat="server" class="nav-link">
-                                    <i class="nav-icon fas fa-pen-square"></i>
-                                    <p>
-                                        ประวัติการฝึกอบรม
-                                    </p>
-                                </a>
-                            </li>
 
                             <% if (Session["isEditMaster"].ToString() == "1")
                                 {%>
@@ -356,6 +367,11 @@
             </footer>
         </div>
 
+        <div class="d-none">
+            <input type="hidden" runat="server" id="downloadReportId" />
+            <asp:Button runat="server" ID="btnDownloadReportFromMasterPage" OnClick="DownloadReportTrainingEvaluationOJT" Text="Can you see me?" />
+        </div>
+
         <asp:ScriptManager ID="MasterScriptManager" runat="server">
             <Scripts>
                 <asp:ScriptReference Path="~/Assets/js/sweetalert.all.min.js" />
@@ -363,13 +379,13 @@
                 <asp:ScriptReference Path="~/Assets/plugins/bootstrap/js/bootstrap.bundle.min.js" />
                 <asp:ScriptReference Path="~/Assets/dist/js/adminlte.js" />
                 <asp:ScriptReference Path="~/Assets/dist/js/moment.js" />
-                <asp:ScriptReference Path="~/Assets/plugins/chart.js/Chart.min.js" />
+                <%--<asp:ScriptReference Path="~/Assets/plugins/chart.js/Chart.min.js" />--%>
                 <asp:ScriptReference Path="~/Assets/js/jquery.transfer.js" />
                 <asp:ScriptReference Path="~/Assets/js/jquery.table2excel.min.js" />
                 <asp:ScriptReference Path="~/Assets/js/printThis.js" />
             </Scripts>
         </asp:ScriptManager>
-
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
         <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 
@@ -438,17 +454,28 @@
                 Swal.fire({
                     title: 'คุณต้องการอนุมัติหลักสูตรนี้หรือไม่?',
                     html: `<div class='container' style='border: 1px solid #ccc; padding-top: 8px;'>
-                               <p class='text-left'>
-                                  <b>แผนก : </b> ${$(this).data("course-department")}
-                               </p>
-                               <p class='text-left'>
-                                  <b>รหัสหลักสูตร : </b> ${$(this).data("course-number")}
-                               </p>
-                               <p class='text-left'>
-                                  <b>ชื่อหลักสูตร : </b> ${$(this).data("course-name")}
-                               </p>
-                               <button type="button" class="btn btn-sm btn-block btn-info my-2" onclick="ShowScore({'APPROVE_ID': ${$(this).data('approval-id')},'COURSE_ID': ${$(this).data('course-id')},'APPROVAL_SEQUENCE': ${$(this).data('approval-sequence')}})">ดูผลประเมิน</button>
-                           </div>`,
+                                <p class='text-left'>
+                                    <b>แผนก : </b> ${$(this).data("course-department")}
+                                </p>
+                                <p class='text-left'>
+                                    <b>รหัสหลักสูตร : </b> ${$(this).data("course-number")}
+                                </p>
+                                <p class='text-left'>
+                                    <b>ชื่อหลักสูตร : </b> ${$(this).data("course-name")}
+                                </p>
+                                <div class="row my-2">
+                                    <div class="col-6">
+                                            <button type="button" class="btn btn-sm btn-block btn-info" onclick="ShowScore({'APPROVE_ID': ${$(this).data('approval-id')},'COURSE_ID': ${$(this).data('course-id')},'APPROVAL_SEQUENCE': ${$(this).data('approval-sequence')}})">ดูผลประเมิน</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-sm btn-block btn-primary" onclick="handleDownloadReport(${$(this).data('course-id')})">พิมพ์รายงานประเมินผล</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2 form-group text-left">
+                                <label>หมายเหตุ</label>
+                                <textarea type="text" id="approval-remark" class="form-control dark-mode text-light" rows="3"></textarea>
+                            </div>`,
                     showCancelButton: true,
                     showConfirmButton: true,
                     showDenyButton: true,
@@ -465,6 +492,7 @@
                     body.APPROVE_ID = $(this).data('approval-id')
                     body.COURSE_ID = $(this).data('course-id')
                     body.APPROVAL_SEQUENCE = $(this).data('approval-sequence')
+                    body.REMARK = $('#approval-remark').val()
 
                     // approved
                     if (isConfirmed) {
@@ -503,6 +531,21 @@
                     }
                 })
             })
+
+            function handleDownloadReport(id) {
+                $('#<%= downloadReportId.ClientID %>').val(id)
+                $('#<%= btnDownloadReportFromMasterPage.ClientID %>').click()
+                $('button.swal2-cancel').click()
+                Swal.fire({
+                    title: 'กำลังโหลดรายงาน...',
+                    html: '',
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    }
+                })
+            }
         </script>
     </form>
 </body>

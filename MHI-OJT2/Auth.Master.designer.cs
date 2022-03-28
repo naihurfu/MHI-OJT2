@@ -60,6 +60,24 @@ namespace MHI_OJT2
         protected global::System.Web.UI.WebControls.ContentPlaceHolder body;
 
         /// <summary>
+        /// downloadReportId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden downloadReportId;
+
+        /// <summary>
+        /// btnDownloadReportFromMasterPage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnDownloadReportFromMasterPage;
+
+        /// <summary>
         /// MasterScriptManager control.
         /// </summary>
         /// <remarks>

@@ -16,14 +16,14 @@ namespace MHI_OJT2.Reports {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class rpt_Manage_Course : ReportClass {
+    public class Training_Profile_Clerk : ReportClass {
         
-        public rpt_Manage_Course() {
+        public Training_Profile_Clerk() {
         }
         
         public override string ResourceName {
             get {
-                return "rpt_Manage_Course.rpt";
+                return "Training_Profile_Clerk.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace MHI_OJT2.Reports {
         
         public override string FullResourceName {
             get {
-                return "MHI_OJT2.Reports.rpt_Manage_Course.rpt";
+                return "MHI_OJT2.Reports.Training_Profile_Clerk.rpt";
             }
             set {
                 // Do nothing
@@ -66,7 +66,7 @@ namespace MHI_OJT2.Reports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section3 {
+        public CrystalDecisions.CrystalReports.Engine.Section GroupHeaderSection1 {
             get {
                 return this.ReportDefinition.Sections[2];
             }
@@ -74,7 +74,7 @@ namespace MHI_OJT2.Reports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
+        public CrystalDecisions.CrystalReports.Engine.Section Section3 {
             get {
                 return this.ReportDefinition.Sections[3];
             }
@@ -82,7 +82,7 @@ namespace MHI_OJT2.Reports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section5 {
+        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection1 {
             get {
                 return this.ReportDefinition.Sections[4];
             }
@@ -90,57 +90,25 @@ namespace MHI_OJT2.Reports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_Commander {
+        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
             get {
-                return this.DataDefinition.ParameterFields[0];
+                return this.ReportDefinition.Sections[5];
             }
         }
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_Section_Manager {
+        public CrystalDecisions.CrystalReports.Engine.Section Section5 {
             get {
-                return this.DataDefinition.ParameterFields[1];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_Training_Officer {
-            get {
-                return this.DataDefinition.ParameterFields[2];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_Commander_Date {
-            get {
-                return this.DataDefinition.ParameterFields[3];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_Section_Manager_Date {
-            get {
-                return this.DataDefinition.ParameterFields[4];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_Training_Officer_Date {
-            get {
-                return this.DataDefinition.ParameterFields[5];
+                return this.ReportDefinition.Sections[6];
             }
         }
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class Cachedrpt_Manage_Course : Component, ICachedReport {
+    public class CachedTraining_Profile_Clerk : Component, ICachedReport {
         
-        public Cachedrpt_Manage_Course() {
+        public CachedTraining_Profile_Clerk() {
         }
         
         [Browsable(false)]
@@ -177,7 +145,7 @@ namespace MHI_OJT2.Reports {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            rpt_Manage_Course rpt = new rpt_Manage_Course();
+            Training_Profile_Clerk rpt = new Training_Profile_Clerk();
             rpt.Site = this.Site;
             return rpt;
         }
