@@ -75,10 +75,8 @@ namespace MHI_OJT2.Pages.Management
 
                 section.DataSource = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
                 section.DataTextField = "SECTION_NAME";
-                section.DataValueField = "SECTION_NAME";
+                section.DataValueField = "SECTION_ID";
                 section.DataBind();
-                section.Items.Insert(0, new ListItem("ทั้งหมด", "0"));
-                section.SelectedIndex = 0;
             }
         } 
         void GetMasterData(int userId, string role)
@@ -301,6 +299,8 @@ namespace MHI_OJT2.Pages.Management
             $"cDate(ToText(cDate('{startDate.Value}'),'dd/MM/yyyy')) " +
             "AND cDate(ToText(cDate({VIEW_PLAN_AND_COURSE.PLAN_DATE}),'dd/MM/yyyy')) <= " +
             $"cDate(ToText(cDate('{endDate.Value}'),'dd/MM/yyyy'))";
+
+            formula += "AND {VIEW_PLAN_AND_COURSE.PLAN_SECTION_ID} = " + int.Parse(section.Value.ToString()) + " ";
 
             if (_roles == "clerk")
             {

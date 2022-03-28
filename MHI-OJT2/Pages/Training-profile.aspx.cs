@@ -140,9 +140,9 @@ namespace MHI_OJT2.Pages
                     int minId = SelectPersonIDForReport(_employeeStartId);
                     int maxId = SelectPersonIDForReport(_employeeEndId);
                     formula += " AND " +
-                         "({COURSE_AND_EMPLOYEE.PersonID} >= '" + minId + "' " +
+                         "({COURSE_AND_EMPLOYEE.PersonID} >= " + minId + " " +
                          " AND " +
-                         "{COURSE_AND_EMPLOYEE.PersonID} <= '" + maxId + "' )";
+                         "{COURSE_AND_EMPLOYEE.PersonID} <= " + maxId + " )";
                 }
 
 

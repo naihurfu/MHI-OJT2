@@ -13,7 +13,7 @@
                 <!-- /.col -->
                 <div class="col-sm-6">
                     <div class="float-sm-right">
-                        <button type="button" class="btn btn-primary" onclick="handlePrintReport()">
+                        <button type="button" class="btn btn-primary" onclick="handlePrintReportTrainingProfile()">
                             <i class="fa fa-file-pdf mr-2"></i>
                             พิมพ์รายงาน</button>
                     </div>
@@ -158,7 +158,7 @@
         var employeeIdContainer = $('.employeeId__container')
         var courseContainer = $('.course__container')
 
-        function handlePrintReport() {
+        function handlePrintReportTrainingProfile() {
             let modal = $('#ExportReportModal')
             let today = moment();
             let currentYears = today.year();
