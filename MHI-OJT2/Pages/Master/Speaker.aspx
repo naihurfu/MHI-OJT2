@@ -19,7 +19,9 @@
                 <!-- /.col -->
                 <div class="col-sm-6">
                     <div class="float-sm-right">
-                        <button type="button" class="btn btn-primary" onclick="handleShowModal('add')">เพิ่มวิทยากร</button>
+                        <button type="button" class="btn btn-primary" onclick="handleShowModal('add')">
+                            <i class="fa fa-plus-circle mr-2"></i>
+                            เพิ่มวิทยากร</button>
                     </div>
                 </div>
                 <!-- /.col -->

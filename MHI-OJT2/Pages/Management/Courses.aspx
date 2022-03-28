@@ -24,7 +24,9 @@
                 <!-- /.col -->
                 <div class="col-sm-6">
                     <div class="float-sm-right">
-                        <button type="button" class="btn btn-primary" onclick="handleShowAddModal('add')">สร้างหลักสูตร</button>
+                        <button type="button" class="btn btn-primary" onclick="handleShowAddModal('add')">
+                            <i class="fa fa-plus-circle mr-2"></i>
+                            สร้างหลักสูตร</button>
                     </div>
                 </div>
                 <!-- /.col -->

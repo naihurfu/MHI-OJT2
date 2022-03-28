@@ -2024,7 +2024,6 @@
     <Content Include="Pages\Profiles.aspx" />
     <Content Include="Pages\Reports\Skill-map-report.aspx" />
     <Content Include="Pages\Reports\skill-map.css" />
-    <Content Include="Pages\Reports\Training-plan-report.aspx" />
     <Content Include="Pages\Systems\Users.aspx" />
     <Content Include="Pages\Training-profile.aspx" />
     <Content Include="Reports\Pic\0_19.png" />
@@ -2149,13 +2148,6 @@
     </Compile>
     <Compile Include="Pages\Reports\Skill-map-report.aspx.designer.cs">
       <DependentUpon>Skill-map-report.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Reports\Training-plan-report.aspx.cs">
-      <DependentUpon>Training-plan-report.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Pages\Reports\Training-plan-report.aspx.designer.cs">
-      <DependentUpon>Training-plan-report.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Systems\Users.aspx.cs">
       <DependentUpon>Users.aspx</DependentUpon>

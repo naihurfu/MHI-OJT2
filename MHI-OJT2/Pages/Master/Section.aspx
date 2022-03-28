@@ -18,7 +18,9 @@
                 <!-- /.col -->
                 <div class="col-sm-6">
                     <div class="float-sm-right">
-                        <button type="button" class="btn btn-primary" onclick="handleShowModal('add', {})">เพิ่มฝ่าย</button>
+                        <button type="button" class="btn btn-primary" onclick="handleShowModal('add', {})">
+                            <i class="fa fa-plus-circle mr-2"></i>
+                            เพิ่มฝ่าย</button>
                     </div>
                 </div>
                 <!-- /.col -->
