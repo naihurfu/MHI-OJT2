@@ -39,6 +39,7 @@
                                 <th>ชื่อหลักสูตร</th>
                                 <% if (roles != "user")
                                     { %>
+                                <th>รหัสพนักงาน</th>
                                 <th>ชื่อผู้เข้าอบรม</th>
                                 <%} %>
                                 <th class="text-center">แผนก</th>
@@ -57,6 +58,7 @@
                                         <td><%# Eval("COURSE_NAME") %></td>
                                         <% if (roles != "user")
                                             { %>
+                                        <td><%# Eval("PersonCode") %> %></td>
                                         <td><%# Eval("InitialT") %> <%# Eval("FnameT") %> <%# Eval("LnameT") %></td>
                                         <%} %>
                                         <td class="text-center"><%# Eval("DEPARTMENT_NAME") %></td>

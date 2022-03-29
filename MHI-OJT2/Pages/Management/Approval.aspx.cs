@@ -25,7 +25,7 @@ namespace MHI_OJT2.Pages.Management
                 {
                     int userId = int.Parse(Session["userId"].ToString());
                     DataTable dt = SQL.GetDataTable($"SELECT ID FROM APPROVAL WHERE PERSON_ID = {userId}", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
-                    if (dt.Rows.Count < 1)
+                    if (dt.Rows.Count <= 0)
                     {
                         Response.Redirect(Auth._403);
                     }

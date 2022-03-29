@@ -14,6 +14,15 @@
                 <div class="col-sm-6">
                     <h1 class="m-0">อนุมัติหลักสูตร</h1>
                 </div>
+                <!-- /.col -->
+                <div class="col-sm-6">
+                    <div class="float-sm-right">
+                        <button type="button" class="btn btn-primary" onclick="handleShowHistoryModal()">
+                            <i class="fa fa-plus-circle mr-2"></i>
+                            ประวัติการอนุม้ติย้อนหลัง</button>
+                    </div>
+                </div>
+                <!-- /.col -->
             </div>
             <!-- /.row -->
         </div>
@@ -102,7 +111,6 @@
             });
 
         })();
-
         function handleShowScore(data) {
             const { aprovalId, courseId, approvalSequence } = data
             let body = "{'APPROVE_ID': " + aprovalId + ",'COURSE_ID': " + courseId + ",'APPROVAL_SEQUENCE': " + approvalSequence + "}"
