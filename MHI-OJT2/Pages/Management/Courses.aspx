@@ -122,23 +122,25 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="pt-2 check-plan-container">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="plan" id="checkPlan" runat="server">
-                            <label class="form-check-label" for="<%= checkPlan.ClientID %>">อบรมตามแผน</label>
+                    <div id="plan-section-container">
+                        <div class="pt-2 check-plan-container">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="plan" id="checkPlan" runat="server">
+                                <label class="form-check-label" for="<%= checkPlan.ClientID %>">อบรมตามแผน</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="plan" id="checkNotPlan" runat="server">
+                                <label class="form-check-label" for="<%= checkNotPlan.ClientID %>">อบรมนอกแผน</label>
+                            </div>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="plan" id="checkNotPlan" runat="server">
-                            <label class="form-check-label" for="<%= checkNotPlan.ClientID %>">อบรมนอกแผน</label>
+                        <div class="form-group py-3 select-plan-container">
+                            <label>เลือกแผนฝึกอบรม</label>
+                            <select class="form-control selectpicker" id="trainingPlan" runat="server" data-live-search="true">
+                                <option selected>-</option>
+                            </select>
                         </div>
-                    </div>
-                    <div class="form-group py-3 select-plan-container">
-                        <label>เลือกแผนฝึกอบรม</label>
-                        <select class="form-control selectpicker" id="trainingPlan" runat="server" data-live-search="true">
-                            <option selected>-</option>
-                        </select>
-                    </div>
                     <hr />
+                    </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label>รหัสหลักสูตร</label>
@@ -660,6 +662,7 @@
             $('#addModal').modal('show')
 
             if (type === 'view') {
+                $('#plan-section-container').hide()
                 $('#addModalTitle').text('Course detail')
                 $('#<%= btnInserted.ClientID %>').hide()
                 $('#<%= btnEdit.ClientID %>').hide()
@@ -668,6 +671,7 @@
             }
 
             if (type === 'edit') {
+                $('#plan-section-container').hide()
                 $('#addModalTitle').text('Edit course')
                 $('#<%= btnDelete.ClientID %>').show()
                 $('#<%= btnEdit.ClientID %>').show()
@@ -713,6 +717,7 @@
         function ClearInputValue() {
             $('#<%= btnDelete.ClientID %>').hide()
             $('.assessor-container-all').hide()
+            $('#plan-section-container').show()
 
             $('#<%= checkPlan.ClientID %>').prop('checked', false)
             $('#<%= checkNotPlan.ClientID %>').prop('checked', false)
