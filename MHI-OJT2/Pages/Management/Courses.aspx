@@ -384,7 +384,6 @@
         })();
 
         function handleExportReport(d) {
-            console.log(d)
             if (d.COURSE_ID) {
                 let modal = $('#ExportReportModal')
                 let hiddenId = $('#<%= EXPORT_REPORT_COURSE_ID.ClientID %>')
@@ -623,13 +622,13 @@
                 $('#addModalTitle').text('Course detail')
                 $('#<%= btnInserted.ClientID %>').hide()
                 $('#<%= btnEdit.ClientID %>').hide()
-                $('#<%= btnDelete.ClientID %>').show()
                 isDisabledInput(true)
                 $('.assessor-container-all').show()
             }
 
             if (type === 'edit') {
                 $('#addModalTitle').text('Edit course')
+                $('#<%= btnDelete.ClientID %>').show()
                 $('#<%= btnEdit.ClientID %>').show()
                 $('#<%= btnInserted.ClientID %>').hide()
                 isDisabledInput(false)

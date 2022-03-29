@@ -566,51 +566,9 @@ namespace MHI_OJT2.Pages.Management
 				string connectionString = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
 
 				SqlParameterCollection param = new SqlCommand().Parameters;
-				int id = int.Parse(hiddenId.Value.ToString());
+				param.AddWithValue("ID", SqlDbType.Int).Value = int.Parse(hiddenId.Value.ToString());
 
-				using (SqlConnection con = new SqlConnection(connectionString))
-				{
-					string query = $"DELETE FROM ADJUST_COURSE WHERE ID = {id}";
-					using (SqlCommand cmd = new SqlCommand(query))
-                    {
-						con.Open();
-						cmd.ExecuteNonQuery();
-						con.Close();
-                    }
-                }
-
-				using (SqlConnection con = new SqlConnection(connectionString))
-				{
-					string query = $"DELETE FROM PLAN_AND_COURSE WHERE COURSE_ID = {id}";
-					using (SqlCommand cmd = new SqlCommand(query))
-					{
-						con.Open();
-						cmd.ExecuteNonQuery();
-						con.Close();
-					}
-				}
-
-				using (SqlConnection con = new SqlConnection(connectionString))
-				{
-					string query = $"DELETE FROM EVALUATE WHERE COURSE_ID = {id}";
-					using (SqlCommand cmd = new SqlCommand(query))
-					{
-						con.Open();
-						cmd.ExecuteNonQuery();
-						con.Close();
-					}
-				}
-
-				using (SqlConnection con = new SqlConnection(connectionString))
-				{
-					string query = $"DELETE FROM APPROVAL WHERE COURSE_ID = {id}";
-					using (SqlCommand cmd = new SqlCommand(query))
-					{
-						con.Open();
-						cmd.ExecuteNonQuery();
-						con.Close();
-					}
-				}
+				SQL.ExecuteWithParams("EXECUTE SP_DELETE_COURSE @ID", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString, param);
 
 				Session.Add("alert", "deleted");
 				Response.Redirect(_selfPathName);
