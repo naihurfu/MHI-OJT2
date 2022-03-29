@@ -11,6 +11,21 @@
         label:not(.form-check-label):not(.custom-file-label) {
             font-weight: 400 !important;
         }
+
+        
+
+        FIELDSET {
+            margin: 8px;
+            border: 1px solid silver;
+            padding: 8px;    
+            border-radius: 4px;
+        }
+        LEGEND{
+            width: auto !important;
+            padding: 2px;
+            font-size: 16px !important;
+        }
+
     </style>
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="body" runat="server">
@@ -314,42 +329,68 @@
                         <span>วันที่อบรม : <b id="export-report-start-date"></b></span>
                         <span>ผู้จัดทำ : <b id="export-report-created-name"></b></span>
                     </div>
-                    <div class="row mb-3 mt-4 pt-2">
-                        <div class="col-8 form-group">
-                            <label>ชื่อหัวหน้างาน (Commander)</label>
-                            <input type="text" runat="server" id="commanderName" class="form-control" />
-                        </div>
-                        <div class="col-4 form-group mb-2">
-                            <label>ลงวันที่</label>
-                            <input type="tel" id="commanderDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
-                        </div>
-                    </div>
 
-                    <div class="row mb-3">
-                        <div class="col-8 form-group">
-                            <label>ชื่อผู้จัดการฝ่าย (Section Manager)</label>
-                            <input type="text" runat="server" id="sectionManagerName" class="form-control" />
+                    <fieldset>
+                        <legend>หัวหน้างาน (Commander)</legend>
+                        <div class="row">
+                            <div class="col-12 form-group">
+                                <label>ลงชื่อ</label>
+                                <input type="text" runat="server" id="commanderName" class="form-control" />
+                            </div>
+                            <div class="col-8 form-group">
+                                <label>ตำแหน่ง</label>
+                                <input type="text" runat="server" id="commanderPositionName" class="form-control" />
+                            </div>
+                            <div class="col-4 form-group mb-2">
+                                <label>ลงวันที่</label>
+                                <input type="tel" id="commanderDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
+                            </div>
                         </div>
-                        <div class="col-4 form-group">
-                            <label>ลงวันที่</label>
-                            <input type="tel" id="sectionManagerDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
+                    </fieldset>
+                    
+                    <fieldset>
+                        <legend>ผู้จัดการฝ่าย (Section Manager)</legend>
+                        <div class="row">
+                            <div class="col-12 form-group">
+                                <label>ลงชื่อ</label>
+                                <input type="text" runat="server" id="sectionManagerName" class="form-control" />
+                            </div>
+                            <div class="col-8 form-group">
+                                <label>ตำแหน่ง</label>
+                                <input type="text" runat="server" id="sectionManagerPositionName" class="form-control" />
+                            </div>
+                            <div class="col-4 form-group">
+                                <label>ลงวันที่</label>
+                                <input type="tel" id="sectionManagerDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
+                            </div>
                         </div>
-                    </div>
+                    </fieldset>
 
-                    <div class="row">
-                        <div class="col-8 form-group">
-                            <label>เจ้าหน้าที่ฝึกอบรม (Training Officer)</label>
-                            <input type="text" runat="server" id="trainingOfficerName" class="form-control" />
+                    <fieldset>
+                        <legend>ผู้ประเมิน (Assessor)</legend>
+                        <div class="row">
+                            <div class="col-12 form-group">
+                                <label>ลงชื่อ</label>
+                                <input type="text" runat="server" id="assessorName" class="form-control" />
+                            </div>
+                            <div class="col-8 form-group">
+                                <label>ตำแหน่ง</label>
+                                <input type="text" runat="server" id="assessorPositionName" class="form-control" />
+                            </div>
+                            <div class="col-4 form-group">
+                                <label>ลงวันที่</label>
+                                <input type="tel" id="assessorDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
+                            </div>
                         </div>
-                        <div class="col-4 form-group">
-                            <label>ลงวันที่</label>
-                            <input type="tel" id="trainingOfficerDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
-                        </div>
-                    </div>
+                    </fieldset>
             </div>
-            <div class="modal-footer" style="justify-content: end !important;">
+            <div class="modal-footer" style="justify-content: space-between !important;">
+                <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="isSigned" runat="server">
+                            <label class="form-check-label" for="<%= isSigned.ClientID %>">ลงลายเซ็นต์พนักงาน</label>
+                </div>
                 <input type="hidden" id="EXPORT_REPORT_COURSE_ID" runat="server" />
-                <asp:Button ID="btnExportReport" Text="พิมพ์รายงาน" runat="server" CssClass="btn btn-block btn-success" OnClick="ExportReportEvaluationOJT" />
+                <asp:Button ID="btnExportReport" Text="พิมพ์รายงาน" runat="server" CssClass="btn btn-success" OnClick="ExportReportEvaluationOJT" />
             </div>
         </div>
     </div>

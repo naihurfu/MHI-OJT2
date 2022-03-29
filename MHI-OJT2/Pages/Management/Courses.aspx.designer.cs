@@ -294,6 +294,15 @@ namespace MHI_OJT2.Pages.Management
         protected global::System.Web.UI.HtmlControls.HtmlInputText commanderName;
 
         /// <summary>
+        /// commanderPositionName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText commanderPositionName;
+
+        /// <summary>
         /// commanderDate control.
         /// </summary>
         /// <remarks>
@@ -312,6 +321,15 @@ namespace MHI_OJT2.Pages.Management
         protected global::System.Web.UI.HtmlControls.HtmlInputText sectionManagerName;
 
         /// <summary>
+        /// sectionManagerPositionName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText sectionManagerPositionName;
+
+        /// <summary>
         /// sectionManagerDate control.
         /// </summary>
         /// <remarks>
@@ -321,22 +339,40 @@ namespace MHI_OJT2.Pages.Management
         protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl sectionManagerDate;
 
         /// <summary>
-        /// trainingOfficerName control.
+        /// assessorName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText trainingOfficerName;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText assessorName;
 
         /// <summary>
-        /// trainingOfficerDate control.
+        /// assessorPositionName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl trainingOfficerDate;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText assessorPositionName;
+
+        /// <summary>
+        /// assessorDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl assessorDate;
+
+        /// <summary>
+        /// isSigned control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox isSigned;
 
         /// <summary>
         /// EXPORT_REPORT_COURSE_ID control.
