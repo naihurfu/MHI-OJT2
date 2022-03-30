@@ -223,7 +223,7 @@
             <aside class="main-sidebar sidebar-dark-primary elevation-4">
                 <!-- Brand Logo -->
                 <a href="~/Default.aspx" runat="server" class="brand-link">
-                    <img src="~/Assets/dist/img/AdminLTELogo.png" runat="server" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <img src="~/Assets/OJTlogo.png" runat="server" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                     <span class="brand-text font-weight-light">OJT TRAINING</span>
                 </a>
 
@@ -514,6 +514,9 @@
                                     case "APPROVED":
                                         window.location.href = window.location.href;
                                         break
+
+                                    case "REJECTED":
+                                        window.localion.href = window.location.href;
                                 }
                             },
                             error: function (err) {

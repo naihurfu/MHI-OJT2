@@ -98,7 +98,7 @@ namespace MHI_OJT2
             HttpContext.Current.Session["firstName"] = userData.Rows[0]["FIRST_NAME"];
             HttpContext.Current.Session["lastName"] = userData.Rows[0]["LAST_NAME"];
             HttpContext.Current.Session["roles"] = userData.Rows[0]["ROLES"];
-            HttpContext.Current.Session["isEditMaster"] = userData.Rows[0]["IS_EDIT_MASTER"]; 
+            HttpContext.Current.Session["isEditMaster"] = bool.Parse(userData.Rows[0]["IS_EDIT_MASTER"].ToString()) == true ? 1 : 0;
 
             if (isUser == true)
             {
@@ -123,7 +123,7 @@ namespace MHI_OJT2
                 ",person.FnameT FIRST_NAME" +
                 ",person.LnameT LAST_NAME" +
                 ",'user' ROLES" +
-                ",0 IS_EDIT_MASTER" +
+                ",'False' IS_EDIT_MASTER" +
                 ",position.PositionNameT positionNameTH" +
                 ",position.PositionNameE positionNameEN " +
                 "FROM PNT_Person person " +

@@ -523,8 +523,8 @@ namespace MHI_OJT2.Pages.Management
 				updateAdjustCourseParamCollection.AddWithValue("COURSE_NUMBER", SqlDbType.VarChar).Value = courseNumber.Value;
 				updateAdjustCourseParamCollection.AddWithValue("TIMES", SqlDbType.Int).Value = times.Value;
 				updateAdjustCourseParamCollection.AddWithValue("COURSE_NAME", SqlDbType.VarChar).Value = courseName.Value;
-				updateAdjustCourseParamCollection.AddWithValue("START_DATE", SqlDbType.Date).Value = startDate.Value;
-				updateAdjustCourseParamCollection.AddWithValue("END_DATE", SqlDbType.Date).Value = endDate.Value;
+				updateAdjustCourseParamCollection.AddWithValue("START_DATE", SqlDbType.Date).Value = DATA.DateTimeToSQL(startDate.Value);
+				updateAdjustCourseParamCollection.AddWithValue("END_DATE", SqlDbType.Date).Value = DATA.DateTimeToSQL(endDate.Value);
 				updateAdjustCourseParamCollection.AddWithValue("START_TIME", SqlDbType.VarChar).Value = startTime.Value;
 				updateAdjustCourseParamCollection.AddWithValue("END_TIME", SqlDbType.VarChar).Value = endTime.Value;
 				updateAdjustCourseParamCollection.AddWithValue("TOTAL_HOURS", SqlDbType.Int).Value = totalHours.Value;

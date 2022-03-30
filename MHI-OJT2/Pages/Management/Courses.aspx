@@ -67,6 +67,7 @@
                                 <th>ชื่อหลักสูตร</th>
                                 <th>ผู้จัดทำ</th>
                                 <th>วันที่เริ่มอบรม</th>
+                                <th class="text-center">ประเภท</th>
                                 <th class="text-center">สถานะ</th>
                                 <th class="text-center">ดาวโหลดรายงาน</th>
                             </tr>
@@ -79,7 +80,7 @@
                                             <%# Container.ItemIndex + 1 %>
                                         </th>
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-sm btn-primary" onclick="handleEditCourse(<%# Eval("COURSE_ID") %>)">แก้ไข</button>
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="handleEditCourse(<%# Eval("COURSE_ID") %>)" <%# Session["roles"].ToString().ToLower() != "admin" ? (int)Eval("STATUS_CODE") == 10 ? "disabled" : "" : "" %> >แก้ไข</button>
                                         </td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-sm btn-link" onclick="handleViewCourseDetail(<%# Eval("COURSE_ID") %>)">แสดง</button>
@@ -88,6 +89,11 @@
                                         <td><%# Eval("COURSE_NAME") %></td>
                                         <td><%# Eval("CREATED_NAME") %></td>
                                         <td><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd MMM yyyy}", Eval("START_DATE")) %></td>
+                                        <td class="text-center">
+                                            <span class="badge badge-<%# int.Parse(Eval("PLANNED").ToString()) == 1 ? "warning" : "info" %>">
+                                                <%# int.Parse(Eval("PLANNED").ToString()) == 1 ? "ในแผน" : "นอกแผน" %>
+                                            </span>
+                                        </td>
                                         <td class="text-center">
                                             <button type="button" class='<%# (int)Eval("STATUS_CODE") == 1 ? "btn btn-sm btn-primary" : (int)Eval("STATUS_CODE") == 2 ? "btn btn-sm btn-warning" : (int)Eval("STATUS_CODE") == 9 ? "btn btn-sm btn-success" : (int)Eval("STATUS_CODE") == 10 ? "btn btn-sm btn-danger" : "btn btn-sm btn-secondary" %>' onclick="handleShowModal(<%# Eval("COURSE_ID") %>,'<%# (int)Eval("STATUS_CODE")== 1 ? "add-employee" : (int)Eval("STATUS_CODE")== 2 ? "evaluate" : "view-status" %>')" style="width: 220px !important;">
                                                 <%# Eval("STATUS_TEXT") %>
@@ -312,7 +318,7 @@
         </div>
     </div>
     <div class="modal fade" id="ExportReportModal" tabindex="-1" aria-labelledby="ExportReportModal" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" style="box-shadow: none !important;">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl" style="box-shadow: none !important;">
             <div class="modal-content dark-mode">
                 <div class="modal-header">
                     <h5 class="modal-title text-light">ลงชื่อผู้ทำการฝึกอบรมและประเมิน</h5>
@@ -333,13 +339,13 @@
                     </div>
 
                     <fieldset>
-                        <legend>หัวหน้างาน (Commander)</legend>
+                        <legend>ลงชื่อคนที่ 1</legend>
                         <div class="row">
-                            <div class="col-12 form-group">
+                            <div class="col-4 form-group">
                                 <label>ลงชื่อ</label>
                                 <input type="text" runat="server" id="commanderName" class="form-control" />
                             </div>
-                            <div class="col-8 form-group">
+                            <div class="col-4 form-group">
                                 <label>ตำแหน่ง</label>
                                 <input type="text" runat="server" id="commanderPositionName" class="form-control" />
                             </div>
@@ -349,15 +355,32 @@
                             </div>
                         </div>
                     </fieldset>
+                    <fieldset>
+                        <legend>ลงชื่อคนที่ 2</legend>
+                        <div class="row">
+                            <div class="col-4 form-group">
+                                <label>ลงชื่อ</label>
+                                <input type="text" runat="server" id="assessorName" class="form-control" />
+                            </div>
+                            <div class="col-4 form-group">
+                                <label>ตำแหน่ง</label>
+                                <input type="text" runat="server" id="assessorPositionName" class="form-control" />
+                            </div>
+                            <div class="col-4 form-group">
+                                <label>ลงวันที่</label>
+                                <input type="tel" id="assessorDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
+                            </div>
+                        </div>
+                    </fieldset>
                     
                     <fieldset>
-                        <legend>ผู้จัดการฝ่าย (Section Manager)</legend>
+                        <legend>ลงชื่อคนที่ 3</legend>
                         <div class="row">
-                            <div class="col-12 form-group">
+                            <div class="col-4 form-group">
                                 <label>ลงชื่อ</label>
                                 <input type="text" runat="server" id="sectionManagerName" class="form-control" />
                             </div>
-                            <div class="col-8 form-group">
+                            <div class="col-4 form-group">
                                 <label>ตำแหน่ง</label>
                                 <input type="text" runat="server" id="sectionManagerPositionName" class="form-control" />
                             </div>
@@ -368,23 +391,6 @@
                         </div>
                     </fieldset>
 
-                    <fieldset>
-                        <legend>ผู้ประเมิน (Assessor)</legend>
-                        <div class="row">
-                            <div class="col-12 form-group">
-                                <label>ลงชื่อ</label>
-                                <input type="text" runat="server" id="assessorName" class="form-control" />
-                            </div>
-                            <div class="col-8 form-group">
-                                <label>ตำแหน่ง</label>
-                                <input type="text" runat="server" id="assessorPositionName" class="form-control" />
-                            </div>
-                            <div class="col-4 form-group">
-                                <label>ลงวันที่</label>
-                                <input type="tel" id="assessorDate" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
-                            </div>
-                        </div>
-                    </fieldset>
             </div>
             <div class="modal-footer" style="justify-content: space-between !important;">
                 <div class="form-check form-check-inline">
