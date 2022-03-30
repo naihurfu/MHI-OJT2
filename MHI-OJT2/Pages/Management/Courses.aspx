@@ -63,7 +63,7 @@
                                 <th class="text-center">ลำดับ</th>
                                 <th class="text-center">แก้ไข</th>
                                 <th class="text-center">รายละเอียด</th>
-                                <th>รหัสหลักสูตร</th>
+                                <th>แผนก</th>
                                 <th>ชื่อหลักสูตร</th>
                                 <th>ผู้จัดทำ</th>
                                 <th>วันที่เริ่มอบรม</th>
@@ -85,7 +85,7 @@
                                         <td class="text-center">
                                             <button type="button" class="btn btn-sm btn-link" onclick="handleViewCourseDetail(<%# Eval("COURSE_ID") %>)">แสดง</button>
                                         </td>
-                                        <td><%# Eval("COURSE_NUMBER") %></td>
+                                        <td><%# Eval("DEPARTMENT_NAME") %></td>
                                         <td><%# Eval("COURSE_NAME") %></td>
                                         <td><%# Eval("CREATED_NAME") %></td>
                                         <td><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd MMM yyyy}", Eval("START_DATE")) %></td>
@@ -100,7 +100,7 @@
                                             </button>
                                         </td>
                                         <td class="text-center">
-                                            <button type="button" class='btn btn-success' onclick="handleExportReport({COURSE_ID: <%# Eval("COURSE_ID") %>, COURSE_CODE : '<%# Eval("COURSE_NUMBER") %>' , COURSE_NAME : '<%# Eval("COURSE_NAME") %>', COURSE_TIMES: '<%# Eval("TIMES") %>' , COURSE_START_DATE : '<%# Eval("START_DATE") %>', CREATED_NAME : '<%# Eval("CREATED_NAME") %>'})" <%# (int)Eval("STATUS_CODE") >= 3 ? "" : "disabled" %>>
+                                            <button type="button" class='btn btn-sm btn-success' onclick="handleExportReport({COURSE_ID: <%# Eval("COURSE_ID") %>, COURSE_CODE : '<%# Eval("COURSE_NUMBER") %>' , COURSE_NAME : '<%# Eval("COURSE_NAME") %>', COURSE_TIMES: '<%# Eval("TIMES") %>' , COURSE_START_DATE : '<%# Eval("START_DATE") %>', CREATED_NAME : '<%# Eval("CREATED_NAME") %>'})" <%# (int)Eval("STATUS_CODE") >= 3 ? "" : "disabled" %>>
                                                 Training/Evaluation OJT
                                             </button>
                                         </td>

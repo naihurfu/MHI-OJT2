@@ -341,12 +341,12 @@ namespace MHI_OJT2.Pages.Management
 
             if (id != 0)
             {
-                formula += "AND {VIEW_PLAN_AND_COURSE.PLAN_SECTION_ID} = " + int.Parse(section.Value.ToString()) + " ";
+                formula += "AND {VIEW_PLAN_AND_COURSE.PLAN_SECTION_ID} = " + int.Parse(section.Value.ToString()) + "  ";
             }
 
             if (_roles == "clerk")
             {
-                formula += " AND " +
+                formula += "  AND " +
                         "{VIEW_PLAN_AND_COURSE.CREATED_ID} = " + id + " ";
             }
 
