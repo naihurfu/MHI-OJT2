@@ -1,5 +1,6 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
+using MHI_OJT2.Pages.Systems;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,6 +20,7 @@ namespace MHI_OJT2.Pages.Management
         string _sessionAlert = null;
         string _selfPathName = "~/Pages/Management/Training-plans.aspx";
         string _roles = "";
+
         protected void Page_Load(object sender, EventArgs e)
         {
             Auth.CheckLoggedIn();
@@ -66,14 +68,15 @@ namespace MHI_OJT2.Pages.Management
         {
             if (role != "user")
             {
-                string query = "SELECT DISTINCT SECTION_NAME,SECTION_ID FROM COURSE_AND_EMPLOYEE ";
+                string query = "SELECT DISTINCT PLAN_SECTION_NAME SECTION_NAME,PLAN_SECTION_ID SECTION_ID FROM VIEW_PLAN_AND_COURSE ";
 
                 if (role == "clerk")
                 {
                     query += $"WHERE CREATED_ID = {userId}";
                 }
 
-                section.DataSource = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+                DataTable sectionDataSource = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+                section.DataSource = sectionDataSource;
                 section.DataTextField = "SECTION_NAME";
                 section.DataValueField = "SECTION_ID";
                 section.DataBind();
@@ -170,6 +173,18 @@ namespace MHI_OJT2.Pages.Management
                 // execute query
                 SQL.ExecuteWithParams(query, mainDb, param);
 
+                // loging
+                try
+                {
+                    ObjectLog obj = new ObjectLog();
+                    obj.TITLE = "แผนการฝึกอบรม";
+                    obj.REMARK = planName.Value;
+                    Log.Create("add", obj);
+                } catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
                 // create session for alert
                 Session.Add("alert", "inserted");
 
@@ -247,7 +262,6 @@ namespace MHI_OJT2.Pages.Management
             try
             {
                 string connectionString = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
-
                 // check use data
                 int usedRowCount = 0;
 
@@ -267,6 +281,20 @@ namespace MHI_OJT2.Pages.Management
                 // throw exeption if data is used
                 if (usedRowCount > 0) return "USED";
 
+                // loging
+                try
+                {
+                    DataTable plan = SQL.GetDataTable($"SELECT PLAN_NAME FROM TRAINING_PLAN WHERE ID={planId}", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+                    ObjectLog obj = new ObjectLog();
+                    obj.TITLE = "แผนการฝึกอบรม";
+                    obj.REMARK = plan.Rows[0][0].ToString();
+                    Log.Create("delete", obj);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
                 // delete data command
                 SqlConnection deleteConnection = new SqlConnection(connectionString);
                 SqlCommand deleteCommand = new SqlCommand("DELETE FROM TRAINING_PLAN WHERE ID=@planId", deleteConnection);
@@ -274,6 +302,8 @@ namespace MHI_OJT2.Pages.Management
                 deleteConnection.Open();
                 deleteCommand.ExecuteNonQuery();
                 deleteConnection.Close();
+
+                
 
                 // deleted
                 HttpContext.Current.Session["alert"] = "deleted";
@@ -294,13 +324,25 @@ namespace MHI_OJT2.Pages.Management
             string exportName = "TRAINING PLAN REPORT";
 
             rpt.Load(filename: Server.MapPath("~/Reports/rpt_Training_Plan.rpt"));
-            rpt.SetParameterValue("Section", section.Value.ToString());
+
+            int sectionId = int.Parse(section.Value.ToString());
+            string sectionName = "";
+            using (DataTable dt = SQL.GetDataTable($"SELECT SECTION_NAME FROM SECTION WHERE ID = {sectionId}", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
+            {
+                sectionName = dt.Rows[0][0].ToString();
+            }
+
+             rpt.SetParameterValue("Section", sectionName);
+
             string formula = "cDate(ToText(cDate({VIEW_PLAN_AND_COURSE.PLAN_DATE}),'dd/MM/yyyy')) >= " +
             $"cDate(ToText(cDate('{startDate.Value}'),'dd/MM/yyyy')) " +
             "AND cDate(ToText(cDate({VIEW_PLAN_AND_COURSE.PLAN_DATE}),'dd/MM/yyyy')) <= " +
             $"cDate(ToText(cDate('{endDate.Value}'),'dd/MM/yyyy'))";
 
-            formula += "AND {VIEW_PLAN_AND_COURSE.PLAN_SECTION_ID} = " + int.Parse(section.Value.ToString()) + " ";
+            if (id != 0)
+            {
+                formula += "AND {VIEW_PLAN_AND_COURSE.PLAN_SECTION_ID} = " + int.Parse(section.Value.ToString()) + " ";
+            }
 
             if (_roles == "clerk")
             {
@@ -310,7 +352,24 @@ namespace MHI_OJT2.Pages.Management
 
             rpt.RecordSelectionFormula = formula;
             rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+
+            // logging
+            try
+            {
+                ObjectLog obj = new ObjectLog();
+                obj.TITLE = exportName;
+                obj.REMARK = $"ช่วงวันที่ {startDate.Value} ถึง {endDate.Value}";
+                Log.Create("print", obj);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            // end logging
+
             rpt.ExportToHttpResponse(expType, Response, true, exportName);
+
+            
         }
     }
 }

@@ -25,16 +25,14 @@ namespace MHI_OJT2.Pages.Systems
                 GetAllLog();
             }
         }
-
         void GetAllLog()
         {
             RepeatTable.DataSource = SQL.GetDataTable("SELECT * FROM VIEW_SYSTEM_LOG", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
             RepeatTable.DataBind();
         }
-
-        public void Create(string actionType, ObjectLog _ObjectLog)
+        public static void Create(string actionType, ObjectLog _ObjectLog)
         {
-            int userId = int.Parse(Session["userId"].ToString());
+            int userId = int.Parse(HttpContext.Current.Session["userId"].ToString());
             _ObjectLog.CREATED_BY = userId;
 
             if (string.IsNullOrWhiteSpace(_ObjectLog.REMARK))
@@ -47,6 +45,7 @@ namespace MHI_OJT2.Pages.Systems
                 case "add":
                     _ObjectLog.ACTION_TYPE = "เพิ่มข้อมูล";
                     _ObjectLog.OLD_VALUE = "-";
+                    _ObjectLog.NEW_VALUE = "-";
 
                     InsertLog(_ObjectLog);
                     break;
@@ -60,6 +59,7 @@ namespace MHI_OJT2.Pages.Systems
                 case "delete":
                     _ObjectLog.ACTION_TYPE = "ลบข้อมูล";
                     _ObjectLog.OLD_VALUE = "-";
+                    _ObjectLog.NEW_VALUE = "-";
 
                     InsertLog(_ObjectLog);
                     break;
@@ -72,7 +72,7 @@ namespace MHI_OJT2.Pages.Systems
             }
         }
 
-        protected void InsertLog(ObjectLog _ObjectLog)
+        public static void InsertLog(ObjectLog _ObjectLog)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace MHI_OJT2.Pages.Systems
                 param.AddWithValue("OLD_VALUE", SqlDbType.VarChar).Value = _ObjectLog.OLD_VALUE;
                 param.AddWithValue("NEW_VALUE", SqlDbType.VarChar).Value = _ObjectLog.NEW_VALUE;
                 param.AddWithValue("REMARK", SqlDbType.VarChar).Value = _ObjectLog.REMARK;
-                param.AddWithValue("CREATED_BY", SqlDbType.VarChar).Value = _ObjectLog.CREATED_BY;
+                param.AddWithValue("CREATED_BY", SqlDbType.Int).Value = _ObjectLog.CREATED_BY;
 
                 SQL.ExecuteWithParams(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString, param);
             }
