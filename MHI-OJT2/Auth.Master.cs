@@ -149,16 +149,11 @@ namespace MHI_OJT2
 
 			rpt.Load(filename: Server.MapPath($"~/Reports/rpt_Manage_Course.rpt"));
 			rpt.RecordSelectionFormula = "{COURSE_AND_EMPLOYEE.COURSE_ID}=" + courseId;
-			//rpt.SetParameterValue("COMMANDER_NAME", commanderName.Value);
-			//rpt.SetParameterValue("COMMANDER_DATE", commanderDate.Value);
-			//rpt.SetParameterValue("SECTION_MANAGER_NAME", sectionManagerName.Value);
-			//rpt.SetParameterValue("SECTION_MANAGER_DATE", sectionManagerDate.Value);
-			//rpt.SetParameterValue("TRAINING_OFFICER_NAME", trainingOfficerName.Value);
-			//rpt.SetParameterValue("TRAINING_OFFICER_DATE", trainingOfficerDate.Value);
 
 			rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
 			rpt.ExportToHttpResponse(expType, Response, true, exportName);
 			downloadReportId.Value = "0";
+
 		}
     }
 }
