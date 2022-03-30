@@ -144,7 +144,7 @@
                             </table>
                         </div>
                         <div class="card-footer text-center dark-mode" >
-                            <a href="~/Pages/Training-profile.aspx" runat="server" class="text-light">ดูเพิ่มเติม</a>
+                            <a href="~/Pages/Management/Courses.aspx" runat="server" class="text-light">ดูเพิ่มเติม</a>
                         </div>
                     </div>
                 </div>

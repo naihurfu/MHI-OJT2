@@ -56,15 +56,28 @@ namespace MHI_OJT2.Pages.Management
                 if (Session["EVALUATE_COURSE_ID"] != null)
                 {
                     int courseId = int.Parse(Session["EVALUATE_COURSE_ID"].ToString());
-                    int approveId = int.Parse(Session["EVALUATE_APPROVE_ID"].ToString());
-                    int approveSequence = int.Parse(Session["EVALUATE_APPROVAL_SEQUENCE"].ToString());
                     int isEvaluation = int.Parse(Session["IS_EVALUATION"].ToString());
+
+                    int approveId = 0;
+                    int approveSequence = 0;
+
+                    if (isEvaluation == 0)
+                    {
+                        approveId = int.Parse(Session["EVALUATE_APPROVE_ID"].ToString());
+                        approveSequence = int.Parse(Session["EVALUATE_APPROVAL_SEQUENCE"].ToString());
+
+                    }
                     if (courseId > 0)
                     {
                         _isEvaluation = isEvaluation;
                         _courseId = courseId;
-                        _approveId = approveId;
-                        _approveSequence = approveSequence;
+
+                        if (isEvaluation == 0)
+                        {
+                            _approveId = approveId;
+                            _approveSequence = approveSequence;
+
+                        }
 
                         string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
                         SqlParameterCollection param = new SqlCommand().Parameters;
@@ -80,10 +93,17 @@ namespace MHI_OJT2.Pages.Management
                             RepeatCourseTable.DataSource = dt;
                             RepeatCourseTable.DataBind();
 
-                            Session.Remove("EVALUATE_COURSE_ID");
-                            Session.Remove("EVALUATE_APPROVE_ID");
-                            Session.Remove("EVALUATE_APPROVAL_SEQUENCE");
-                            Session.Remove("IS_EVALUATION");
+
+                            if (isEvaluation == 0)
+                            {
+                                _approveId = approveId;
+                                _approveSequence = approveSequence;
+
+                                Session.Remove("EVALUATE_COURSE_ID");
+                                Session.Remove("EVALUATE_APPROVE_ID");
+                                Session.Remove("EVALUATE_APPROVAL_SEQUENCE");
+                                Session.Remove("IS_EVALUATION");
+                            }
                         } else
                         {
                             throw new Exception("ไม่พนักงานในหลักสูตร กรุณาตรวจสอบรายชื่อที่เข้าร่วมอบรมอีกครั้ง");

@@ -149,7 +149,11 @@
                         "previous": "ย้อนกลับ",
                         "next": "หน้าถัดไป"
                     }
-                }
+                },
+                aLengthMenu: [
+                    [ "All"]
+                ],
+                paging: false
             });
             if (!<%= _isEvaluation %>) {
                 $('.input__score').attr('disabled', 'disabled');

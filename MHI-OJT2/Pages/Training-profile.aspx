@@ -58,7 +58,7 @@
                                         <td><%# Eval("COURSE_NAME") %></td>
                                         <% if (roles != "user")
                                             { %>
-                                        <td><%# Eval("PersonCode") %> %></td>
+                                        <td><%# Eval("PersonCode") %></td>
                                         <td><%# Eval("InitialT") %> <%# Eval("FnameT") %> <%# Eval("LnameT") %></td>
                                         <%} %>
                                         <td class="text-center"><%# Eval("DEPARTMENT_NAME") %></td>
