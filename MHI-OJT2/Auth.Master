@@ -123,7 +123,7 @@
 
                         </a>
 
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right dark-mode">
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right dark-mode" style="max-width:unset !important;">
                             <% if (notificationCount > 0)
                                 { %>
                             <span class="dropdown-header text-light">คุณมีคำขอ <%= notificationCount >= 10 ? $" มากกว่า {notificationCount.ToString()} " : notificationCount.ToString() %> รายการที่ต้องอนุมัติ</span>
