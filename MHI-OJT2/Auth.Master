@@ -108,46 +108,47 @@
                 <!-- Right navbar links -->
                 <% if (Session["roles"].ToString().ToLower() == "user")
                     { %>
-                <ul class="navbar-nav ml-auto">
-                    <!-- Notifications Dropdown Menu -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" data-toggle="dropdown" href="#">
-                            <i class="far fa-bell"></i>
+                   <ul class="navbar-nav ml-auto">
+                        <% if (notificationCount > 0)
+                                    { %>
+                        <!-- Notifications Dropdown Menu -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" data-toggle="dropdown" href="#">
+                                <i class="far fa-bell"></i>
 
-                            <% if (notificationCount > 0)
-                                { %>
-                            <span class="badge badge-danger navbar-badge">
-                                <%= notificationCount %>
-                            </span>
-                            <% } %>
+                            
+                                <span class="badge badge-danger navbar-badge">
+                                    <%= notificationCount %>
+                                </span>
+                            
 
-                        </a>
-
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right dark-mode" style="max-width:unset !important;">
-                            <% if (notificationCount > 0)
-                                { %>
-                            <span class="dropdown-header text-light">คุณมีคำขอ <%= notificationCount >= 10 ? $" มากกว่า {notificationCount.ToString()} " : notificationCount.ToString() %> รายการที่ต้องอนุมัติ</span>
-                            <div class="dropdown-divider"></div>
-                            <asp:Repeater ID="RepeatNotification" runat="server">
-                                <ItemTemplate>
-                                    <a href="#" class="dropdown-item list__approval" data-course-id='<%# Eval("COURSE_ID") %>' data-approval-id='<%# Eval("APPROVAL_ID") %>' data-approval-sequence='<%# Eval("APPROVAL_SEQUENCE") %>' data-course-number='<%# Eval("COURSE_NUMBER") %>' data-course-department='<%# Eval("DEPARTMENT_NAME") %>' data-course-name='<%# Eval("COURSE_NAME") %>'>
-                                        <%# Eval("COURSE_NAME") %>
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                </ItemTemplate>
-                            </asp:Repeater>
-                            <a href="~/Pages/Management/Approval.aspx" class="dropdown-item dropdown-footer" runat="server">ดูทั้งหมด</a>
-                            <% }
-                                else
-                                { %>
-                            <a href="#" class="dropdown-item text-center">ไม่มีรายการที่ต้องอนุมัติ
                             </a>
-                            <% } %>
-                        </div>
 
-                    </li>
-                </ul>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right dark-mode" style="max-width:unset !important;">
+                                <% if (notificationCount > 0)
+                                    { %>
+                                <span class="dropdown-header text-light">คุณมีคำขอ <%= notificationCount >= 10 ? $" มากกว่า {notificationCount.ToString()} " : notificationCount.ToString() %> รายการที่ต้องอนุมัติ</span>
+                                <div class="dropdown-divider"></div>
+                                <asp:Repeater ID="RepeatNotification" runat="server">
+                                    <ItemTemplate>
+                                        <a href="#" class="dropdown-item list__approval" data-course-id='<%# Eval("COURSE_ID") %>' data-approval-id='<%# Eval("APPROVAL_ID") %>' data-approval-sequence='<%# Eval("APPROVAL_SEQUENCE") %>' data-course-number='<%# Eval("COURSE_NUMBER") %>' data-course-department='<%# Eval("DEPARTMENT_NAME") %>' data-course-name='<%# Eval("COURSE_NAME") %>'>
+                                            <%# Eval("COURSE_NAME") %>
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                                <a href="~/Pages/Management/Approval.aspx" class="dropdown-item dropdown-footer" runat="server">ดูทั้งหมด</a>
+                                <% }
+                                    else
+                                    { %>
+                                <a href="#" class="dropdown-item text-center">ไม่มีรายการที่ต้องอนุมัติ
+                                </a>
+                                <% } %>
+                            </div>
 
+                        </li>
+                        <% } %>
+                   </ul>
                 <% } %>
 
                 <% if (Session["roles"].ToString().ToLower() == "clerk")

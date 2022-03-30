@@ -282,7 +282,8 @@
                         $('#<%= LD_SEP_EP.ClientID %>').prop('checked', data.LD_SEP_EP)
                         $('#<%= OP.ClientID %>').prop('checked', data.OP)
                         $('#<%= trainer.ClientID %>').val(data.TRAINER)
-                        $('#<%= date.ClientID %>').val(data.PLAN_DATE.split(' ')[0])
+                        const planDate = moment(data.PLAN_DATE).format("DD/MM/yyyy")
+                        $('#<%= date.ClientID %>').val(planDate)
 
                         editButton.show()
                         addModal.show()

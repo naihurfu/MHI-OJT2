@@ -103,17 +103,6 @@
                 <div class="card-footer">
                     <div class="row justify-content-end">
                         <input type="hidden" runat="server" id="hiddenCourseId" />
-
-                        <% if (_isEvaluation == 1)
-                            { %>
-                        <button type="button" class="btn btn-warning" onclick="saved(true)">บันทึก (ร่าง)</button>
-                        <button type="button" class="btn btn-success ml-2 w-25" onclick="saved(false)">บันทึก</button>
-                        <% }
-                            else
-                            { %>
-                        <button type="button" class="btn btn-success mr-2 w-25" onclick="handleApprove(1)">อนุมัติ</button>
-                        <button type="button" class="btn btn-danger " onclick="handleApprove(0)">ไม่อนุมัติ</button>
-                        <% } %>
                     </div>
                 </div>
             </div>
