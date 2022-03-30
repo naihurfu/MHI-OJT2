@@ -332,14 +332,14 @@
                                     </p>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                           <%-- <li class="nav-item">
                                 <a href="~/Pages/Systems/Log.aspx" runat="server" class="nav-link">
                                     <i class="nav-icon fas fa-cog"></i>
                                     <p>
                                         SYSTEM LOG 
                                     </p>
                                 </a>
-                            </li>
+                            </li>--%>
                             <% } %>
                         </ul>
                     </nav>

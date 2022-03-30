@@ -174,16 +174,16 @@ namespace MHI_OJT2.Pages.Management
                 SQL.ExecuteWithParams(query, mainDb, param);
 
                 // loging
-                try
-                {
-                    ObjectLog obj = new ObjectLog();
-                    obj.TITLE = "แผนการฝึกอบรม";
-                    obj.REMARK = planName.Value;
-                    Log.Create("add", obj);
-                } catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+                //try
+                //{
+                //    ObjectLog obj = new ObjectLog();
+                //    obj.TITLE = "แผนการฝึกอบรม";
+                //    obj.REMARK = planName.Value;
+                //    Log.Create("add", obj);
+                //} catch (Exception ex)
+                //{
+                //    Console.WriteLine(ex.Message);
+                //}
 
                 // create session for alert
                 Session.Add("alert", "inserted");
@@ -354,17 +354,17 @@ namespace MHI_OJT2.Pages.Management
             rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
 
             // logging
-            try
-            {
-                ObjectLog obj = new ObjectLog();
-                obj.TITLE = exportName;
-                obj.REMARK = $"ช่วงวันที่ {startDate.Value} ถึง {endDate.Value}";
-                Log.Create("print", obj);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            //try
+            //{
+            //    ObjectLog obj = new ObjectLog();
+            //    obj.TITLE = exportName;
+            //    obj.REMARK = $"ช่วงวันที่ {startDate.Value} ถึง {endDate.Value}";
+            //    Log.Create("print", obj);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //}
             // end logging
 
             rpt.ExportToHttpResponse(expType, Response, true, exportName);
