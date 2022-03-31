@@ -29,7 +29,7 @@ namespace MHI_OJT2.Pages.Management
                     int personId = int.Parse(Session["userId"].ToString());
                     if (CheckIsApprover(_courseId, personId) == 0)
                     {
-                        Response.Redirect(Auth._403);
+                        Response.Redirect(Auth.Dashboard);
                     }
                 }
 

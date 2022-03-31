@@ -179,7 +179,7 @@
                     <button type="button" id="btnDownloadReport" class="btn btn-primary btn-block" onclick="GetReportData()">พิมพ์รายงาน</button>
                 </div>
             </div>
-            <div class="card d-none">
+            <div class="card" id="card-print">
                 <div class="card-body page" id="print_me">
                     <div class="d-flex justify-content-between" style="padding-bottom: 15px; vertical-align: middle;">
                         <img src="../../Reports/Pic/OJTlogo-report.png" />
@@ -295,6 +295,8 @@
             let endDate = moment(`${currentYears}-12-31`);
             $('#<%= startDate.ClientID %>').val(startDate.format("DD/MM/YYYY"))
             $('#<%= endDate.ClientID %>').val(endDate.format("DD/MM/YYYY"))
+
+            $('#card-print').hide()
         })();
 
         function GetReportData() {
@@ -330,6 +332,8 @@
                         Swal.fire("ไม่พบหลักสูตรการอบรม", "", "error")
                         return
                     }
+
+                    $('#card-print').show()
 
                     // clear old data
                     $('table thead tr').remove()
@@ -544,6 +548,8 @@
                             importStyle: true,
                             loadCSS: "skill-map.css"
                         });
+                        $('#card-print').hide()
+
                     })
                 }
             });

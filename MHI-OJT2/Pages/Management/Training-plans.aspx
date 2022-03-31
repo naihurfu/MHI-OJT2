@@ -210,7 +210,7 @@
                 scrollX: 500,
                 scrollCollapse: true,
                 scroller: true,
-                "order": [[3, "asc"]],
+                "order": [[0, "asc"]],
                 "oLanguage": {
                     "sSearch": "ค้นหา :",
                     "sLengthMenu": "แสดง _MENU_ รายการ"
