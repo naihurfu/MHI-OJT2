@@ -24,6 +24,14 @@
             left: 50%;
         }
 
+        #table-skill-map thead {
+            font-size:25px !important;
+        }
+
+        #table-skill-map tbody {
+            font-size:22px !important;    
+        }
+
         .main__div {
             display: flex;
             justify-content: center;
@@ -31,7 +39,7 @@
         }
 
         .main__div div {
-            border: 1px solid black;
+            border: 1px solid grey;
             border-right: 0;
             border-bottom: 0;
             text-align: center;
@@ -41,7 +49,7 @@
         }
 
         .main__div div:last-child {
-            border-right: 1px solid black;
+            border-right: 1px solid grey;
         }
 
         .main__div div span {
@@ -50,7 +58,7 @@
         }
 
         .main__div div hr {
-            border-top: 1px solid black;
+            border-top: 1px solid grey;
         }
 
         .main__div div pre {
@@ -75,11 +83,13 @@
 
         .daigonal {
             width:300px;
+            color: grey;
         }
         svg {
             position: absolute;
             width: 100%;
             height: 100%;
+            color: grey;
         }
 
         #print_me * {
@@ -225,7 +235,7 @@
                             </div>
                         </div>
                     </div>
-                    <table class="rotate-table-grid" id="table-skill-map" style="width: 100% !important; font-size: 8px !important;">
+                    <table class="rotate-table-grid" id="table-skill-map" style="width: 100% !important;">
                         <thead>
                         </thead>
                         <tbody>
@@ -383,22 +393,38 @@
                         tableHeader += `</tr>`
                         tableHeader += `<tr>`
                         for (let i = 0; i < keyNames.length; i++) {
-                            if (i > 3) {
+                            if (i === 0) {
+                                // emp code
+                                tableHeader += `<th class="text-center" style="width: 25px !important;">
+                                                    EMP.<br/>CODE
+                                                </th>`
+                            } else if (i > keyNames.length - 5) {
+                                tableHeader += `<th class="text-center" style="width: 40px !important">
+                                                    <span>
+                                                     ${keyNames[i]}
+                                                    <span>
+                                                </th>`
+
+                            } else if (i > 3 && i <= keyNames.length - 5) {
+                                // course name
                                 tableHeader += `<th> 
-                                                <span>
-                                                    ${keyNames[i]} 
-                                                </span>
-                                            </th>`
+                                                    <span>
+                                                        ${keyNames[i]}
+                                                    </span>
+                                                </th>`
                             } else if (i === 1) {
-                                tableHeader += `<th style="text-align: center; padding: 0 !important">
+                                // name and start working
+                                tableHeader += `<th style="text-align: center; padding: 0 !important; width: 80px !important;">
                                                 <div>Name</div>
                                                 <hr style="border-top: 1px solid black; margin-top: 1.5rem; margin-bottom: 1.5rem;"/>
                                                 <div>Start working</div>
                                             </th>`
 
-                            } else if (i === 2) { } else {
-                                tableHeader += `<th style="text-align: center">
-                                                ${keyNames[i]} 
+                            } else if (i === 2) {
+                            } else {
+                                // position
+                                tableHeader += `<th style="text-align: center; width: 200px !important;">
+                                                ${keyNames[i]}
                                             </th>`
                             }
 
@@ -447,7 +473,7 @@
                                              </td>`
 
                                 } else if (j === 1) {
-                                    tableRow += `<td style="text-align: center; padding: 0 !important; vertical-align: middle;">
+                                    tableRow += `<td style="text-align: center; padding: 0 !important; vertical-align: middle; white-space: nowrap !important;">
                                                 ${nameIsNull === true ? `<pre style="margin-bottom: unset; padding: 10.77px;"> </pre>` : `<div style="padding: 10px;">${name}</div>`}
                                                 <hr style="border-top: 1px solid black; margin: 0;"/>
                                                 <div style="padding: 10px">${date}</div>
@@ -542,7 +568,7 @@
                             });
                         });
 
-
+                        //return
                         $('#print_me').printThis({
                             importCSS: true,
                             importStyle: true,
