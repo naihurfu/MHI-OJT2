@@ -9,7 +9,7 @@
         }
 
         .rotate-table-grid tr, .rotate-table-grid td, .rotate-table-grid th {
-            border: 1px solid black !important;
+            border: 1px solid grey !important;
             position: relative;
             padding: 5px;
         }
@@ -35,7 +35,7 @@
         .main__div {
             display: flex;
             justify-content: center;
-            font-size: 12px;
+            font-size: 22px !important;
         }
 
         .main__div div {
@@ -44,8 +44,8 @@
             border-bottom: 0;
             text-align: center;
             padding: 0.5rem 0;
-            height: 140px;
-            width: 120px;
+            height: 175px;
+            width: 145px;
         }
 
         .main__div div:last-child {
@@ -193,14 +193,14 @@
                 <div class="card-body page" id="print_me">
                     <div class="d-flex justify-content-between" style="padding-bottom: 15px; vertical-align: middle;">
                         <img src="../../Reports/Pic/OJTlogo-report.png" />
-                        <h3>MHI Automotive climate control (Thailand) Co., Ltd.</h3>
-                        <span>(HR-T-05)</span>
+                        <h1 style="font-size: 29px !important; font-weight: bold;">MHI Automotive climate control (Thailand) Co., Ltd.</h1>
+                        <span style="font-size: 22px; font-weight: bold; width: 221px; text-align: right;">(HR-T-05)</span>
                     </div>
                     <div class="d-flex justify-content-between" style="vertical-align: middle;">
                         <div class="section__wrap d-flex align-items-end">
-                            <h5>แผนก(Section) : <span id="report_section"></span></h5>
+                            <h3 style="font-size: 25px !important; font-weight: bold; width: 580px;">แผนก(Section) : <span id="report_section"></span></h3>
                         </div>
-                        <h4>รายงานผลแสดงความสามารถของพนักงาน (Skill Map Result Report)</h4>
+                        <h2 style="font-size: 27px !important; font-weight: bold;">รายงานผลแสดงความสามารถของพนักงาน (Skill Map Result Report)</h2>
                         <div class="main__div">
                             <div>
                                 <span>วันที่ประเมิน
@@ -243,7 +243,7 @@
                         <tfoot>
                         </tfoot>
                     </table>
-                    <div class="div__footer" style="font-size: 12px;">
+                    <div class="div__footer" style="font-size: 20px;">
                         <div class="row">
                             <div class="col-3">
                                 <ul style="list-style:none;">
@@ -360,10 +360,10 @@
                     let tableHeader = `<tr id="table-row-department" style="height: 70px !important; padding: 0; margin: 0;">
                                           <th class="text-center" rowspan="2" style="width: 10px;">No.</th>
                                           <td class="diagonal" colspan="3" style="padding: 0; margin: 0;">
-                                            <span style="position: absolute; top: 0; left: 0; margin: 10px; font-size: 14px;">Process Description</span>
-                                            <span style="position: absolute; bottom: 0; right: 0; margin: 10px; font-size: 14px;">Employee</span>
+                                            <span style="position: absolute; top: 0; left: 0; margin: 0 10px;"><b>Process Description</b></span>
+                                            <span style="position: absolute; bottom: 0; right: 0; margin: 0 10px;"><b>Employee</b></span>
                                             <svg viewBox="0 0 10 10" preserveAspectRatio="none" style="top: 0">
-                                                <line x1="10" y1="0" x2="0" y2="10" stroke="black" stroke-width="0.05"></line>
+                                                <line x1="10" y1="0" x2="0" y2="10" stroke="grey" stroke-width="0.03"></line>
                                             </svg>
                                           </td>`
 
@@ -377,8 +377,8 @@
                             async: false,
                             success: (results) => {
                                 let department = results.d
-                                tableHeader += `<td class="${department}" style="text-align: center; height: 5px !important; font-size: 14px;">
-                                                    ${department}
+                                tableHeader += `<td class="${department}" style="text-align: center;">
+                                                    <b>${department}</b>
                                                 </td>`
                                 departmentGroup.push(department)
                             },
@@ -416,7 +416,7 @@
                                 // name and start working
                                 tableHeader += `<th style="text-align: center; padding: 0 !important; width: 80px !important;">
                                                 <div>Name</div>
-                                                <hr style="border-top: 1px solid black; margin-top: 1.5rem; margin-bottom: 1.5rem;"/>
+                                                <hr style="border-top: 1px solid grey; margin-top: 1.5rem; margin-bottom: 1.5rem;"/>
                                                 <div>Start working</div>
                                             </th>`
 
@@ -475,7 +475,7 @@
                                 } else if (j === 1) {
                                     tableRow += `<td style="text-align: center; padding: 0 !important; vertical-align: middle; white-space: nowrap !important;">
                                                 ${nameIsNull === true ? `<pre style="margin-bottom: unset; padding: 10.77px;"> </pre>` : `<div style="padding: 10px;">${name}</div>`}
-                                                <hr style="border-top: 1px solid black; margin: 0;"/>
+                                                <hr style="border-top: 1px solid grey; margin: 0;"/>
                                                 <div style="padding: 10px">${date}</div>
                                              </td>`
 
@@ -491,7 +491,7 @@
                             $('.rotate-table-grid th span').each(function () {
                                 if ($(this).outerWidth() > header_height) header_height = $(this).outerWidth();
                             });
-                            $('.rotate-table-grid th').height(header_height);
+                            $('.rotate-table-grid th').height(header_height + 25);
 
                         }
 
@@ -500,19 +500,19 @@
                         tableTR.find('td:last-child').remove()
 
                         // table footer count plan and actual 
-                        let rowFooter = `<tr>
+                        let rowFooter = `<tr style="font-size: 22px;">
                                         <td
                                             colspan="3"
                                             rowspan="2"
-                                            style="vertical-align: middle; text-align:center; padding: 0.25rem 0 !important; border: 1px solid black;"
+                                            style="vertical-align: middle; text-align:center; padding: 0.25rem 0 !important; border: 1px solid grey;"
                                           >
                                             จำนวนคนทดแทน / งาน
                                             <br/>
                                             (Compensate Person / Job)
                                           </td>
-                                          <td rowspan="2" colspan="1" style="vertical-align: middle; text-align:center; padding: 0.25rem 0 !important; border: 1px solid black;">
+                                          <td rowspan="2" colspan="1" style="vertical-align: middle; text-align:center; padding: 0.25rem 0 !important; border: 1px solid grey;">
                                             <span>Plan</span>
-                                            <hr style="margin: 2px 0 !important; border-top: 1px solid black;" />
+                                            <hr style="margin: 2px 0 !important; border-top: 1px solid grey;" />
                                             <span>Actual</span>
                                           </td>`
                         for (let i = 4; i >= 4 && i <= (keyNames.length - 5); i++) {
@@ -522,9 +522,9 @@
                                     actualSummary += 1
                                 }
                             }
-                            rowFooter += `<td style="text-align:center; padding: 0.25rem 0 !important; border: 1px solid black;">
+                            rowFooter += `<td style="text-align:center; padding: 0.25rem 0 !important; border: 1px solid grey;">
                                             <span>${rowWithKey.length}</span>
-                                            <hr style="margin: 2px 0 !important; border-top: 1px solid black;" />
+                                            <hr style="margin: 2px 0 !important; border-top: 1px solid grey;" />
                                             <span>${actualSummary}</span>
                                       </td>`
                         }
@@ -536,13 +536,13 @@
                         tableFooter.append(rowFooter)
 
                         // row fix value
-                        let rowFixValue = `<tr>
-                                        <td colspan="4" style="text-align:center; padding: 0.1rem 0 !important; border: 1px solid black;">
+                        let rowFixValue = `<tr style="font-size: 22px;">
+                                        <td colspan="4" style="text-align:center; padding: 0.1rem 0 !important; border: 1px solid grey;">
                                                 คะแนนเต็ม (Full Scores)
                                         </td>`
 
                         for (let i = 5; i > 4 && i <= (keyNames.length - 4); i++) {
-                            rowFixValue += `<td style="text-align:center; padding: 0.25rem 0 !important; border: 1px solid black;">
+                            rowFixValue += `<td style="text-align:center; padding: 0.25rem 0 !important; border: 1px solid grey;">
                                             4
                                         </td>`
                         }
@@ -574,7 +574,7 @@
                             importStyle: true,
                             loadCSS: "skill-map.css"
                         });
-                        $('#card-print').hide()
+                        //$('#card-print').hide()
 
                     })
                 }
