@@ -67,7 +67,7 @@
 
                                     <div class="footer">
                                         <div class="col font-kanit" style="text-align: center; font-size: 10px; letter-spacing: 1px; opacity: 0.7; color: black;">
-                                            MHI - OJT Training © <%= DateTime.Now.Year.ToString() %>
+                                            MCCT - OJT Training © <%= DateTime.Now.Year.ToString() %>
                                         </div>
                                     </div>
                                 </div>

@@ -364,7 +364,7 @@
 
             <!-- Main Footer -->
             <footer class="main-footer dark-mode text-center border-0" style="background-color: #343a40 !important; color :rgba(255,255,255,0.4) !important;">
-                <strong style="color: rgba(255,255,255,0.4)  !important;">Copyright &copy; <%= DateTime.Now.Year %> OJT Training </strong>All rights reserved.
+                <strong style="color: rgba(255,255,255,0.4)  !important;">Copyright &copy; <%= DateTime.Now.Year %> MCCT OJT Training </strong>All rights reserved.
             </footer>
         </div>
 
