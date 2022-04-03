@@ -34,6 +34,7 @@ namespace MHI_OJT2.Pages.Systems
         {
             int userId = int.Parse(HttpContext.Current.Session["userId"].ToString());
             string role = HttpContext.Current.Session["roles"].ToString().ToLower();
+            string detail = String.Empty;
 
             _ObjectLog.IS_USER = role == "user" ? 1 : 0;
             _ObjectLog.CREATED_BY = userId;
@@ -57,6 +58,12 @@ namespace MHI_OJT2.Pages.Systems
             {
                 _ObjectLog.TABLE_NAME = "-";
                 _ObjectLog.FK_ID = 0;
+
+            }
+            else
+            {
+                detail = GetNameOrDetail(_ObjectLog.TABLE_NAME, _ObjectLog.FK_ID);
+
             }
 
             switch (actionType.ToLower())
@@ -74,6 +81,7 @@ namespace MHI_OJT2.Pages.Systems
 
                 case "delete":
                     _ObjectLog.ACTION_TYPE = "ลบข้อมูล";
+                    _ObjectLog.REMARK = detail;
 
                     InsertLog(_ObjectLog);
                     break;
@@ -127,6 +135,36 @@ namespace MHI_OJT2.Pages.Systems
             {
                 Console.WriteLine(ex.Message);
             }
+        }
+        public static string GetNameOrDetail(string tableName,int id)
+        {
+            try
+            {
+                string query = BuildQueryByTableName(tableName, id);
+                DataTable dt = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+
+                return dt.Rows[0][0].ToString();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return "";
+            }
+        }
+        public static string BuildQueryByTableName(string tableName, int id)
+        {
+            string results = String.Empty;
+            switch (tableName.ToUpper())
+            {
+                case "ADJUST_COURSE":
+                    results = $"SELECT COURSE_NAME FROM ADJUST_COURSE WHERE ID={id}";
+                    break;
+
+                case "APPROVAL":
+                    results = "COURSE_NAME";
+                    break;
+            }
+            return results;
         }
     }
 
