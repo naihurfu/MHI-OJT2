@@ -166,6 +166,19 @@ namespace MHI_OJT2
 			rpt.SetParameterValue("Section_Manager_Date", "");
 
 			rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+
+			// logging
+			try
+			{
+				ObjectLog obj = new ObjectLog();
+				obj.TITLE = exportName;
+				Log.Create("print", obj);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+
 			rpt.ExportToHttpResponse(expType, Response, true, exportName);
 			downloadReportId.Value = "0";
 
