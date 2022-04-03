@@ -574,7 +574,7 @@
                             importStyle: true,
                             loadCSS: "skill-map.css"
                         });
-                        //$('#card-print').hide()
+                        $('#card-print').hide()
 
                     })
                 }

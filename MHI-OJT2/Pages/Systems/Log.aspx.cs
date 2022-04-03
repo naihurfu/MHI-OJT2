@@ -27,7 +27,7 @@ namespace MHI_OJT2.Pages.Systems
         }
         void GetAllLog()
         {
-            RepeatTable.DataSource = SQL.GetDataTable("SELECT * FROM VIEW_SYSTEM_LOG", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+            RepeatTable.DataSource = SQL.GetDataTable("SELECT * FROM VIEW_SYSTEM_LOG ORDER BY CREATED_AT DESC", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
             RepeatTable.DataBind();
         }
         public static void Create(string actionType, ObjectLog _ObjectLog)

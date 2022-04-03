@@ -110,6 +110,7 @@
     <Content Include="Assets\dist\img\credit\visa.png" />
     <Content Include="Assets\dist\img\default-150x150.png" />
     <Content Include="Assets\dist\img\icons.png" />
+    <Content Include="Assets\dist\img\OJTlogo.png" />
     <Content Include="Assets\dist\img\photo1.png" />
     <Content Include="Assets\dist\img\photo2.png" />
     <Content Include="Assets\dist\img\photo3.jpg" />
@@ -134,12 +135,16 @@
     <Content Include="Assets\dist\js\pages\dashboard.js" />
     <Content Include="Assets\dist\js\pages\dashboard2.js" />
     <Content Include="Assets\dist\js\pages\dashboard3.js" />
+    <Content Include="Assets\icon_font.css" />
     <Content Include="Assets\jquery.transfer.css" />
     <Content Include="Assets\js\jquery.min.js" />
+    <Content Include="Assets\js\jquery.table2excel.min.js" />
     <Content Include="Assets\js\jquery.transfer.js" />
     <Content Include="Assets\js\jspdf.umd.min.js" />
     <Content Include="Assets\js\printThis.js" />
     <Content Include="Assets\js\sweetalert.all.min.js" />
+    <Content Include="Assets\OJTlogo.png" />
+    <Content Include="Assets\pe-icon-7-stroke.css" />
     <Content Include="Assets\plugins\bootstrap-colorpicker\css\bootstrap-colorpicker.css" />
     <Content Include="Assets\plugins\bootstrap-colorpicker\css\bootstrap-colorpicker.min.css" />
     <Content Include="Assets\plugins\bootstrap-colorpicker\js\bootstrap-colorpicker.js" />
@@ -2028,8 +2033,11 @@
     <Content Include="Pages\Systems\Users.aspx" />
     <Content Include="Pages\Training-profile.aspx" />
     <Content Include="Reports\Pic\0_19.png" />
+    <Content Include="Reports\Pic\0_19_NOT_STAR.png" />
     <Content Include="Reports\Pic\20_25.png" />
+    <Content Include="Reports\Pic\20_25_NOT_STAR.png" />
     <Content Include="Reports\Pic\26_50.png" />
+    <Content Include="Reports\Pic\26_50_NOT_STAR.png" />
     <Content Include="Reports\Pic\51_75.png" />
     <Content Include="Reports\Pic\76_100.png" />
     <Content Include="Reports\Pic\Actual.png" />
@@ -2038,6 +2046,7 @@
     <Content Include="Reports\Pic\OJTlogo.png" />
     <Content Include="Reports\Pic\Plan.png" />
     <Content Include="Reports\Pic\Postponned.png" />
+    <Content Include="Reports\Pic\WONG_NAI.png" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
