@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MHI_OJT2.Pages.Systems;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -72,6 +73,20 @@ namespace MHI_OJT2.Pages.Reports
         {
             string query = $"EXEC SP_SKILL_MAP '{sectionName}', '{DateToSQLDateString(startDate)}', '{DateToSQLDateString(endDate)}'";
             DataTable dt = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+
+            // logging
+            try
+            {
+                ObjectLog obj = new ObjectLog();
+                obj.TITLE = "SKILL MAP";
+                obj.REMARK = $"ฝ่าย->{sectionName} // ช่วงวันที่ {startDate} ถึง {endDate}";
+                Log.Create("print", obj);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
             return DATA.DataTableToJSONWithJSONNet(dt);
         }
         [WebMethod]

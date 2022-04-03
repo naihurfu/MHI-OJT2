@@ -100,7 +100,7 @@ namespace MHI_OJT2.Pages.Systems
 			
 			try
 			{
-				if (String.IsNullOrWhiteSpace(username.Value) == true) throw new Exception("กรุณากรอกชื่อผู้ใช้งานให้ถูกต้อง");
+				if (string.IsNullOrWhiteSpace(username.Value) == true) throw new Exception("กรุณากรอกชื่อผู้ใช้งานให้ถูกต้อง");
 
 				int checkDup = CheckUsernameDuplicate(username.Value);
 				if (checkDup > 0) throw new Exception("ชื่อผู้ใช้ถูกใช้งานแล้ว กรุณาลองใหม่อีกครั้ง");
@@ -117,7 +117,7 @@ namespace MHI_OJT2.Pages.Systems
 					",[ROLES] " +
 					",[IS_EDIT_MASTER] " +
 					",[IS_ACTIVE]" +
-					") VALUES (" +
+					") OUTPUT INSERTED.ID VALUES (" +
 					" @USERNAME " +
 					",@PASSWORD " +
 					",@INITIAL_NAME " +
@@ -136,9 +136,23 @@ namespace MHI_OJT2.Pages.Systems
 				param.AddWithValue("POSITION_NAME", SqlDbType.VarChar).Value = positionName.Value;
 				param.AddWithValue("ROLES", SqlDbType.VarChar).Value = roleName.Value;
 				param.AddWithValue("IS_EDIT_MASTER", SqlDbType.Bit).Value = editMaster.Value;
-				SQL.ExecuteWithParams(query, MainDB, param);
+				int insertedId = SQL.ExecuteAndGetInsertId(query, MainDB, param);
 
 				Session.Add("alert", "inserted");
+				// logging
+				try
+				{
+					ObjectLog obj = new ObjectLog();
+					obj.TITLE = "เพิ่มผู้ใช้ระบบ";
+					obj.REMARK = $"{username.Value}";
+					obj.TABLE_NAME = "SYSTEM_USERS";
+					obj.FK_ID = insertedId;
+					Log.Create("add", obj);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
 				Response.Redirect(_selfPathName);
 			}
 			catch (Exception ex)
@@ -173,6 +187,19 @@ namespace MHI_OJT2.Pages.Systems
 				SQL.ExecuteWithParams(query, MainDB, param);
 
 				Session.Add("alert", "updated");
+				try
+				{
+					ObjectLog obj = new ObjectLog();
+					obj.TITLE = "แก้ไขข้อมูลผู้ใช้ระบบ";
+					obj.REMARK = $"{username.Value}";
+					obj.TABLE_NAME = "SYSTEM_USERS";
+					obj.FK_ID = int.Parse(hiddenId.Value.ToString());
+					Log.Create("edit", obj);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
 				Response.Redirect(_selfPathName);
 			}
 			catch (Exception ex)
@@ -195,6 +222,18 @@ namespace MHI_OJT2.Pages.Systems
 				SQL.ExecuteWithParams(query, MainDB, param);
 
 				Session.Add("alert", "deleted");
+				try
+				{
+					ObjectLog obj = new ObjectLog();
+					obj.TITLE = "ลบข้อมูลผู้ใช้";
+					obj.TABLE_NAME = "SYSTEM_USERS";
+					obj.FK_ID = int.Parse(hiddenId.Value.ToString());
+					Log.Create("delete", obj);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
 				Response.Redirect(_selfPathName);
 			}
 			catch (Exception ex)
@@ -227,6 +266,18 @@ namespace MHI_OJT2.Pages.Systems
 				SQL.ExecuteWithParams(query, MainDB, param);
 
 				Session.Add("alert", "change-password");
+				try
+				{
+					ObjectLog obj = new ObjectLog();
+					obj.TITLE = "เปลี่ยนรหัสผ่าน";
+					obj.TABLE_NAME = "SYSTEM_USERS";
+					obj.FK_ID = int.Parse(hiddenId.Value.ToString());
+					Log.Create("edit", obj);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
 				Response.Redirect(_selfPathName);
 			}
 			catch (Exception ex)

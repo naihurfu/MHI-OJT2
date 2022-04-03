@@ -35,9 +35,7 @@
                                 <th class="text-center">ลำดับ</th>
                                 <th>ประเภท</th>
                                 <th>หัวข้อ</th>
-                                <th>ค่าเดิม</th>
-                                <th>ค่าใหม่</th>
-                                <th>หมายเหตุ</th>
+                                <th>รายละเอียด</th>
                                 <th>ผู้ปรับปรุงข้อมูล</th>
                                 <th class="text-center">วันที่/เวลา</th>
                             </tr>
@@ -46,16 +44,14 @@
                             <asp:Repeater ID="RepeatTable" runat="server">
                                 <ItemTemplate>
                                     <tr>
-                                        <th scope="row" class="text-center">
+                                        <td scope="row" class="text-center">
                                             <%# Container.ItemIndex + 1 %>
-                                        </th>
-                                        <th><%# Eval("ACTION_TYPE") %></th>
-                                        <th><%# Eval("TITLE") %></th>
-                                        <th><%# Eval("OLD_VALUE") %></th>
-                                        <th><%# Eval("NEW_VALUE") %></th>
-                                        <th><%# Eval("REMARK") %></th>
-                                        <th><%# Eval("USERNAME") %></th>
-                                        <th class="text-center"><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd MMM yyyy / HH:mm}", Eval("CREATED_AT")) %></th>
+                                        </td>
+                                        <td><%# Eval("ACTION_TYPE") %></td>
+                                        <td><%# Eval("TITLE") %></td>
+                                        <td><%# Eval("REMARK") %></td>
+                                        <td><%# Eval("USERNAME") %></td>
+                                        <td class="text-center"><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd MMM yyyy / HH:mm}", Eval("CREATED_AT")) %></td>
                                     </tr>
                                 </ItemTemplate>
                             </asp:Repeater>

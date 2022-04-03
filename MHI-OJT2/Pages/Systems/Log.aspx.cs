@@ -33,6 +33,9 @@ namespace MHI_OJT2.Pages.Systems
         public static void Create(string actionType, ObjectLog _ObjectLog)
         {
             int userId = int.Parse(HttpContext.Current.Session["userId"].ToString());
+            string role = HttpContext.Current.Session["roles"].ToString().ToLower();
+
+            _ObjectLog.IS_USER = role == "user" ? 1 : 0;
             _ObjectLog.CREATED_BY = userId;
 
             if (string.IsNullOrWhiteSpace(_ObjectLog.REMARK))
@@ -40,34 +43,44 @@ namespace MHI_OJT2.Pages.Systems
                 _ObjectLog.REMARK = "-";
             }
 
+            if (string.IsNullOrWhiteSpace(_ObjectLog.OLD_VALUE))
+            {
+                _ObjectLog.OLD_VALUE = "-";
+            }
+
+            if (string.IsNullOrWhiteSpace(_ObjectLog.NEW_VALUE))
+            {
+                _ObjectLog.NEW_VALUE = "-";
+            }
+
+            if (string.IsNullOrWhiteSpace(_ObjectLog.TABLE_NAME))
+            {
+                _ObjectLog.TABLE_NAME = "-";
+                _ObjectLog.FK_ID = 0;
+            }
+
             switch (actionType.ToLower())
             {
                 case "add":
                     _ObjectLog.ACTION_TYPE = "เพิ่มข้อมูล";
-                    _ObjectLog.OLD_VALUE = "-";
-                    _ObjectLog.NEW_VALUE = "-";
 
                     InsertLog(_ObjectLog);
                     break;
 
                 case "edit":
                     _ObjectLog.ACTION_TYPE = "แก้ไขข้อมูล";
-
                     InsertLog(_ObjectLog);
                     break;
 
                 case "delete":
                     _ObjectLog.ACTION_TYPE = "ลบข้อมูล";
-                    _ObjectLog.OLD_VALUE = "-";
-                    _ObjectLog.NEW_VALUE = "-";
 
                     InsertLog(_ObjectLog);
                     break;
 
                 case "print":
-                    _ObjectLog.ACTION_TYPE = "ดาวน์โหลดรายงาน";
-                    _ObjectLog.OLD_VALUE = "-";
-                    _ObjectLog.NEW_VALUE = "-";
+                    _ObjectLog.ACTION_TYPE = "พิมพ์รายงาน";
+                    InsertLog(_ObjectLog);
                     break;
             }
         }
@@ -82,14 +95,20 @@ namespace MHI_OJT2.Pages.Systems
                  "[OLD_VALUE] ," +
                  "[NEW_VALUE] ," +
                  "[REMARK] ," +
-                 "[CREATED_BY] ) " +
+                 "[CREATED_BY] ," +
+                 "[IS_USER] ," +
+                 "[TABLE_NAME] ," +
+                 "[FK_ID]) " +
                  "VALUES ( " +
                  "@ACTION_TYPE ," +
                  "@TITLE ," +
                  "@OLD_VALUE ," +
                  "@NEW_VALUE ," +
                  "@REMARK ," +
-                 "@CREATED_BY )";
+                 "@CREATED_BY ," +
+                 "@IS_USER ," +
+                 "@TABLE_NAME ," +
+                 "@FK_ID )";
                
                 SqlParameterCollection param = new SqlCommand().Parameters;
                 param.AddWithValue("ACTION_TYPE", SqlDbType.VarChar).Value = _ObjectLog.ACTION_TYPE;
@@ -98,6 +117,9 @@ namespace MHI_OJT2.Pages.Systems
                 param.AddWithValue("NEW_VALUE", SqlDbType.VarChar).Value = _ObjectLog.NEW_VALUE;
                 param.AddWithValue("REMARK", SqlDbType.VarChar).Value = _ObjectLog.REMARK;
                 param.AddWithValue("CREATED_BY", SqlDbType.Int).Value = _ObjectLog.CREATED_BY;
+                param.AddWithValue("IS_USER", SqlDbType.Int).Value = _ObjectLog.IS_USER;
+                param.AddWithValue("TABLE_NAME", SqlDbType.Int).Value = _ObjectLog.TABLE_NAME;
+                param.AddWithValue("FK_ID", SqlDbType.Int).Value = _ObjectLog.FK_ID;
 
                 SQL.ExecuteWithParams(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString, param);
             }
@@ -116,5 +138,8 @@ namespace MHI_OJT2.Pages.Systems
         public string NEW_VALUE { get; set; }
         public string REMARK { get; set; }
         public int CREATED_BY { get; set; }
+        public int IS_USER { get; set; }
+        public string TABLE_NAME { get; set; }
+        public int FK_ID { get; set; }
     }
 }

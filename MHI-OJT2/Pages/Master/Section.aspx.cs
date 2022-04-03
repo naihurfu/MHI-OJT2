@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MHI_OJT2.Pages.Systems;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -76,16 +77,32 @@ namespace MHI_OJT2.Pages.Master
 					"[SECTION_NAME] " +
 					",[IS_ACTIVE]  " +
 					",[CREATED_BY] " +
-					") VALUES ( " +
+					") OUTPUT INSERTED.ID VALUES ( " +
 					"@SECTION_NAME " +
 					",1 " +
 					",@CREATED_BY )";
 				SqlParameterCollection param = new SqlCommand().Parameters;
 				param.AddWithValue("SECTION_NAME", SqlDbType.VarChar).Value = sectionName.Value;
 				param.AddWithValue("CREATED_BY", SqlDbType.Int).Value = Session["userId"];
-				SQL.ExecuteWithParams(query, MainDB, param);
+				int insertedId = SQL.ExecuteAndGetInsertId(query, MainDB, param);
 
 				Session.Add("alert", "inserted");
+
+				// logging
+				try
+				{
+					ObjectLog obj = new ObjectLog();
+					obj.TITLE = "เพิ่มฝ่าย";
+					obj.REMARK = sectionName.Value;
+					obj.TABLE_NAME = "SECTION";
+					obj.FK_ID = insertedId;
+					Log.Create("add", obj);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+
 				Response.Redirect(_selfPathName);
 			}
 			catch (Exception ex)
@@ -111,6 +128,22 @@ namespace MHI_OJT2.Pages.Master
 				SQL.ExecuteWithParams(query, MainDB, param);
 
 				Session.Add("alert", "updated");
+
+				// logging
+				try
+				{
+					ObjectLog obj = new ObjectLog();
+					obj.TITLE = "แก้ไขฝ่าย";
+					obj.REMARK = sectionName.Value;
+					obj.TABLE_NAME = "SECTION";
+					obj.FK_ID = int.Parse(hiddenId.Value.ToString()) ;
+					Log.Create("edit", obj);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+
 				Response.Redirect(_selfPathName);
 			}
 			catch (Exception ex)
@@ -135,6 +168,21 @@ namespace MHI_OJT2.Pages.Master
 				SQL.ExecuteWithParams(query, MainDB, param);
 
 				Session.Add("alert", "deleted");
+
+				// logging
+				try
+				{
+					ObjectLog obj = new ObjectLog();
+					obj.TITLE = "ลบฝ่าย";
+					obj.TABLE_NAME = "SECTION";
+					obj.FK_ID = int.Parse(hiddenId.Value.ToString());
+					Log.Create("delete", obj);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+
 				Response.Redirect(_selfPathName);
 			}
 			catch (Exception ex)

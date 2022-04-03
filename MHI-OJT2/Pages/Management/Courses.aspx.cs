@@ -1,5 +1,6 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
+using MHI_OJT2.Pages.Systems;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -227,7 +228,19 @@ namespace MHI_OJT2.Pages.Management
 					SQL.ExecuteWithParams("INSERT INTO PLAN_AND_COURSE([PLAN_ID],[COURSE_ID],[CREATED_BY]) VALUES(@PLAN_ID,@COURSE_ID,@CREATED_BY)", mainDb, paramPlanAndCourse);
 				}
 
-
+				try
+				{
+					ObjectLog obj = new ObjectLog();
+					obj.TITLE = "เพิ่มหลักสูตร";
+					obj.REMARK = courseName.Value;
+					obj.TABLE_NAME = "ADJUST_COURSE";
+					obj.FK_ID = insertedId;
+					Log.Create("add", obj);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
 
 				Session.Add("alert", "inserted");
 				Response.Redirect(_selfPathName);
@@ -293,9 +306,23 @@ namespace MHI_OJT2.Pages.Management
 						updateConnection.Open();
 						updateCommand.ExecuteNonQuery();
 						updateConnection.Close();
+
+						try
+						{
+							ObjectLog obj = new ObjectLog();
+							obj.TITLE = "อัพเดทสถานะหลักสูตร";
+							obj.REMARK = "อัพเดทสถานะหลักสูตร เลือกพนักงาน --> รอผู้อนุมัติ";
+							obj.TABLE_NAME = "ADJUST_COURSE";
+							obj.FK_ID = CourseId;
+							Log.Create("edit", obj);
+						}
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message);
+						}
 					}
 
-                    HttpContext.Current.Session.Add("alert", "employee_inserted");
+					HttpContext.Current.Session.Add("alert", "employee_inserted");
 					return successCount;
 				}
 			}
@@ -374,6 +401,19 @@ namespace MHI_OJT2.Pages.Management
                 rpt.SetParameterValue("Section_Manager_Date", sectionManagerDate.Value);
 
                 rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+
+				// logging
+				try
+				{
+					ObjectLog obj = new ObjectLog();
+					obj.TITLE = exportName;
+					Log.Create("print", obj);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+
 				rpt.ExportToHttpResponse(expType, Response, true, exportName);
 			}	
 			catch (Exception ex)
@@ -425,6 +465,19 @@ namespace MHI_OJT2.Pages.Management
 					rpt.SetParameterValue("Section_Manager_Date", sectionManagerDate.Value);
 
 					rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+
+					// logging
+					try
+					{
+						ObjectLog obj = new ObjectLog();
+						obj.TITLE = exportName;
+						Log.Create("print", obj);
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine(ex.Message);
+					}
+
 					rpt.ExportToHttpResponse(expType, Response, true, exportName);
 					break;
 			}
@@ -558,6 +611,20 @@ namespace MHI_OJT2.Pages.Management
 				updateAdjustCourseParamCollection.AddWithValue("courseId", SqlDbType.Int).Value = hiddenId.Value;
 				SQL.ExecuteWithParams(queryUpdateAdjustCourse, mainDb, updateAdjustCourseParamCollection);
 
+				try
+				{
+					ObjectLog obj = new ObjectLog();
+					obj.TITLE = "แก้ไขหลักสูตร";
+					obj.REMARK = courseName.Value;
+					obj.TABLE_NAME = "ADJUST_COURSE";
+					obj.FK_ID = int.Parse(hiddenId.Value.ToString());
+					Log.Create("edit", obj);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
+
 				Session["alert"] = "updated";
 				Response.Redirect(_selfPathName);
 			}
@@ -582,6 +649,19 @@ namespace MHI_OJT2.Pages.Management
 				param.AddWithValue("ID", SqlDbType.Int).Value = int.Parse(hiddenId.Value.ToString());
 
 				SQL.ExecuteWithParams("EXECUTE SP_DELETE_COURSE @ID", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString, param);
+
+				try
+				{
+					ObjectLog obj = new ObjectLog();
+					obj.TITLE = "ลบหลักสูตร";
+					obj.TABLE_NAME = "ADJUST_COURSE";
+					obj.FK_ID = int.Parse(hiddenId.Value.ToString());
+					Log.Create("delete", obj);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.Message);
+				}
 
 				Session.Add("alert", "deleted");
 				Response.Redirect(_selfPathName);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MHI_OJT2.Pages.Systems;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -167,6 +168,20 @@ namespace MHI_OJT2.Pages.Management
                             connection.Open();
                             cmd.ExecuteNonQuery();
                             connection.Close();
+
+                            try
+                            {
+                                ObjectLog obj = new ObjectLog();
+                                obj.TITLE = "ประเมินผลหลักสูตร";
+                                obj.REMARK = "บันทึกการประเมินผลหลักสูตร";
+                                obj.TABLE_NAME = "ADJUST_COURSE";
+                                obj.FK_ID = _courseId;
+                                Log.Create("edit", obj);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
                         }
                     }
                 }

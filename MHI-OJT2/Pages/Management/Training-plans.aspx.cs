@@ -135,7 +135,7 @@ namespace MHI_OJT2.Pages.Management
                     ",[PLAN_DATE] " +
                     ",[TRAINER]" +
                     ",[CREATED_BY]" +
-                    ") VALUES(" +
+                    ") OUTPUT INSERTED.ID VALUES(" +
                     "@DEPARTMENT_ID" +
                     ",@PLAN_NAME" +
                     ",@REF_DOCUMENT" +
@@ -171,19 +171,22 @@ namespace MHI_OJT2.Pages.Management
                 param.AddWithValue("CREATED_BY", SqlDbType.Int).Value = Session["userId"];
 
                 // execute query
-                SQL.ExecuteWithParams(query, mainDb, param);
+                int insertedId = SQL.ExecuteAndGetInsertId(query, mainDb, param);
 
                 // loging
-                //try
-                //{
-                //    ObjectLog obj = new ObjectLog();
-                //    obj.TITLE = "แผนการฝึกอบรม";
-                //    obj.REMARK = planName.Value;
-                //    Log.Create("add", obj);
-                //} catch (Exception ex)
-                //{
-                //    Console.WriteLine(ex.Message);
-                //}
+                try
+                {
+                    ObjectLog obj = new ObjectLog();
+                    obj.TITLE = "แผนการฝึกอบรม";
+                    obj.REMARK = planName.Value.ToString();
+                    obj.TABLE_NAME = "TRAINING_PLAN";
+                    obj.FK_ID = insertedId;
+                    Log.Create("add", obj);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
 
                 // create session for alert
                 Session.Add("alert", "inserted");
@@ -245,6 +248,21 @@ namespace MHI_OJT2.Pages.Management
                 // execute query
                 SQL.ExecuteWithParams(query, mainDb, param);
 
+                // loging
+                try
+                {
+                    ObjectLog obj = new ObjectLog();
+                    obj.TITLE = "แผนการฝึกอบรม";
+                    obj.REMARK = planName.Value.ToString();
+                    obj.TABLE_NAME = "TRAINING_PLAN";
+                    obj.FK_ID = int.Parse(hiddenIdAddModal.Value.ToString());
+                    Log.Create("edit", obj);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
                 // add alert session
                 Session.Add("alert", "updated");
 
@@ -288,6 +306,8 @@ namespace MHI_OJT2.Pages.Management
                     ObjectLog obj = new ObjectLog();
                     obj.TITLE = "แผนการฝึกอบรม";
                     obj.REMARK = plan.Rows[0][0].ToString();
+                    obj.TABLE_NAME = "TRAINING_PLAN";
+                    obj.FK_ID = planId;
                     Log.Create("delete", obj);
                 }
                 catch (Exception ex)
@@ -354,17 +374,17 @@ namespace MHI_OJT2.Pages.Management
             rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
 
             // logging
-            //try
-            //{
-            //    ObjectLog obj = new ObjectLog();
-            //    obj.TITLE = exportName;
-            //    obj.REMARK = $"ช่วงวันที่ {startDate.Value} ถึง {endDate.Value}";
-            //    Log.Create("print", obj);
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //}
+            try
+            {
+                ObjectLog obj = new ObjectLog();
+                obj.TITLE = exportName;
+                obj.REMARK = $"ช่วงวันที่ {startDate.Value.ToString()} ถึง {endDate.Value.ToString()}";
+                Log.Create("print", obj);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             // end logging
 
             rpt.ExportToHttpResponse(expType, Response, true, exportName);

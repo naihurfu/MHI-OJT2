@@ -1,5 +1,6 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
+using MHI_OJT2.Pages.Systems;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -65,6 +66,23 @@ namespace MHI_OJT2.Pages.Management
                 RejectApprovalUpdate(_ApproveResult.COURSE_ID, _ApproveResult.REMARK);
                 SetCourseApproveNotify(_ApproveResult.COURSE_ID, false);
                 approveCookie.Value = "rejected";
+
+                // logging
+                try
+                {
+                    ObjectLog obj = new ObjectLog();
+                    obj.TITLE = "อนุมัติหลักสูตร";
+                    obj.REMARK = "ปฏิเสธการอนุมัติหลักสูตร";
+                    obj.TABLE_NAME = "APPROVAL";
+                    obj.FK_ID = _ApproveResult.APPROVE_ID;
+                    Log.Create("add", obj);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                // end logging
+
                 return "REJECTED";
             }
 
@@ -98,8 +116,22 @@ namespace MHI_OJT2.Pages.Management
                 }
             }
 
+            try
+            {
+                ObjectLog obj = new ObjectLog();
+                obj.TITLE = "อนุมัติหลักสูตร";
+                obj.REMARK = "อนุมัติหลักสูตร";
+                obj.TABLE_NAME = "APPROVAL";
+                obj.FK_ID = _ApproveResult.APPROVE_ID;
+                Log.Create("add", obj);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
             // check if last approval
-            using(SqlCommand command = new SqlCommand("SELECT * FROM APPROVAL WHERE COURSE_ID=@COURSE_ID", connection))
+            using (SqlCommand command = new SqlCommand("SELECT * FROM APPROVAL WHERE COURSE_ID=@COURSE_ID", connection))
             {
                 command.Parameters.AddWithValue("COURSE_ID", SqlDbType.Int).Value = _ApproveResult.COURSE_ID;
 
@@ -221,6 +253,20 @@ namespace MHI_OJT2.Pages.Management
                 rpt.SetParameterValue("Section_Manager_Date", "");
 
                 rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+
+                // logging
+                try
+                {
+                    ObjectLog obj = new ObjectLog();
+                    obj.TITLE = exportName;
+                    Log.Create("print", obj);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                // end logging
+
                 rpt.ExportToHttpResponse(expType, Response, true, exportName);
             }
         }

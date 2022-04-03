@@ -1,5 +1,6 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
+using MHI_OJT2.Pages.Systems;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -156,6 +157,20 @@ namespace MHI_OJT2.Pages
 
             rpt.RecordSelectionFormula = formula;
             rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+
+            // logging
+            try
+            {
+                ObjectLog obj = new ObjectLog();
+                obj.TITLE = exportName;
+                obj.REMARK = $"ช่วงวันที่ {startDate.Value.ToString()} ถึง {endDate.Value.ToString()}";
+                Log.Create("print", obj);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
             rpt.ExportToHttpResponse(expType, Response, true, exportName);
         }
         static int SelectPersonIDForReport(string PersonCode)
