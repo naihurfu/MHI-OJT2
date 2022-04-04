@@ -107,7 +107,7 @@
                     </div>
                     <div class="form-group">
                         <label for='<%= sectionName.ClientID %>'>ฝ่าย</label>
-                        <select class="form-control selectpicker" data-live-search="true" id="sectionName" runat="server"></select>
+                        <select class="form-control" id="sectionName" runat="server"></select>
                     </div>
                     <div class="pt-2 check-container">
                         <div class="form-check form-check-inline">
