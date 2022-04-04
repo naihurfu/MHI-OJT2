@@ -101,7 +101,6 @@
                     <div class="form-group">
                         <label>แผนก</label>
                         <select class="form-control" id="department" runat="server">
-                            <option selected>-</option>
                         </select>
                     </div>
                     <div class="form-row">
@@ -223,6 +222,8 @@
                     }
                 }
             });
+
+
         })();
 
         function handleShowExportReportModal() {

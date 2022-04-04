@@ -456,7 +456,7 @@
 
             isDisabledInput(false)
 
-            assessor1.val(0).change()
+            assessor1.val(0).change()                     
             $('.assessor-container-all').show()
             $('#addModalTitle').text('Add course')
             $('#addModal').modal('show')

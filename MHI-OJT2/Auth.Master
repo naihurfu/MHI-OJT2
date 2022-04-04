@@ -161,7 +161,7 @@
                             <% if (clerkNoticationCount > 0)
                                 { %>
                             <span class="badge badge-danger navbar-badge">
-                                <%= clerkNoticationCount %>
+                                <%= clerkNoticationCount > 10 ? "10+" : clerkNoticationCount.ToString() %>
                             </span>
                             <% } %>
                         </a>
@@ -370,7 +370,7 @@
 
         <div class="d-none">
             <input type="hidden" runat="server" id="downloadReportId" />
-            <asp:Button runat="server" ID="btnDownloadReportFromMasterPage" OnClick="DownloadReportTrainingEvaluationOJT" Text="Can you see me?" />
+            <asp:Button runat="server" ID="btnDownloadReportFromMasterPage" OnClick="DownloadReportTrainingEvaluationOJT" Text="Can you see me?" TabIndex="-1" />
         </div>
 
         <asp:ScriptManager ID="MasterScriptManager" runat="server">

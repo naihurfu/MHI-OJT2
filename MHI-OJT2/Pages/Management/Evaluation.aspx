@@ -105,7 +105,7 @@
                         <input type="hidden" runat="server" id="hiddenCourseId" />
                         <% if (_isEvaluation == 1)
                             { %>
-                        <button type="button" class="btn btn-warning" onclick="saved(true)">บันทึก (ร่าง)</button>
+                        <button type="button" class="btn btn-warning" onclick="saved(true)" id="btnSaveDraft">บันทึก (ร่าง)</button>
                         <button type="button" class="btn btn-success ml-2 w-25" onclick="saved(false)">บันทึก</button>
                         <% } %>
                     </div>
@@ -152,6 +152,8 @@
             if (!<%= _isEvaluation %>) {
                 $('.input__score').attr('disabled', 'disabled');
             }
+
+            $('#btnSaveDraft').focus()
         })();
 
         function calculate(id, inputNumber) {

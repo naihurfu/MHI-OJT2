@@ -91,8 +91,7 @@ namespace MHI_OJT2.Pages.Management
             department.DataValueField = "ID";
             department.DataTextField = "DEPARTMENT_NAME";
             department.DataBind();
-            department.Items.Insert(0, new ListItem("-", "0"));
-            department.SelectedIndex = 0;
+
 
             string query = "SELECT " +
                 "p.* ," +
@@ -115,6 +114,7 @@ namespace MHI_OJT2.Pages.Management
         {
             try
             {
+                if (int.Parse(department.Value.ToString()) == 0) throw new Exception("กรุณากรอกข้อมูลให้ครบ");
                 // get connection string from web.config file
                 string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
 
@@ -196,7 +196,7 @@ namespace MHI_OJT2.Pages.Management
             }
             catch (Exception ex)
             {
-                Alert("error", "Error!", $"{ex.Message}");
+                Alert("error", "ผิดพลาด!", $"{ex.Message}");
             }
         }
 

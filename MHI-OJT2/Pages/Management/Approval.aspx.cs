@@ -28,7 +28,7 @@ namespace MHI_OJT2.Pages.Management
                     DataTable dt = SQL.GetDataTable($"SELECT ID FROM APPROVAL WHERE PERSON_ID = {userId}", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
                     if (dt.Rows.Count <= 0)
                     {
-                        Response.Redirect(Auth._403);
+                        Response.Redirect(Auth.Dashboard);
                     }
                     RepeatTable.DataSource = GetApproveList(userId);
                     RepeatTable.DataBind();
