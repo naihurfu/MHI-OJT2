@@ -337,23 +337,7 @@ namespace MHI_OJT2.Pages.Management
 		{
 			string connectionString = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
 
-			SqlConnection con = new SqlConnection(connectionString);
-			SqlCommand command = new SqlCommand("SELECT p.PersonID ," +
-				"CONCAT(p.PersonCode, SPACE(8 - LEN(p.PersonCode)), ' ', p.FnameT, ' ', p.LnameT, '  (', Cmb2NameT ,')') fullName, " +
-				"IIF(e.PERSON_ID = p.PersonID, 1, 0) as selected " +
-				"FROM Cyberhrm_PCT.dbo.PNT_Person p " +
-				"INNER JOIN Cyberhrm_PCT.dbo.PNM_Cmb2 c ON c.Cmb2ID = p.Cmb2ID " +
-				"LEFT JOIN TEST_DB.dbo.EVALUATE e ON e.PERSON_ID = p.PersonID AND e.COURSE_ID = @courseId " +
-				"WHERE p.ResignStatus = 1 AND p.ChkDeletePerson = 1 AND p.CompanyID = 1", con);
-			con.Open();
-			command.Parameters.AddWithValue("courseId", SqlDbType.Int).Value = courseId;
-			command.CommandType = CommandType.Text;
-			SqlDataAdapter da = new SqlDataAdapter();
-			da.SelectCommand = command;
-			con.Close();
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-
+			DataTable dt = SQL.GetDataTable($"EXEC GET_TIGER_EMPLOYEE {courseId}", connectionString);
 			return DATA.DataTableToJSONWithJSONNet(dt);
 		}
 		void Alert(string type, string title, string message)
