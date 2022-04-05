@@ -457,7 +457,7 @@
 
             assessor1.val(0).change()                     
             $('.assessor-container-all').show()
-            $('#addModalTitle').text('Add course')
+            $('#addModalTitle').text('เพิ่มหลักสูตร')
             $('#addModal').modal('show')
         };
         function handleShowModal(courseId, modalName) {

@@ -145,7 +145,7 @@
                     </div>
                     <div class="form-row mt-3">
                         <div class="form-group col-8">
-                            <label>ผู้รับฝึกอบรม</label>
+                            <label>ผู้ฝึกอบรม</label>
                             <input runat="server" id="trainer" class="form-control" />
                         </div>
                         <div class="form-group col-4">
@@ -342,7 +342,7 @@
             $('#<%= hiddenIdAddModal.ClientID %>').val('')
             $('#<%= planName.ClientID %>').val('')
             $('#<%= refDocument.ClientID %>').val('')
-            $('#<%= department.ClientID %>').val('')
+            $('#<%= department.ClientID %>')[0].selectedIndex = 0;
             $('#<%= frequency.ClientID %>').val('')
             $('#<%= hours.ClientID %>').val('')
             $('#<%= SM_MG.ClientID %>').prop('checked', 0)
