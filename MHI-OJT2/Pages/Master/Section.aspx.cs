@@ -17,6 +17,7 @@ namespace MHI_OJT2.Pages.Master
 		string _selfPathName = "~/Pages/Master/Section.aspx";
 		protected void Page_Load(object sender, EventArgs e)
         {
+			_selfPathName = "~" + Auth.applicationPath + "/Pages/Master/Section.aspx";
 			Auth.CheckLoggedIn();
               if (!IsPostBack)
 				{

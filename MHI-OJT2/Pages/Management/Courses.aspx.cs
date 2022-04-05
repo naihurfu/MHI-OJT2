@@ -17,9 +17,11 @@ namespace MHI_OJT2.Pages.Management
     public partial class Courses : System.Web.UI.Page
 	{
 		string _sessionAlert = null;
-		string _selfPathName = "~/Pages/Management/Courses.aspx";
+		string _selfPathName = "";
 		protected void Page_Load(object sender, EventArgs e)
 		{
+			_selfPathName = "~" + Auth.applicationPath + "/Pages/Management/Courses.aspx";
+
 			Auth.CheckLoggedIn();
 			string role = Session["roles"].ToString().ToLower();
 			if (!IsPostBack)
@@ -616,12 +618,6 @@ namespace MHI_OJT2.Pages.Management
 			{
 				Alert("error", "Error!", $"{ex.Message}");
 			}
-		}
-        protected void btnScanBarcode_ServerClick(object sender, EventArgs e)
-        {
-			int courseId = int.Parse(hiddenCourseId_AddEmployeeModal.Value);
-			Response.Redirect($"~/Pages/Management/scan-barcode.aspx?queryId={courseId}");
-			Response.End();
 		}
         protected void btnDelete_ServerClick(object sender, EventArgs e)
         {

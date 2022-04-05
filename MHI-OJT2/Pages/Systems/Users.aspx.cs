@@ -16,6 +16,7 @@ namespace MHI_OJT2.Pages.Systems
         string _selfPathName = "~/Pages/Systems/Users.aspx";
         protected void Page_Load(object sender, EventArgs e)
         {
+			_selfPathName = "~" + Auth.applicationPath + "/Pages/Systems/Users.aspx";
 			Auth.CheckLoggedIn();
             if (!IsPostBack)
             {

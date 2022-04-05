@@ -19,7 +19,7 @@ namespace MHI_OJT2.Pages.Management
     public partial class Training_plans : System.Web.UI.Page
     {
         string _sessionAlert = null;
-        string _selfPathName = "~/Pages/Management/Training-plans.aspx";
+        string _selfPathName = "";
         string _roles = "";
 
         protected void Page_Load(object sender, EventArgs e)
@@ -43,6 +43,7 @@ namespace MHI_OJT2.Pages.Management
         }
         void CheckAlertSession()
         {
+            _selfPathName = "~" + Auth.applicationPath + "/Pages/Management/Training-plans.aspx";
             _sessionAlert = null;
             if (Session["alert"] != null)
             {

@@ -23,7 +23,7 @@ namespace MHI_OJT2.Pages.Reports
                 role = _role;
                 if (role == "user")
                 {
-                    Response.Redirect("~/Pages/Error/403.aspx");
+                    Response.Redirect(Auth._403);
                 }
 
                 GetSectionName();
@@ -44,7 +44,7 @@ namespace MHI_OJT2.Pages.Reports
             if (dt.Rows.Count <= 0)
             {
                 Session.Add("alert", "skill-map-not-found");
-                Response.Redirect("~/Default.aspx");
+                Response.Redirect(Auth.Dashboard);
             }
 
             section.DataSource = dt;

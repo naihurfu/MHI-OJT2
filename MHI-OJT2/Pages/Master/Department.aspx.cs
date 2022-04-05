@@ -14,9 +14,10 @@ namespace MHI_OJT2.Pages.Master
     public partial class Department : System.Web.UI.Page
     {
 		string _sessionAlert;
-		string _selfPathName = "~/Pages/Master/Department.aspx";
+		string _selfPathName = "";
 		protected void Page_Load(object sender, EventArgs e)
         {
+			_selfPathName = "~" + Auth.applicationPath + "/Pages/Master/Department.aspx";
 			Auth.CheckLoggedIn();
               if (!IsPostBack)
             {

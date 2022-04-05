@@ -20,7 +20,7 @@ namespace MHI_OJT2
 		public static string applicationPath = "";
 
         string _sessionAlert = null;
-		public static string _403 = "~/Pages/Error/403.aspx";
+		public static string _403 = "";
 		public static string Dashboard = "";
 		static string _firstName = String.Empty;
 		static string _lastName = String.Empty;

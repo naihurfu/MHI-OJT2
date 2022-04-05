@@ -112,7 +112,7 @@ namespace MHI_OJT2.Pages.Management
                     };
                 } else
                 {
-                    Response.Redirect("~/Pages/Error/403.aspx");
+                    Response.Redirect(Auth.Dashboard);
                 }
             } catch(Exception ex)
             {
