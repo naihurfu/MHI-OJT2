@@ -80,9 +80,9 @@
     <%-- Modal --%>
     <div class="modal fade" id="addModal" data-backdrop="static">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl" style="box-shadow: none !important;">
-            <div class="modal-content dark-mode">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-light">สร้างแผนการฝึกอบรม</h5>
+                    <h5 class="modal-title">สร้างแผนการฝึกอบรม</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -166,9 +166,9 @@
 
     <div class="modal fade" id="ExportReportModal" tabindex="-1" aria-labelledby="ExportReportModal" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="box-shadow: none !important;">
-            <div class="modal-content dark-mode">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-light">เลือกเงื่อนไขเพื่อพิมพ์รายงาน</h5>
+                    <h5 class="modal-title">เลือกเงื่อนไขเพื่อพิมพ์รายงาน</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
                     </button>

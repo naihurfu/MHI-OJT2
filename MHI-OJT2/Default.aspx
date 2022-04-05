@@ -4,8 +4,6 @@
     <style>
         .info-box {
             height: 90px !important;
-            background-color: #343a40;
-            color: #fff;
             box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
         }
 
@@ -23,7 +21,7 @@
         }
 
         .info-box:hover {
-            background-color: rgba(52, 58, 64, 0.3);
+            background-color: rgba(52, 58, 64, 0.1);
             cursor: pointer;
         }
     </style>
@@ -100,7 +98,7 @@
             </div>
             <div class="row cal-card-height">
                 <div class="col-lg-7 d-flex align-items-stretch">
-                    <div class="card text-light" style="background-color: #343a40;">
+                    <div class="card " >
                         <div class="card-header border-0">
                             <h3 class="card-title">สถานะหลักสูตร</h3>
                         </div>
@@ -143,13 +141,13 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="card-footer text-center dark-mode" >
-                            <a href="~/Pages/Training-profile.aspx" runat="server" class="text-light">ดูเพิ่มเติม</a>
+                        <div class="card-footer text-center " >
+                            <a href="~/Pages/Training-profile.aspx" runat="server" class="">ดูเพิ่มเติม</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-5 d-flex align-items-stretch">
-                    <div class="card text-light" style="background-color: #343a40;">
+                    <div class="card">
                         <div class="card-header border-0">
                             <h3 class="card-title">
                                 <%= (string)Session["roles"] == "user" ? "คะแนนการอบรม (ปีปัจจุบัน)" : "จำนวนคนแต่ละหลักสูตร" %>
@@ -169,9 +167,9 @@
 <asp:Content ID="ModalContent" ContentPlaceHolderID="modal" runat="server">
     <div class="modal fade" id="ViewCardModal" tabindex="-1" aria-labelledby="ViewCardModal" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" style="box-shadow: none !important;">
-            <div class="modal-content dark-mode">
+            <div class="modal-content ">
                 <div class="modal-header border-0">
-                    <h5 class="modal-title text-light" id="view-card-title"></h5>
+                    <h5 class="modal-title " id="view-card-title"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -251,17 +249,17 @@
                             responsive: true,
                             scales: {
                                 xAxis: {
-                                    ticks: {
-                                        color: 'rgba(255, 255, 255, 1)'
-                                    },
+                                    //ticks: {
+                                    //    color: 'rgba(255, 255, 255, 1)'
+                                    //},
                                 },
                                 yAxis: {
                                     precision: 0,
                                     min: 0,
                                     max: parseInt(`${<%= (string)Session["roles"] == "user" ? "100" : "Math.max(...datas) + 5" %>}`),
-                                    ticks: {
-                                        color: 'rgba(255, 255, 255, 1)'
-                                    },
+                                    //ticks: {
+                                    //    color: 'rgba(255, 255, 255, 1)'
+                                    //},
                                 }
                             }
                         }

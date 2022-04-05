@@ -120,11 +120,11 @@
     <%-- add course modal --%>
     <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModal" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-dialog-scrollable modal-xl">
-            <div class="modal-content dark-mode">
+            <div class="modal-content ">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addModalTitle"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true" class="text-light">&times;</span>
+                        <span aria-hidden="true" class="">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
@@ -258,9 +258,9 @@
     <%-- add employee modal --%>
     <div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addModal" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl" style="box-shadow: none !important;">
-            <div class="modal-content dark-mode">
+            <div class="modal-content ">
                 <div class="modal-header">
-                    <h5 class="modal-title text-light">เลือกพนักงานเข้าฝึกอบรม</h5>
+                    <h5 class="modal-title ">เลือกพนักงานเข้าฝึกอบรม</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -281,9 +281,9 @@
     </div>
     <div class="modal fade" id="viewStatusModal" tabindex="-1" aria-labelledby="viewStatusModal" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" style="box-shadow: none !important;">
-            <div class="modal-content dark-mode">
+            <div class="modal-content ">
                 <div class="modal-header">
-                    <h5 class="modal-title text-light">ตรวจสอบสถานะการอนุมัติ</h5>
+                    <h5 class="modal-title ">ตรวจสอบสถานะการอนุมัติ</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -318,9 +318,9 @@
     </div>
     <div class="modal fade" id="ExportReportModal" tabindex="-1" aria-labelledby="ExportReportModal" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl" style="box-shadow: none !important;">
-            <div class="modal-content dark-mode">
+            <div class="modal-content ">
                 <div class="modal-header">
-                    <h5 class="modal-title text-light">ลงชื่อผู้ทำการฝึกอบรมและประเมิน</h5>
+                    <h5 class="modal-title ">ลงชื่อผู้ทำการฝึกอบรมและประเมิน</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -603,6 +603,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (results) {
+                    console.log(results.d)
                     allEmployee = JSON.parse(results.d)
                     var settings = {
                         itemName: "fullName",

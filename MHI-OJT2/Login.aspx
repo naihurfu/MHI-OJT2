@@ -23,17 +23,17 @@
     <link rel="stylesheet" href="~/Assets/dist/css/adminlte.min.css" />
 </head>
 <body>
-    <form id="formLogin" runat="server" style="min-width: 100%; min-height: 100vh; background-color: #f9fafe">
+    <form id="formLogin" runat="server" style="min-width: 100%; min-height: 100vh;">
         <script type="text/javascript">
             function sweetAlert(type, title, message) {
                 Swal.fire(title, message, type);
             }
         </script>
-        <div class="d-flex align-items-center min-vh-100" style="background-color: #343A40">
+        <div class="d-flex align-items-center min-vh-100">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-12" align="center">
-                        <div class="card card-success" style="max-width: 350px !important;">
+                        <div class="card card-success elevation-3" style="max-width: 350px !important;">
                             <div class="card-body">
                                 <div class="row mb-3 justify-content-between">
                                     <div class="col">

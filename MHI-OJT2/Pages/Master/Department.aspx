@@ -93,9 +93,9 @@
 <asp:Content ID="ModalContent" ContentPlaceHolderID="modal" runat="server">
     <div class="modal fade" id="crudModal" tabindex="-1" aria-labelledby="crudModal" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="box-shadow: none !important;">
-            <div class="modal-content dark-mode">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-light" id="titleModal"></h5>
+                    <h5 class="modal-title" id="titleModal"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -107,7 +107,7 @@
                     </div>
                     <div class="form-group">
                         <label for='<%= sectionName.ClientID %>'>ฝ่าย</label>
-                        <select class="form-control" id="sectionName" runat="server" style="background-color: #343a40 !important; color: #fff !important;"></select>
+                        <select class="form-control" id="sectionName" runat="server"></select>
                     </div>
                     <div class="pt-2 check-container">
                         <div class="form-check form-check-inline">

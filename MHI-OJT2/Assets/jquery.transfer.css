@@ -17,7 +17,6 @@
     position: relative;
     padding-left: 25px;
     cursor: pointer;
-    color: #fff;
 }
 
 .checkbox-group + .checkbox-group label {
@@ -160,7 +159,6 @@
 }                                                   
 
 .transfer-double-content {
-    background-color: #454d55 !important;
     display: flex;
     justify-content: space-between;
 }
@@ -219,10 +217,8 @@
     height: auto;
     line-height: 24px;
     border-color: #6c757d;
-    background-color: #474c52;
-    color: #fff;
     padding: 5px 10px;
-    border-radius: 8px;
+    border-radius: 5px;
 }
 
 .transfer-double-list-content {
@@ -278,10 +274,8 @@
     height: auto;
     line-height: 24px;
     border-color: #6c757d;
-    background-color: #474c52;
-    color: #fff;
     padding: 5px 10px;
-    border-radius: 8px;
+    border-radius: 5px;
 }
 
 .transfer-double-selected-list-content {

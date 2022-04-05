@@ -186,7 +186,7 @@
                 </div>
 
                 <div class="card-footer">
-                    <button type="button" id="btnDownloadReport" class="btn btn-primary btn-block" onclick="GetReportData()">พิมพ์รายงาน</button>
+                    <button type="button" id="btnDownloadReport" class="btn btn-success btn-block" onclick="GetReportData()">พิมพ์รายงาน</button>
                 </div>
             </div>
             <div class="card" id="card-print">

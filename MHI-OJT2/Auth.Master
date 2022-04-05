@@ -11,47 +11,6 @@
         * {
             font-family: 'Kanit', sans-serif;
         }
-
-        /* jQuery dataTable border bottom */
-        .dataTables_wrapper.no-footer .dataTables_scrollBody, table.dataTable thead th, table.dataTable thead td {
-            border-bottom: 1px solid #ccc !important;
-        }
-
-
-        /* Dark mode DataTable */
-        .dataTables_length,
-        .dataTables_filter,
-        .dataTables_filter input,
-        .dataTables_info,
-        .dataTables_paginate,
-        .paginate_button 
-        {
-            color:#fff !important;
-        }
-
-        /* paginate button */
-        .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover{
-            background: #454d55 !important;
-        }
-
-        .dark-mode .btn-light {
-            background-color: #343a40 !important;
-            border-color: #6c757d !important;
-            color:#fff !important;
-        }
-
-        
-
-        input[type="time"]::-webkit-calendar-picker-indicator{
-          filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%);
-        }
-
-        .swal2-popup,
-        .swal2-modal,
-        .swal2-show {
-           background-color: #343a40 !important;
-           color: #fff !important;
-        }
     </style>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="~/Assets/plugins/fontawesome-free/css/all.min.css">
@@ -66,7 +25,7 @@
     <link rel="stylesheet" href="~/Assets/dist/css/bootstrap-select.min.css">
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 </head>
-<body class="hold-transition sidebar-mini" style="background-color: #454d55">
+<body class="hold-transition sidebar-mini">
     <form id="MasterForm" runat="server" autocomplete="off">
         <script type="text/javascript">
             function sweetAlert(type, title, message) {
@@ -97,7 +56,7 @@
 
         <div class="wrapper"> 
             <!-- Navbar -->
-            <nav class="main-header navbar navbar-expand navbar-dark ">
+            <nav class="main-header navbar navbar-expand navbar-light ">
                 <!-- Left navbar links -->
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -124,14 +83,14 @@
 
                             </a>
 
-                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right dark-mode" style="max-width:unset !important;">
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="max-width:unset !important;">
                                 <% if (notificationCount > 0)
                                     { %>
-                                <span class="dropdown-header text-light">คุณมีคำขอ <%= notificationCount >= 10 ? $" มากกว่า {notificationCount.ToString()} " : notificationCount.ToString() %> รายการที่ต้องอนุมัติ</span>
+                                <span class="dropdown-header">คุณมีคำขอ <%= notificationCount >= 10 ? $" มากกว่า {notificationCount.ToString()} " : notificationCount.ToString() %> รายการที่ต้องอนุมัติ</span>
                                 <div class="dropdown-divider"></div>
                                 <asp:Repeater ID="RepeatNotification" runat="server">
                                     <ItemTemplate>
-                                        <a href="#" class="dropdown-item list__approval" data-course-id='<%# Eval("COURSE_ID") %>' data-approval-id='<%# Eval("APPROVAL_ID") %>' data-approval-sequence='<%# Eval("APPROVAL_SEQUENCE") %>' data-course-number='<%# Eval("COURSE_NUMBER") %>' data-course-department='<%# Eval("DEPARTMENT_NAME") %>' data-course-name='<%# Eval("COURSE_NAME") %>'>
+                                        <a href="#" class="dropdown-item list__approval text-center" data-course-id='<%# Eval("COURSE_ID") %>' data-approval-id='<%# Eval("APPROVAL_ID") %>' data-approval-sequence='<%# Eval("APPROVAL_SEQUENCE") %>' data-course-number='<%# Eval("COURSE_NUMBER") %>' data-course-department='<%# Eval("DEPARTMENT_NAME") %>' data-course-name='<%# Eval("COURSE_NAME") %>'>
                                             <%# Eval("COURSE_NAME") %>
                                         </a>
                                         <div class="dropdown-divider"></div>
@@ -165,7 +124,7 @@
                             </span>
                             <% } %>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right dark-mode" style="left: inherit; right: 0px; max-width: none; min-width: 310px !important;">
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px; max-width: none; min-width: 310px !important;">
                             <% if (clerkNoticationCount > 0)
                                 { %>
                             <asp:Repeater ID="ClerkNotificationRepleter" runat="server">
@@ -208,7 +167,7 @@
                             <i class="far fa-user mr-3"></i>
                             <span><%= sessionProfileName %></span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right dark-mode">
+                        <div class="dropdown-menu dropdown-menu-right">
                             <a href="~/Pages/Profiles.aspx" runat="server" class="dropdown-item dropdown-footer" style="padding: 0  10px !important;">บัญชีของฉัน
                             </a>
                             <div class="dropdown-divider"></div>
@@ -221,7 +180,7 @@
             <!-- /.navbar -->
 
             <!-- Main Sidebar Container -->
-            <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <aside class="main-sidebar sidebar-light-primary elevation-4">
                 <!-- Brand Logo -->
                 <a href="~/Default.aspx" runat="server" class="brand-link">
                     <img src="~/Assets/OJTlogo.png" runat="server" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
@@ -277,7 +236,7 @@
                             <li class="nav-header">รายงาน</li>
                             <li class="nav-item">
                                 <a href="~/Pages/Reports/Skill-map-report.aspx" runat="server" class="nav-link">
-                                    <i class="nav-icon fas fa-pen-square"></i>
+                                    <i class="nav-icon fas fa-chart-line"></i>
                                     <p>
                                         SKILL MAP
                                     </p>
@@ -350,21 +309,21 @@
             </aside>
 
             <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper dark-mode">
+            <div class="content-wrapper">
                 <asp:ContentPlaceHolder ID="body" runat="server">
                 </asp:ContentPlaceHolder>
             </div>
             <!-- /.content-wrapper -->
 
             <!-- Control Sidebar -->
-            <aside class="control-sidebar control-sidebar-dark">
+            <aside class="control-sidebar control-sidebar-light">
                 <!-- Control sidebar content goes here -->
             </aside>
             <!-- /.control-sidebar -->
 
             <!-- Main Footer -->
-            <footer class="main-footer dark-mode text-center border-0" style="background-color: #343a40 !important; color :rgba(255,255,255,0.4) !important;">
-                <strong style="color: rgba(255,255,255,0.4)  !important;">Copyright &copy; <%= DateTime.Now.Year %> MCCT OJT Training </strong>All rights reserved.
+            <footer class="main-footer text-center border-0">
+                <strong>Copyright &copy; <%= DateTime.Now.Year %> MCCT OJT Training </strong>All rights reserved.
             </footer>
         </div>
 
@@ -475,7 +434,7 @@
                             </div>
                             <div class="mt-2 form-group text-left">
                                 <label>หมายเหตุ</label>
-                                <textarea type="text" id="approval-remark" class="form-control dark-mode text-light" rows="3"></textarea>
+                                <textarea type="text" id="approval-remark" class="form-control text-light" rows="3"></textarea>
                             </div>`,
                     showCancelButton: true,
                     showConfirmButton: true,
