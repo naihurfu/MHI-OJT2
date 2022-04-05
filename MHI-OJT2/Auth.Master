@@ -411,7 +411,7 @@
                 e.preventDefault();
                 $.ajax({
                     type: "POST",
-                    url: "/Default.aspx/MarkNotifyAsRead",
+                     url: "<%= applicationPath %>" + "/Default.aspx/MarkNotifyAsRead",
                     data: "{'rowId': " + $(this).attr('data-id') + "}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -430,7 +430,7 @@
                 console.log(JSON.stringify(data))
                 $.ajax({
                     type: "POST",
-                    url: "/Pages/Management/Approval.aspx/ShowScore",
+                     url: "<%= applicationPath %>" + "/Pages/Management/Approval.aspx/ShowScore",
                     data: "{ '_ApproveResult': " + JSON.stringify(data) + " }",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -509,7 +509,7 @@
                     if (!isDismissed) {
                         $.ajax({
                             type: "POST",
-                            url: "/Pages/Management/Approval.aspx/HandleApprove",
+                             url: "<%= applicationPath %>" + "/Pages/Management/Approval.aspx/HandleApprove",
                             data: "{ '_ApproveResult': " + JSON.stringify(body) + " }",
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",

@@ -16,10 +16,11 @@ namespace MHI_OJT2.Pages.Management
 {
     public partial class Approval : Page
     {
+		public static string ajax = "";
         protected void Page_Load(object sender, EventArgs e)
         {
+            ajax = HttpContext.Current.Request.ApplicationPath == "/" ? "" : HttpContext.Current.Request.ApplicationPath;
             Auth.CheckLoggedIn();
-
             if (!IsPostBack)
             {
                 if ((string)Session["roles"] == "user")

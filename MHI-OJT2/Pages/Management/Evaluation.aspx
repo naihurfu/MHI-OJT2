@@ -213,10 +213,10 @@
             { %>
             if (evaluatedList.length > 0) {
                 $.ajax({
-                    url: "/Pages/Management/Evaluation.aspx/SaveEvaluateResults",
+                    type: "POST",
+                    url: "<%= ajax %>" + "/Pages/Management/Evaluation.aspx/SaveEvaluateResults",
                     data: "{ 'EvaluatedList': " + JSON.stringify(evaluatedList) + ", 'IsDraft': " + isDraft + " }",
                     dataType: "json",
-                    type: "POST",
                     contentType: "application/json; charset=utf-8",
                     success: function (res) {
                         window.location.href = window.location.protocol + "//" + window.location.host + "/Pages/Management/Courses.aspx"
@@ -234,7 +234,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/Pages/Management/Approval.aspx/HandleApprove",
+                url: "<%= ajax %>" + "/Pages/Management/Approval.aspx/HandleApprove",
                 data: "{ '_ApproveResult': " + JSON.stringify(body) + " }",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",

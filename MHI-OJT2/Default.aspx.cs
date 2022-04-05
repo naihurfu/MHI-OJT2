@@ -19,8 +19,12 @@ namespace MHI_OJT2
 		public static int waitingForEvaluation = 0;
 		public static int waitingForApproval = 0;
 		public static int statusTableRowCount = 0;
+		public static string ajax = "";
 		protected void Page_Load(object sender, EventArgs e)
         {
+			// url: "<%= ajax %>" + "/
+			ajax = HttpContext.Current.Request.ApplicationPath == "/" ? "" : HttpContext.Current.Request.ApplicationPath;
+			
 			Auth.CheckLoggedIn();
 			int userId = int.Parse(Session["userId"].ToString());
 			string connectionString = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;

@@ -116,7 +116,7 @@
             let body = "{'APPROVE_ID': " + aprovalId + ",'COURSE_ID': " + courseId + ",'APPROVAL_SEQUENCE': " + approvalSequence + "}"
             $.ajax({
                 type: "POST",
-                url: "/Pages/Management/Approval.aspx/ShowScore",
+                 url: "<%= ajax %>" + "/Pages/Management/Approval.aspx/ShowScore",
                 data: "{ '_ApproveResult': " + body + " }",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -156,7 +156,7 @@
                     let body = "{'APPROVE_ID': " + aprovalId + ",'COURSE_ID': " + courseId + ",'IS_APPROVE': " + isApprove + ",'APPROVAL_SEQUENCE': " + approvalSequence + ", 'REMARK': '" + remark + "'}"
                     $.ajax({
                         type: "POST",
-                        url: "/Pages/Management/Approval.aspx/HandleApprove",
+                         url: "<%= ajax %>" + "/Pages/Management/Approval.aspx/HandleApprove",
                         data: "{ '_ApproveResult': " + body + " }",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",

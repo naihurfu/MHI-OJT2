@@ -331,7 +331,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/Pages/Reports/Skill-map-report.aspx/GetReportData",
+                 url: "<%= ajax %>" + "/Pages/Reports/Skill-map-report.aspx/GetReportData",
                 data: body,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -370,7 +370,7 @@
                     for (let i = 4; i >= 4 && i <= (keyNames.length - 5); i++) {
                         var request = $.ajax({
                             type: "POST",
-                            url: "/Pages/Reports/Skill-map-report.aspx/GetDepartmentName",
+                             url: "<%= ajax %>" + "/Pages/Reports/Skill-map-report.aspx/GetDepartmentName",
                             data: `{ 'courseName': '${keyNames[i]}' }`,
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",

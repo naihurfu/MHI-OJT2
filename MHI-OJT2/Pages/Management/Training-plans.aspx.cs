@@ -21,9 +21,10 @@ namespace MHI_OJT2.Pages.Management
         string _sessionAlert = null;
         string _selfPathName = "";
         string _roles = "";
-
+        public static string ajax = "";
         protected void Page_Load(object sender, EventArgs e)
         {
+            ajax = HttpContext.Current.Request.ApplicationPath == "/" ? "" : HttpContext.Current.Request.ApplicationPath;
             Auth.CheckLoggedIn();
 
             if (!IsPostBack)

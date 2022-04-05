@@ -18,8 +18,10 @@ namespace MHI_OJT2.Pages.Management
 	{
 		string _sessionAlert = null;
 		string _selfPathName = "";
+		public static string ajax = "";
 		protected void Page_Load(object sender, EventArgs e)
 		{
+			ajax = HttpContext.Current.Request.ApplicationPath == "/" ? "" : HttpContext.Current.Request.ApplicationPath;
 			_selfPathName = "~" + Auth.applicationPath + "/Pages/Management/Courses.aspx";
 
 			Auth.CheckLoggedIn();

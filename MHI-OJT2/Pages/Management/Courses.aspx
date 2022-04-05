@@ -471,7 +471,7 @@
                 case 'evaluate':
                     $.ajax({
                         type: "POST",
-                        url: "/Pages/Management/Courses.aspx/CreateSessionToEvaluate",
+                         url: "<%= ajax %>" + "/Pages/Management/Courses.aspx/CreateSessionToEvaluate",
                         data: "{'courseId': " + courseId + "}",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -497,7 +497,7 @@
                     approval_container.hide()
                     $.ajax({
                         type: "POST",
-                        url: "/Pages/Management/Courses.aspx/GetApprovalList",
+                         url: "<%= ajax %>" + "/Pages/Management/Courses.aspx/GetApprovalList",
                         data: "{'courseId': " + courseId + "}",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -575,7 +575,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/Pages/Management/Courses.aspx/InsertEmployee",
+                     url: "<%= ajax %>" + "/Pages/Management/Courses.aspx/InsertEmployee",
                     data: "{'EmployeeSelectedList': " + JSON.stringify(employeeList) + ", 'CourseId': " + courseId + ", 'IsDraft': " + isDraft + "}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -598,7 +598,7 @@
             var data = "{'courseId': " + courseId + "}"
             $.ajax({
                 type: "POST",
-                url: "/Pages/Management/Courses.aspx/GetEmployeeList",
+                 url: "<%= ajax %>" + "/Pages/Management/Courses.aspx/GetEmployeeList",
                 data: data,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -633,7 +633,7 @@
         function handleEditCourse(courseId) {
             $.ajax({
                 type: "POST",
-                url: "/Pages/Management/Courses.aspx/GetCourseDetailById",
+                 url: "<%= ajax %>" + "/Pages/Management/Courses.aspx/GetCourseDetailById",
                 data: "{'courseId': " + courseId + "}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -649,7 +649,7 @@
         function handleViewCourseDetail(id) {
             $.ajax({
                 type: "POST",
-                url: "/Pages/Management/Courses.aspx/GetCourseDetailById",
+                 url: "<%= ajax %>" + "/Pages/Management/Courses.aspx/GetCourseDetailById",
                 data: "{'courseId': " + id + "}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",

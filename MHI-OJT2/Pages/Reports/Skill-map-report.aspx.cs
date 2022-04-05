@@ -13,9 +13,11 @@ namespace MHI_OJT2.Pages.Reports
 {
     public partial class Skill_map_report : Page
     {
+        public static string ajax = "";
         public static string role = "";
         protected void Page_Load(object sender, EventArgs e)
         {
+			ajax = HttpContext.Current.Request.ApplicationPath == "/" ? "" : HttpContext.Current.Request.ApplicationPath;
             Auth.CheckLoggedIn();
             if(!IsPostBack)
             {
