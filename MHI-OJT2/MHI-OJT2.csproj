@@ -2020,7 +2020,6 @@
     <Content Include="Pages\Management\Approval.aspx" />
     <Content Include="Pages\Management\Courses.aspx" />
     <Content Include="Pages\Management\Evaluation.aspx" />
-    <Content Include="Pages\Management\scan-barcode.aspx" />
     <Content Include="Pages\Management\Training-plans.aspx" />
     <Content Include="Pages\Master\Department.aspx" />
     <Content Include="Pages\Master\Location.aspx" />
@@ -2102,13 +2101,6 @@
     </Compile>
     <Compile Include="Pages\Management\Evaluation.aspx.designer.cs">
       <DependentUpon>Evaluation.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Management\scan-barcode.aspx.cs">
-      <DependentUpon>scan-barcode.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Pages\Management\scan-barcode.aspx.designer.cs">
-      <DependentUpon>scan-barcode.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Management\Training-plans.aspx.cs">
       <DependentUpon>Training-plans.aspx</DependentUpon>
