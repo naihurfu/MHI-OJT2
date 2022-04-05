@@ -346,7 +346,7 @@ namespace MHI_OJT2.Pages.Management
             string exportName = "TRAINING PLAN REPORT";
             
             rpt.Load(Server.MapPath("~/Reports/rpt_Training_Plan.rpt"));
-
+            rpt.SetParameterValue("PIC_PATH", Server.MapPath("~"));
             int sectionId = int.Parse(section.Value.ToString());
             string sectionName = "";
             using (DataTable dt = SQL.GetDataTable($"SELECT SECTION_NAME FROM SECTION WHERE ID = {sectionId}", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))

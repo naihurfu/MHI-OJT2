@@ -267,15 +267,6 @@ namespace MHI_OJT2.Pages.Management
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden hiddenCourseAndPlanId;
 
         /// <summary>
-        /// btnScanBarcode control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton btnScanBarcode;
-
-        /// <summary>
         /// hiddenCourseId_AddEmployeeModal control.
         /// </summary>
         /// <remarks>

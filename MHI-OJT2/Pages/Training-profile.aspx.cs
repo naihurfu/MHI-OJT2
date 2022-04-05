@@ -101,7 +101,7 @@ namespace MHI_OJT2.Pages
                 reportName = "~/Reports/Training_Profile_Emp.rpt";
             }
 
-            rpt.Load(filename: Server.MapPath(reportName));
+            rpt.Load(Server.MapPath(reportName));
 
             string formula = "cDate(ToText(cDate({COURSE_AND_EMPLOYEE.START_DATE}),'dd/MM/yyyy')) >= " +
             $"cDate(ToText(cDate('{startDate.Value}'),'dd/MM/yyyy')) " +

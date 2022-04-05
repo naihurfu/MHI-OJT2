@@ -162,6 +162,7 @@ namespace MHI_OJT2
 				rpt.RecordSelectionFormula = "{COURSE_AND_EMPLOYEE.COURSE_ID}=" + courseId;
 
 				// set parameters
+				rpt.SetParameterValue("PIC_PATH", Server.MapPath("~"));
 				rpt.SetParameterValue("IS_Signed", 0);
 
 				rpt.SetParameterValue("Commander", "");
@@ -196,9 +197,5 @@ namespace MHI_OJT2
 			
 
 		}
-		public static string MapPath(string path)
-        {
-			return System.Web.Hosting.HostingEnvironment.MapPath(path); ;
-        }
     }
 }

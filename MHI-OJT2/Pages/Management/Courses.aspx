@@ -269,7 +269,6 @@
                     <div class="transfer"></div>
                 </div>
                 <div class="modal-footer" style="justify-content: end !important;">
-                    <button type="button" id="btnScanBarcode" runat="server" class="btn btn-warning d-none" onserverclick="btnScanBarcode_ServerClick">Scan Barcode</button>
                     <div class="action-button-area">
                         <input type="hidden" runat="server" id="hiddenCourseId_AddEmployeeModal" />
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>

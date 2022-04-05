@@ -372,6 +372,7 @@ namespace MHI_OJT2.Pages.Management
 				rpt.RecordSelectionFormula = "{COURSE_AND_EMPLOYEE.COURSE_ID}=" + courseId;
 
 				// set parameters
+                rpt.SetParameterValue("PIC_PATH", Server.MapPath("~"));
                 rpt.SetParameterValue("IS_Signed", isSigned.Checked == true ? 1 : 0);
 
                 rpt.SetParameterValue("Commander", commanderName.Value);
@@ -436,6 +437,7 @@ namespace MHI_OJT2.Pages.Management
 					rpt.RecordSelectionFormula = "{COURSE_AND_EMPLOYEE.COURSE_ID}=" + courseId;
 
 					// set parameters
+					rpt.SetParameterValue("PIC_PATH", Server.MapPath("~"));
 					rpt.SetParameterValue("IS_Signed", isSigned.Checked == true ? 1 : 0);
 
 					rpt.SetParameterValue("Commander", commanderName.Value);

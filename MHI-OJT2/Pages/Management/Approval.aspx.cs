@@ -238,6 +238,7 @@ namespace MHI_OJT2.Pages.Management
                 rpt.Load(filename: Server.MapPath($"~/Reports/rpt_Manage_Course.rpt"));
                 rpt.RecordSelectionFormula = "{COURSE_AND_EMPLOYEE.COURSE_ID}=" + courseId;
                 // set parameters
+                rpt.SetParameterValue("PIC_PATH", Server.MapPath("~"));
                 rpt.SetParameterValue("IS_Signed", 0);
 
                 rpt.SetParameterValue("Commander", "");
