@@ -14,7 +14,6 @@ namespace MHI_OJT2
     public partial class Default : System.Web.UI.Page
     {
 		string _sessionAlert;
-
 		public static int allCourseCount = 0;
 		public static int trainedThisYear = 0;
 		public static int waitingForEvaluation = 0;

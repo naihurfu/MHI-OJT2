@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
@@ -342,8 +343,8 @@ namespace MHI_OJT2.Pages.Management
             ExportFormatType expType = ExportFormatType.PortableDocFormat;
             int id = int.Parse(Session["userId"].ToString());
             string exportName = "TRAINING PLAN REPORT";
-
-            rpt.Load(filename: Server.MapPath("~/Reports/rpt_Training_Plan.rpt"));
+            
+            rpt.Load(Server.MapPath("~/Reports/rpt_Training_Plan.rpt"));
 
             int sectionId = int.Parse(section.Value.ToString());
             string sectionName = "";

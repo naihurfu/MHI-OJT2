@@ -366,7 +366,7 @@ namespace MHI_OJT2.Pages.Management
 				ReportDocument rpt = new ReportDocument();
 				ExportFormatType expType = ExportFormatType.PortableDocFormat;
 
-				rpt.Load(filename: Server.MapPath($"~/Reports/rpt_Manage_Course.rpt"));
+				rpt.Load(Server.MapPath("~/Reports/rpt_Manage_Course.rpt"));															
 				rpt.RecordSelectionFormula = "{COURSE_AND_EMPLOYEE.COURSE_ID}=" + courseId;
 
 				// set parameters

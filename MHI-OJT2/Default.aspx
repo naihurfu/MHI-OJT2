@@ -216,7 +216,7 @@
             let data = `{ 'PersonID': ${id}, 'Roles': '${role}' }`
             $.ajax({
                 type: "POST",
-                url: "/OJT/Default.aspx/GetChart",
+                url: "/Default.aspx/GetChart",
                 data: data,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -290,7 +290,7 @@
             // get all course count table
             $.ajax({
                 type: "POST",
-                url: "/OJT/Default.aspx/GetAllCourseCountTable",
+                url: "/Default.aspx/GetAllCourseCountTable",
                 data: data,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -307,7 +307,7 @@
             // get trained this year table
             $.ajax({
                 type: "POST",
-                url: "/OJT/Default.aspx/GetTrainedThisYearTable",
+                url: "/Default.aspx/GetTrainedThisYearTable",
                 data: data,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -324,7 +324,7 @@
             // get wait for evaluation table
             $.ajax({
                 type: "POST",
-                url: "/OJT/Default.aspx/GetWaitForEvaluationTable",
+                url: "/Default.aspx/GetWaitForEvaluationTable",
                 data: data,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -341,7 +341,7 @@
             // get wait for approval table
             $.ajax({
                 type: "POST",
-                url: "/OJT/Default.aspx/GetWaitForApprovalTable",
+                url: "/Default.aspx/GetWaitForApprovalTable",
                 data: data,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",

@@ -17,9 +17,11 @@ namespace MHI_OJT2
 {
     public partial class Auth : MasterPage
     {
+		public static string applicationPath = "";
+
         string _sessionAlert = null;
 		public static string _403 = "~/Pages/Error/403.aspx";
-		public static string Dashboard = "~/Default.aspx";
+		public static string Dashboard = "";
 		static string _firstName = String.Empty;
 		static string _lastName = String.Empty;
 		static string _positionName = String.Empty;
@@ -29,6 +31,10 @@ namespace MHI_OJT2
 
 		protected void Page_Load(object sender, EventArgs e)
 			{
+				applicationPath = HttpContext.Current.Request.ApplicationPath == "/" ? "" : HttpContext.Current.Request.ApplicationPath;
+				Dashboard = "~" + applicationPath + "/Default.aspx";
+				_403 = "~" + applicationPath + "/Pages/Error/403.aspx";
+
 				CheckLoggedIn();
 				CheckAlertSession();
 				if (!IsPostBack)
@@ -114,7 +120,7 @@ namespace MHI_OJT2
 			}
 			catch (Exception ex)
 			{
-				HttpContext.Current.Response.Redirect("~/Login.aspx");
+				HttpContext.Current.Response.Redirect("~" + applicationPath + "/Login.aspx");
 				Console.WriteLine(ex.Message);
 				return 0;
 			}
@@ -128,7 +134,7 @@ namespace MHI_OJT2
 		{
 			Session.Abandon();
 			Session.RemoveAll();
-			Response.Redirect("~/login.aspx");
+			Response.Redirect("~" + applicationPath + "/Login.aspx");
 		}
 		protected void DownloadReportTrainingEvaluationOJT(object sender, EventArgs e)
 		{
@@ -190,5 +196,9 @@ namespace MHI_OJT2
 			
 
 		}
+		public static string MapPath(string path)
+        {
+			return System.Web.Hosting.HostingEnvironment.MapPath(path); ;
+        }
     }
 }

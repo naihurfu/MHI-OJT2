@@ -213,7 +213,7 @@
             { %>
             if (evaluatedList.length > 0) {
                 $.ajax({
-                    url: "/OJT/Pages/Management/Evaluation.aspx/SaveEvaluateResults",
+                    url: "/Pages/Management/Evaluation.aspx/SaveEvaluateResults",
                     data: "{ 'EvaluatedList': " + JSON.stringify(evaluatedList) + ", 'IsDraft': " + isDraft + " }",
                     dataType: "json",
                     type: "POST",
@@ -234,7 +234,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/OJT/Pages/Management/Approval.aspx/HandleApprove",
+                url: "/Pages/Management/Approval.aspx/HandleApprove",
                 data: "{ '_ApproveResult': " + JSON.stringify(body) + " }",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",

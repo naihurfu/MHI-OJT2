@@ -311,7 +311,7 @@
                 if (result.isDenied) {
                     $.ajax({
                         type: "POST",
-                        url: "/OJT/Pages/Management/Training-plans.aspx/DeletePlan",
+                        url: "/Pages/Management/Training-plans.aspx/DeletePlan",
                         data: "{'planId': " + id + "}",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
