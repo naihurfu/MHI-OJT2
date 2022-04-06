@@ -261,7 +261,7 @@
             <div class="modal-content ">
                 <div class="modal-header">
                     <h5 class="modal-title ">เลือกพนักงานเข้าฝึกอบรม</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -284,7 +284,7 @@
             <div class="modal-content ">
                 <div class="modal-header">
                     <h5 class="modal-title ">ตรวจสอบสถานะการอนุมัติ</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -321,7 +321,7 @@
             <div class="modal-content ">
                 <div class="modal-header">
                     <h5 class="modal-title ">ลงชื่อผู้ทำการฝึกอบรมและประเมิน</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>

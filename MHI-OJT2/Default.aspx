@@ -170,7 +170,7 @@
             <div class="modal-content ">
                 <div class="modal-header border-0">
                     <h5 class="modal-title " id="view-card-title"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>

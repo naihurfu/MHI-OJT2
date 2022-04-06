@@ -6,7 +6,7 @@
         input[type=checkbox], input[type=radio] {
             width: 20px !important;
             height: 20px !important;
-        }
+        }                                    
 
         .bootstrap-select > .dropdown-toggle {
             background-color: #fff !important;
@@ -96,7 +96,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="titleModal"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>

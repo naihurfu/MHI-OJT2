@@ -571,8 +571,7 @@
                         //return
                         $('#print_me').printThis({
                             importCSS: true,
-                            importStyle: true,
-                            loadCSS: "skill-map.css"
+                            importStyle: true
                         });
                         $('#card-print').hide()
 
