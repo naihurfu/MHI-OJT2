@@ -255,7 +255,7 @@
                                         <img src="~/Reports/Pic/20_25_NOT_STAR.png" width="50" height="47" runat="server" />
                                         <span>= (20-25 คะแนน) ทราบทฤษฎีเบื้องต้นเท่านั้น Only theoretically.</span>
                                     </li>
-                                    <li>
+                                    <li >
                                         <img src="~/Reports/Pic/26_50_NOT_STAR.png" width="50" height="47" runat="server" />
                                         <span>= (26-50 คะแนน) สามารถปฏิบัติงานได้ภายใต้การควบคุมของหัวหน้างาน Can work under Leader.</span>
                                     </li>
@@ -263,11 +263,11 @@
                             </div>
                             <div class="col-3">
                                 <ul style="list-style:none;">
-                                    <li>
+                                    <li >
                                         <img src="~/Reports/Pic/51_75.png" width="50" height="47" runat="server" />
                                         <span>= (51-75 คะแนน) สามารถปฏิบัติงานได้ด้วยตัวเอง Can work by himself.</span>
                                     </li>
-                                    <li>
+                                    <li >
                                         <img src="~/Reports/Pic/76_100.png" width="50" height="47" runat="server" />
                                         <span> = (76-100 คะแนน) สามารถปฏิบัติงานได้ด้วยตนเองและถ่ายทอดให้ผู้อื่นได้ Can work by himself & Can teach others.</span>
                                     </li>
@@ -275,17 +275,27 @@
                             </div>
                             <div class="col-3">
                                 <ul style="list-style:none;">
-                                    <li><img src="~/Reports/Pic/0_19_NOT_STAR.png"  width="50" height="47" runat="server" /> วงใน คือ เป้าหมาย อ้างอิงตามตารางมาตรฐานกำหนดความสามารถของพนักงาน (FR-HR01-019) Inside circle : Target  Ref.to Competency Mapping Standard (FR-HR01-019)</li>
-                                    <li><img src="~/Reports/Pic/WONG_NAI.png"  width="50" height="47" runat="server" /> วงนอก : ปฏิบัติได้จริง Outside circle : Actual</li>
+                                    <li >
+                                        <img src="~/Reports/Pic/0_19_NOT_STAR.png"  width="50" height="47" runat="server" /> 
+                                        วงใน คือ เป้าหมาย อ้างอิงตามตารางมาตรฐานกำหนดความสามารถของพนักงาน (FR-HR01-019) Inside circle : Target  Ref.to Competency Mapping Standard (FR-HR01-019)
+                                    </li>
+                                    <li>
+                                        <img src="~/Reports/Pic/WONG_NAI.png"  width="50" height="47" runat="server" /> 
+                                        วงนอก : ปฏิบัติได้จริง Outside circle : Actual
+                                    </li>
                                 </ul>
                             </div>
-                            <div class="col-3">
-                                <ul style="list-style:none;">
-                                    <li>1. ประเมินพนักงานใหม่ ต้องทำการประเมินภายในวันที่ 91 Probation period. The evaluation will do within 91st of Probation period since start working</li>
-                                    <li>2. ประเมินพนักงานหลังบรรจุเป็นพนักงานประจำแล้ว โดยต้องทำการประเมินทุก 6 เดือน After Passed Probation. Re-Evaluation every 6 months (2 times/year)</li>
-                                    <li>3. ต้นฉบับ --> ต้นสังกัด ,สำเนา --> HR Original --> For each setion, Copied --> For HR</li>
+                            <div class="col-3 d-flex">
+                                <span style="white-space:nowrap; margin: 5px 5px 0 0;">Note : </span>
+                                <ul style="width: 100%">
+                                    <li style="width: 100%">1. ประเมินพนักงานใหม่ ต้องทำการประเมินภายในวันที่ 91 Probation period. The evaluation will do within 91st of Probation period since start working</li>
+                                    <li style="width: 100%">2. ประเมินพนักงานหลังบรรจุเป็นพนักงานประจำแล้ว โดยต้องทำการประเมินทุก 6 เดือน After Passed Probation. Re-Evaluation every 6 months (2 times/year)</li>
+                                    <li style="width: 100%">3. ต้นสังกัด จัดเก็บไฟล์อิเล็กทรอนิกส์ (Each section keep eclectronic file)</li>
                                 </ul>
                             </div>
+                        </div>
+                        <div class="row justify-content-end">
+                            <b>FR-HR01-007 ED:22-Jan-19 (Rev.00)</b>   
                         </div>
                     </div>
                 </div>
@@ -568,7 +578,6 @@
                             });
                         });
 
-                        //return
                         $('#print_me').printThis({
                             importCSS: true,
                             importStyle: true
