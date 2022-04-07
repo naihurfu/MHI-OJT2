@@ -352,6 +352,7 @@ namespace MHI_OJT2.Pages.Management
         {
 			try
             {
+
 				int courseId = int.Parse(EXPORT_REPORT_COURSE_ID.Value.ToString());
 				string exportName = "unname report";
 
