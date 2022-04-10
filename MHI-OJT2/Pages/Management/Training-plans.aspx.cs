@@ -25,6 +25,7 @@ namespace MHI_OJT2.Pages.Management
         protected void Page_Load(object sender, EventArgs e)
         {
             ajax = HttpContext.Current.Request.ApplicationPath == "/" ? "" : HttpContext.Current.Request.ApplicationPath;
+            _selfPathName = "~" + Auth.applicationPath + "/Pages/Management/Training-plans.aspx";
             Auth.CheckLoggedIn();
 
             if (!IsPostBack)
@@ -44,7 +45,6 @@ namespace MHI_OJT2.Pages.Management
         }
         void CheckAlertSession()
         {
-            _selfPathName = "~" + Auth.applicationPath + "/Pages/Management/Training-plans.aspx";
             _sessionAlert = null;
             if (Session["alert"] != null)
             {
