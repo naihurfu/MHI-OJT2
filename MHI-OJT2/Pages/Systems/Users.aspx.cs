@@ -49,22 +49,22 @@ namespace MHI_OJT2.Pages.Systems
 
 				if (_sessionAlert == "inserted")
 				{
-					Alert("success", "Done!", "Successfully data added.");
+					Alert("success", "สำเร็จ", "บักทึกข้อมูลเรียบร้อย");
 				}
 
 				if (_sessionAlert == "updated")
 				{
-					Alert("success", "Updated!", "Successfully updated data.");
+					Alert("success", "สำเร็จ", "ปรับปรุงข้อมูลเรียบร้อย");
 				}
 
 				if (_sessionAlert == "deleted")
 				{
-					Alert("success", "Deleted!", "The data has been deleted.");
+					Alert("success", "สำเร็จ", "ลบข้อมูลเรียบร้อย");
 				}
 
 				if (_sessionAlert == "change-password")
                 {
-					Alert("success", "Done!", "Password has been changed.");
+					Alert("success", "สำเร็จ", "เปลี่ยนรหัสผ่านเรียบร้อย");
                 }
 
 				Session.Remove("alert");

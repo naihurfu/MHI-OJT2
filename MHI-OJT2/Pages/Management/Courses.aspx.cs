@@ -48,33 +48,33 @@ namespace MHI_OJT2.Pages.Management
 
 				if (_sessionAlert == "inserted")
 				{
-					Alert("success", "Done!", "Successfully data added.");
+					Alert("success", "สำเร็จ", "บักทึกข้อมูลเรียบร้อย");
 				};
 
 				if (_sessionAlert == "updated")
 				{
-					Alert("success", "Updated!", "Successfully updated data.");
+					Alert("success", "สำเร็จ", "ปรับปรุงข้อมูลเรียบร้อย");
 				}
 
 				if (_sessionAlert == "deleted")
 				{
-					Alert("success", "Deleted!", "The data has been deleted.");
+					Alert("success", "สำเร็จ", "ลบข้อมูลเรียบร้อย");
 				}
 
 				if (_sessionAlert == "update_status")
 				{
-					Alert("success", "Success", "Status has been updated.");
+					Alert("success", "สำเร็จ", "ปรับปรุงสถานะเรียบร้อย");
 				}
 
 				if (_sessionAlert == "employee_inserted")
                 {
-					Alert("success", "Success!", "Employees have been recorded in the course successfully.");
+					Alert("success", "สำเร็จ", "บันทึกพนักงานเข้าหลักสูตรเรียบร้อย");
 
 				}
 
 				if (_sessionAlert == "evaluated")
 				{
-					Alert("success", "Success!", "Evaluated successfully.");
+					Alert("success", "สำเร็จ", "บันทึกการประเมินผลเรียบร้อย");
 
 				}
 
