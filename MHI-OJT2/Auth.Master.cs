@@ -97,11 +97,14 @@ namespace MHI_OJT2
 		{
 			string query = $"SELECT * FROM VIEW_CLERK_NOTIFICATION WHERE USER_ID = {userId} AND [READ]=0";
 			DataTable ClerkDataTable = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
-			clerkNoticationCount = ClerkDataTable.Rows.Count;
+			if (ClerkDataTable.Rows.Count > 0)
+            {
+				clerkNoticationCount = ClerkDataTable.Rows.Count;
 
-			DataTable dt = ClerkDataTable.Rows.Cast<System.Data.DataRow>().Take(10).CopyToDataTable();
-			ClerkNotificationRepleter.DataSource = dt;
-			ClerkNotificationRepleter.DataBind();
+				DataTable dt = ClerkDataTable.Rows.Cast<System.Data.DataRow>().Take(10).CopyToDataTable();
+				ClerkNotificationRepleter.DataSource = dt;
+				ClerkNotificationRepleter.DataBind();
+			}
 		}
 		public static int CheckLoggedIn()
 		{

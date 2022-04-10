@@ -13,7 +13,7 @@
                 <!-- /.col -->
                 <div class="col-sm-6">
                     <div class="float-sm-right">
-                        <button type="button" class="btn btn-primary" onclick="handlePrintReportTrainingProfile()">
+                        <button type="button" class="btn btn-success" onclick="handlePrintReportTrainingProfile()">
                             <i class="fa fa-file-pdf mr-2"></i>
                             พิมพ์รายงาน</button>
                     </div>
