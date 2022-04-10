@@ -9,7 +9,10 @@ namespace MHI_OJT2
 {
     public class SQL
     {
+        public static string user = "Project1";
+        public static string pass = "Tigersoft1998$";
         public static SqlConnection connection;
+
         public static DataTable GetDataTable(string queryString, string connectionString)
         {
             using (connection = new SqlConnection(connectionString))

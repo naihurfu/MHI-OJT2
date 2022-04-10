@@ -390,7 +390,7 @@ namespace MHI_OJT2.Pages.Management
                 rpt.SetParameterValue("Section_Manager_position", sectionManagerPositionName.Value);
                 rpt.SetParameterValue("Section_Manager_Date", sectionManagerDate.Value);
 
-                rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+                rpt.SetDatabaseLogon(SQL.user, SQL.pass);
 
 				// logging
 				try
@@ -436,7 +436,7 @@ namespace MHI_OJT2.Pages.Management
 					ReportDocument rpt = new ReportDocument();
 					ExportFormatType expType = ExportFormatType.PortableDocFormat;
 
-					rpt.Load(Server.MapPath($"~/Reports/rpt_Manage_Course.rpt"));
+					rpt.Load(Server.MapPath($"~/Reports/rpt_Manage_Course1.rpt"));
 					rpt.RecordSelectionFormula = "{COURSE_AND_EMPLOYEE.COURSE_ID}=" + courseId;
 
 					// set parameters
@@ -455,7 +455,7 @@ namespace MHI_OJT2.Pages.Management
 					rpt.SetParameterValue("Section_Manager_position", sectionManagerPositionName.Value);
 					rpt.SetParameterValue("Section_Manager_Date", sectionManagerDate.Value);
 
-					rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+					rpt.SetDatabaseLogon(SQL.user, SQL.pass);
 
 					// logging
 					try

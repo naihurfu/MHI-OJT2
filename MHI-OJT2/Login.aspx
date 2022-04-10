@@ -37,7 +37,7 @@
                             <div class="card-body">
                                 <div class="row mb-3 justify-content-between">
                                     <div class="col">
-                                        <h5>MCCT - OJT Training</h5>
+                                        <h5>MCCT - OJT Training (2046)</h5>
                                     </div>
                                 </div>
 

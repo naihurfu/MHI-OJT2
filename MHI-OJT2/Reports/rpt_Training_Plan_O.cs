@@ -16,14 +16,14 @@ namespace MHI_OJT2.Reports {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class rpt_Training_Plan : ReportClass {
+    public class rpt_Training_Plan_O : ReportClass {
         
-        public rpt_Training_Plan() {
+        public rpt_Training_Plan_O() {
         }
         
         public override string ResourceName {
             get {
-                return "rpt_Training_Plan.rpt";
+                return "rpt_Training_Plan_O.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace MHI_OJT2.Reports {
         
         public override string FullResourceName {
             get {
-                return "MHI_OJT2.Reports.rpt_Training_Plan.rpt";
+                return "MHI_OJT2.Reports.rpt_Training_Plan_O.rpt";
             }
             set {
                 // Do nothing
@@ -106,7 +106,7 @@ namespace MHI_OJT2.Reports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_PIC_PATH {
+        public CrystalDecisions.Shared.IParameterField Parameter_Section {
             get {
                 return this.DataDefinition.ParameterFields[0];
             }
@@ -114,7 +114,7 @@ namespace MHI_OJT2.Reports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_Section {
+        public CrystalDecisions.Shared.IParameterField Parameter_PIC_PATH {
             get {
                 return this.DataDefinition.ParameterFields[1];
             }
@@ -122,9 +122,9 @@ namespace MHI_OJT2.Reports {
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class Cachedrpt_Training_Plan : Component, ICachedReport {
+    public class Cachedrpt_Training_Plan_O : Component, ICachedReport {
         
-        public Cachedrpt_Training_Plan() {
+        public Cachedrpt_Training_Plan_O() {
         }
         
         [Browsable(false)]
@@ -161,7 +161,7 @@ namespace MHI_OJT2.Reports {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            rpt_Training_Plan rpt = new rpt_Training_Plan();
+            rpt_Training_Plan_O rpt = new rpt_Training_Plan_O();
             rpt.Site = this.Site;
             return rpt;
         }

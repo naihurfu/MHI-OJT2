@@ -110,7 +110,7 @@
                    </ul>
                 <% } %>
 
-                <% if (Session["roles"].ToString().ToLower() == "clerk")
+                <% if (Session["roles"].ToString().ToLower() != "user")
                     { %>
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item dropdown">
@@ -161,7 +161,7 @@
                 <% } %>
 
 
-                <ul class='navbar-nav <%= Session["roles"].ToString().ToLower() == "admin" ? "ml-auto" : "" %>'>
+                <ul class='navbar-nav'>
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#">
                             <i class="far fa-user mr-3"></i>

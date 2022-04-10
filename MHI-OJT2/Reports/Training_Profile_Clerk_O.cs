@@ -16,14 +16,14 @@ namespace MHI_OJT2.Reports {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class rpt_Training_Plan : ReportClass {
+    public class Training_Profile_Clerk_O : ReportClass {
         
-        public rpt_Training_Plan() {
+        public Training_Profile_Clerk_O() {
         }
         
         public override string ResourceName {
             get {
-                return "rpt_Training_Plan.rpt";
+                return "Training_Profile_Clerk_O.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace MHI_OJT2.Reports {
         
         public override string FullResourceName {
             get {
-                return "MHI_OJT2.Reports.rpt_Training_Plan.rpt";
+                return "MHI_OJT2.Reports.Training_Profile_Clerk_O.rpt";
             }
             set {
                 // Do nothing
@@ -103,28 +103,12 @@ namespace MHI_OJT2.Reports {
                 return this.ReportDefinition.Sections[6];
             }
         }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_PIC_PATH {
-            get {
-                return this.DataDefinition.ParameterFields[0];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_Section {
-            get {
-                return this.DataDefinition.ParameterFields[1];
-            }
-        }
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class Cachedrpt_Training_Plan : Component, ICachedReport {
+    public class CachedTraining_Profile_Clerk_O : Component, ICachedReport {
         
-        public Cachedrpt_Training_Plan() {
+        public CachedTraining_Profile_Clerk_O() {
         }
         
         [Browsable(false)]
@@ -161,7 +145,7 @@ namespace MHI_OJT2.Reports {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            rpt_Training_Plan rpt = new rpt_Training_Plan();
+            Training_Profile_Clerk_O rpt = new Training_Profile_Clerk_O();
             rpt.Site = this.Site;
             return rpt;
         }

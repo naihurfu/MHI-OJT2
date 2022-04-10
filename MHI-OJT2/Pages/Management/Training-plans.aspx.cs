@@ -357,10 +357,10 @@ namespace MHI_OJT2.Pages.Management
 
              rpt.SetParameterValue("Section", sectionName);
 
-            string formula = "cDate(ToText(cDate({VIEW_PLAN_AND_COURSE.PLAN_DATE}),'dd/MM/yyyy')) >= " +
-            $"cDate(ToText(cDate('{startDate.Value}'),'dd/MM/yyyy')) " +
-            "AND cDate(ToText(cDate({VIEW_PLAN_AND_COURSE.PLAN_DATE}),'dd/MM/yyyy')) <= " +
-            $"cDate(ToText(cDate('{endDate.Value}'),'dd/MM/yyyy'))";
+            string[] sDate = startDate.Value.Split('/');
+            string[] eDate = endDate.Value.Split('/');
+            string formula = "{VIEW_PLAN_AND_COURSE.PLAN_DATE} >= Date (" + sDate[2] + ", " + sDate[1] + ", " + sDate[0] + ") " +
+                "AND {VIEW_PLAN_AND_COURSE.PLAN_DATE} <= Date (" + eDate[2] + ", " + eDate[1] + ", " + eDate[0] + ") ";
 
             if (id != 0)
             {
@@ -374,7 +374,7 @@ namespace MHI_OJT2.Pages.Management
             }
 
             rpt.RecordSelectionFormula = formula;
-            rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+            rpt.SetDatabaseLogon(SQL.user, SQL.pass);
 
             // logging
             try

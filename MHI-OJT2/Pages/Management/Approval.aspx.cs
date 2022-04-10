@@ -254,7 +254,7 @@ namespace MHI_OJT2.Pages.Management
                 rpt.SetParameterValue("Section_Manager_position", "");
                 rpt.SetParameterValue("Section_Manager_Date", "");
 
-                rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+                rpt.SetDatabaseLogon(SQL.user, SQL.pass);
 
                 // logging
                 try

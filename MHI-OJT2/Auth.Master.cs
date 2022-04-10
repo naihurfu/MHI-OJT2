@@ -46,15 +46,14 @@ namespace MHI_OJT2
 					}
 
 					int userId = int.Parse(Session["userId"].ToString());
-					if (Session["roles"].ToString().ToLower() == "user")
+					string role = Session["roles"].ToString().ToLower();
+					if (role == "user")
 					{
 						GetNotification(userId);
-					}
-
-					if (Session["roles"].ToString().ToLower() == "clerk")
+					}  else
 					{
+						// clerk and admin
 						GetClerkNotification(userId);
-
 					}
 				}
 		}
@@ -177,7 +176,7 @@ namespace MHI_OJT2
 				rpt.SetParameterValue("Section_Manager_position", "");
 				rpt.SetParameterValue("Section_Manager_Date", "");
 
-				rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+				rpt.SetDatabaseLogon(SQL.user, SQL.pass);
 
 				// logging
 				try

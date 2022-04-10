@@ -165,7 +165,7 @@
                 let totalPercentage = 0;
                 for (let i = 1; i <= 5; i++) {
                     let inputScore = $('.input__score__' + i + '__' + id).val()
-                    evaluatedScore += parseInt(inputScore)
+                    evaluatedScore += parseFloat(inputScore)
                 }
 
                 totalPercentage = (evaluatedScore * 100) / 25

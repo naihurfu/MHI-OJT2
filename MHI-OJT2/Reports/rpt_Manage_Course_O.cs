@@ -16,14 +16,14 @@ namespace MHI_OJT2.Reports {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class rpt_Manage_Course1 : ReportClass {
+    public class rpt_Manage_Course_O : ReportClass {
         
-        public rpt_Manage_Course1() {
+        public rpt_Manage_Course_O() {
         }
         
         public override string ResourceName {
             get {
-                return "rpt_Manage_Course1.rpt";
+                return "rpt_Manage_Course_O.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace MHI_OJT2.Reports {
         
         public override string FullResourceName {
             get {
-                return "MHI_OJT2.Reports.rpt_Manage_Course1.rpt";
+                return "MHI_OJT2.Reports.rpt_Manage_Course_O.rpt";
             }
             set {
                 // Do nothing
@@ -178,9 +178,9 @@ namespace MHI_OJT2.Reports {
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class Cachedrpt_Manage_Course1 : Component, ICachedReport {
+    public class Cachedrpt_Manage_Course_O : Component, ICachedReport {
         
-        public Cachedrpt_Manage_Course1() {
+        public Cachedrpt_Manage_Course_O() {
         }
         
         [Browsable(false)]
@@ -217,7 +217,7 @@ namespace MHI_OJT2.Reports {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            rpt_Manage_Course1 rpt = new rpt_Manage_Course1();
+            rpt_Manage_Course_O rpt = new rpt_Manage_Course_O();
             rpt.Site = this.Site;
             return rpt;
         }

@@ -103,10 +103,10 @@ namespace MHI_OJT2.Pages
 
             rpt.Load(Server.MapPath(reportName));
 
-            string formula = "cDate(ToText(cDate({COURSE_AND_EMPLOYEE.START_DATE}),'dd/MM/yyyy')) >= " +
-            $"cDate(ToText(cDate('{startDate.Value}'),'dd/MM/yyyy')) " +
-            "AND cDate(ToText(cDate({COURSE_AND_EMPLOYEE.START_DATE}),'dd/MM/yyyy')) <= " +
-            $"cDate(ToText(cDate('{endDate.Value}'),'dd/MM/yyyy'))";
+            string[] sDate = startDate.Value.Split('/');
+            string[] eDate = endDate.Value.Split('/');
+            string formula = "{COURSE_AND_EMPLOYEE.START_DATE} >= Date (" + sDate[2] + ", " + sDate[1] + ", " + sDate[0] + ") " +
+                "AND {COURSE_AND_EMPLOYEE.START_DATE} <= Date (" + eDate[2] + ", " + eDate[1] + ", " + eDate[0] + ") ";
 
             if (roles == "user")
             {
@@ -156,7 +156,7 @@ namespace MHI_OJT2.Pages
             }
 
             rpt.RecordSelectionFormula = formula;
-            rpt.SetDatabaseLogon("Project1", "Tigersoft1998$");
+            rpt.SetDatabaseLogon(SQL.user, SQL.pass);
 
             // logging
             try
