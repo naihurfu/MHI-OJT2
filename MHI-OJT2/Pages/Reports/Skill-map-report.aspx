@@ -294,7 +294,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="row justify-content-end">
+                        <div class="row justify-content-end" style="padding-right:8px;">
                             <b>FR-HR01-007 ED:22-Jan-19 (Rev.00)</b>   
                         </div>
                     </div>
@@ -362,7 +362,6 @@
 
                     let tableThead = $('table thead')
                     let tableBody = $('table tbody')
-                    let tableFooter = $('table tfoot')
                     let keyNames = Object.keys(data[0]);
                     let rowWithKey = []
                     let departmentGroup = []
@@ -543,7 +542,7 @@
                                   <td></td><td></td>`
                         rowFooter += `</tr>
                                   <tr></tr>`
-                        tableFooter.append(rowFooter)
+                        tableBody.append(rowFooter)
 
                         // row fix value
                         let rowFixValue = `<tr style="font-size: 22px;">
@@ -561,7 +560,7 @@
                                     <td style="text-align: center;">100</td>
                                     <td></td>`
                         rowFixValue += `</tr>`
-                        tableFooter.append(rowFixValue)
+                        tableBody.append(rowFixValue)
 
                         // auto merge department
                         $('#table-row-department td').each(function () {
@@ -582,6 +581,7 @@
                             importCSS: true,
                             importStyle: true
                         });
+                        return
                         $('#card-print').hide()
 
                     })

