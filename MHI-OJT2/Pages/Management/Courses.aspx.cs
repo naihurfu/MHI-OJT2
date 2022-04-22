@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
@@ -185,12 +186,94 @@ namespace MHI_OJT2.Pages.Management
 		}
 		protected void btnInserted_Click(object sender, EventArgs e)
 		{
-			try
+            try
 			{
+
 				string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
 				SqlParameterCollection param = new SqlCommand().Parameters;
+				bool hasFile = false;
+				string filePath = "";
+				string fileName = "";
+				string extension = "";
+				Byte[] bytes = new Byte[64];
+				BinaryReader br;
+				Stream fs;
 
-				string query = "INSERT INTO ADJUST_COURSE([COURSE_NUMBER],[TIMES],[COURSE_NAME],[START_DATE],[END_DATE],[START_TIME],[END_TIME],[TOTAL_HOURS],[DEPARTMENT_ID],[LOCATION_ID],[TEACHER_ID],[DETAIL],[OBJECTIVE],[ASSESSOR1_ID],[ASSESSOR2_ID],[ASSESSOR3_ID],[ASSESSOR4_ID],[ASSESSOR5_ID],[ASSESSOR6_ID],[STATUS],[CREATED_BY]) OUTPUT INSERTED.ID VALUES(@COURSE_NUMBER,@TIMES,@COURSE_NAME,@START_DATE,@END_DATE,@START_TIME,@END_TIME,@TOTAL_HOURS,@DEPARTMENT_ID,@LOCATION_ID,@TEACHER_ID,@DETAIL,@OBJECTIVE,@ASSESSOR1_ID,@ASSESSOR2_ID,@ASSESSOR3_ID,@ASSESSOR4_ID,@ASSESSOR5_ID,@ASSESSOR6_ID,@STATUS,@CREATED_BY)";
+				if (fileUpload.PostedFile.ContentLength > 0)
+                {
+					filePath = fileUpload.PostedFile.FileName;
+					fileName = Path.GetFileName(filePath);
+					extension = Path.GetExtension(fileName);
+
+					if (extension != ".pdf") throw new Exception("อัพโหลดได้เฉพาะ .pdf เท่านั้น ");
+
+					fs = fileUpload.PostedFile.InputStream;
+					br = new BinaryReader(fs);
+					bytes = br.ReadBytes((Int32)fs.Length);
+					hasFile = true;
+                }
+
+				string query = "INSERT INTO ADJUST_COURSE([COURSE_NUMBER]," +
+					"[TIMES]," +
+					"[COURSE_NAME]," +
+					"[START_DATE]," +
+					"[END_DATE]," +
+					"[START_TIME]," +
+					"[END_TIME]," +
+					"[TOTAL_HOURS]," +
+					"[DEPARTMENT_ID]," +
+					"[LOCATION_ID]," +
+					"[TEACHER_ID]," +
+					"[DETAIL]," +
+					"[OBJECTIVE]," +
+					"[ASSESSOR1_ID]," +
+					"[ASSESSOR2_ID]," +
+					"[ASSESSOR3_ID]," +
+					"[ASSESSOR4_ID]," +
+					"[ASSESSOR5_ID]," +
+					"[ASSESSOR6_ID]," +
+					"[STATUS]," +
+					"[CREATED_BY]," +
+					"[IS_EXAM_EVALUATE]," +
+					"[IS_REAL_WORK_EVALUATE] ";
+
+				if (hasFile == true)
+				{
+					query += ",[FILE_UPLOAD]";
+				}
+				query += ") ";
+
+				query += "OUTPUT INSERTED.ID " +
+				"VALUES(" +
+				"@COURSE_NUMBER," +
+				"@TIMES," +
+				"@COURSE_NAME," +
+				"@START_DATE," +
+				"@END_DATE," +
+				"@START_TIME," +
+				"@END_TIME," +
+				"@TOTAL_HOURS," +
+				"@DEPARTMENT_ID," +
+				"@LOCATION_ID," +
+				"@TEACHER_ID," +
+				"@DETAIL," +
+				"@OBJECTIVE," +
+				"@ASSESSOR1_ID," +
+				"@ASSESSOR2_ID," +
+				"@ASSESSOR3_ID," +
+				"@ASSESSOR4_ID," +
+				"@ASSESSOR5_ID," +
+				"@ASSESSOR6_ID," +
+				"@STATUS," +
+				"@CREATED_BY," +
+				"@IS_EXAM_EVALUATE," +
+				"@IS_REAL_WORK_EVALUATE";
+				if (hasFile == true)
+				{
+					query += ",@FILE_UPLOAD";
+				}
+				query += ")";
+
 				param.AddWithValue("COURSE_NUMBER", SqlDbType.VarChar).Value = courseNumber.Value;
 				param.AddWithValue("TIMES", SqlDbType.Int).Value = times.Value;
 				param.AddWithValue("COURSE_NAME", SqlDbType.VarChar).Value = courseName.Value;
@@ -212,6 +295,13 @@ namespace MHI_OJT2.Pages.Management
 				param.AddWithValue("ASSESSOR6_ID", SqlDbType.Int).Value = Assessor6.Value;
 				param.AddWithValue("STATUS", SqlDbType.Int).Value = 1;
 				param.AddWithValue("CREATED_BY", SqlDbType.Int).Value = Session["userId"];
+				param.AddWithValue("IS_EXAM_EVALUATE", SqlDbType.Bit).Value = examEvaluate.Checked == true ? 1 : 0;
+				param.AddWithValue("IS_REAL_WORK_EVALUATE", SqlDbType.Bit).Value = realWorkEvaluate.Checked == true ? 1 : 0;
+
+				if (hasFile == true)
+                {
+					param.AddWithValue("FILE_UPLOAD", SqlDbType.VarBinary).Value = bytes;
+                }
 
 				int insertedId = SQL.ExecuteAndGetInsertId(query, mainDb, param);
 				CreateApproval(insertedId, int.Parse(Assessor1.Value), 1);
@@ -556,6 +646,27 @@ namespace MHI_OJT2.Pages.Management
 			{
 				string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
 				SqlParameterCollection updateAdjustCourseParamCollection = new SqlCommand().Parameters;
+				bool hasFile = false;
+				string filePath = "";
+				string fileName = "";
+				string extension = "";
+				Byte[] bytes = new Byte[64];
+				BinaryReader br;
+				Stream fs;
+
+				if (fileUpload.PostedFile.ContentLength > 0)
+				{
+					filePath = fileUpload.PostedFile.FileName;
+					fileName = Path.GetFileName(filePath);
+					extension = Path.GetExtension(fileName);
+
+					if (extension != ".pdf") throw new Exception("อัพโหลดได้เฉพาะ .pdf เท่านั้น ");
+
+					fs = fileUpload.PostedFile.InputStream;
+					br = new BinaryReader(fs);
+					bytes = br.ReadBytes((Int32)fs.Length);
+					hasFile = true;
+				}
 
 				string queryUpdateAdjustCourse = "UPDATE [ADJUST_COURSE] SET " +
 					"[COURSE_NUMBER]=@COURSE_NUMBER " +
@@ -577,8 +688,15 @@ namespace MHI_OJT2.Pages.Management
 					",[ASSESSOR4_ID]=@ASSESSOR4_ID " +
 					",[ASSESSOR5_ID]=@ASSESSOR5_ID " +
 					",[ASSESSOR6_ID]=@ASSESSOR6_ID " +
-					",[CREATED_BY]=@CREATED_BY " +
-					"WHERE ID=@courseId";
+					",[CREATED_BY]=@CREATED_BY" +
+					",[IS_EXAM_EVALUATE]=@IS_EXAM_EVALUATE" +
+					",[IS_REAL_WORK_EVALUATE]=@IS_REAL_WORK_EVALUATE ";
+				if (hasFile == true)
+                {
+					queryUpdateAdjustCourse += ",[FILE_UPLOAD]=@FILE_UPLOAD ";
+
+				}
+				queryUpdateAdjustCourse += " WHERE ID=@courseId";
 				updateAdjustCourseParamCollection.AddWithValue("COURSE_NUMBER", SqlDbType.VarChar).Value = courseNumber.Value;
 				updateAdjustCourseParamCollection.AddWithValue("TIMES", SqlDbType.Int).Value = times.Value;
 				updateAdjustCourseParamCollection.AddWithValue("COURSE_NAME", SqlDbType.VarChar).Value = courseName.Value;
@@ -600,6 +718,12 @@ namespace MHI_OJT2.Pages.Management
 				updateAdjustCourseParamCollection.AddWithValue("ASSESSOR6_ID", SqlDbType.Int).Value = Assessor6.Value;
 				updateAdjustCourseParamCollection.AddWithValue("CREATED_BY", SqlDbType.Int).Value = Session["userId"];
 				updateAdjustCourseParamCollection.AddWithValue("courseId", SqlDbType.Int).Value = hiddenId.Value;
+				updateAdjustCourseParamCollection.AddWithValue("IS_EXAM_EVALUATE", SqlDbType.Bit).Value = examEvaluate.Checked == true ? 1 : 0;
+				updateAdjustCourseParamCollection.AddWithValue("IS_REAL_WORK_EVALUATE", SqlDbType.Bit).Value = realWorkEvaluate.Checked == true ? 1 : 0;
+				if (hasFile == true)
+                {
+					updateAdjustCourseParamCollection.AddWithValue("FILE_UPLOAD", SqlDbType.VarBinary).Value = bytes;
+                }
 				SQL.ExecuteWithParams(queryUpdateAdjustCourse, mainDb, updateAdjustCourseParamCollection);
 
 				try
@@ -655,6 +779,39 @@ namespace MHI_OJT2.Pages.Management
             {
 				Console.WriteLine(ex.Message);
 				Alert("error", "Failed!", "A network error was encountered, Please try again.");
+			}
+		}
+		protected void DownloadPDFDocument(object sender, EventArgs e)
+        {
+			try
+			{
+				if (string.IsNullOrEmpty(downloadFileId.Value)) throw new Exception("Not Found!");
+				int id = int.Parse(downloadFileId.Value);
+
+				SqlParameterCollection param = new SqlCommand().Parameters;
+				param.AddWithValue("rowId", SqlDbType.Int).Value = id;
+				DataTable dt = SQL.GetDataTableWithParams("SELECT COURSE_NAME,FILE_UPLOAD FROM ADJUST_COURSE WHERE ID=@rowId", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString, param);
+
+				if (dt.Rows.Count > 0)
+				{
+					Response.Clear();
+					Response.Buffer = true;
+					Response.ContentType = "application/pdf";
+					Response.AddHeader("content-disposition", "attachment;filename="+ "เอกสารหลักสูตร " + dt.Rows[0]["COURSE_NAME"].ToString() + ".pdf");
+					Response.Charset = "";
+					Response.Cache.SetCacheability(HttpCacheability.NoCache);
+					Response.BinaryWrite((byte[])dt.Rows[0]["FILE_UPLOAD"]);
+					Response.End();
+
+				}
+				else
+				{
+					Alert("error", "ล้มเหลว!", "ไม่พบไฟล์ กรุณาลองใหม่อีกครั้ง");
+				}
+			}
+			catch (Exception ex)
+			{
+				Alert("error", "Error!", $"{ex.Message}");
 			}
 		}
     }

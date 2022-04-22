@@ -36,7 +36,7 @@
                 $(document).Toasts('create', {
                     title: title,
                     body: body,
-                    icon: icon,
+                    //icon: icon,
                     class: className,
                     delay: delay,
                     autoremove: true,

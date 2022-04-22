@@ -132,6 +132,24 @@ namespace MHI_OJT2.Pages.Management
         protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl totalHours;
 
         /// <summary>
+        /// realWorkEvaluate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox realWorkEvaluate;
+
+        /// <summary>
+        /// examEvaluate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox examEvaluate;
+
+        /// <summary>
         /// department control.
         /// </summary>
         /// <remarks>
@@ -166,6 +184,15 @@ namespace MHI_OJT2.Pages.Management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTextArea detail;
+
+        /// <summary>
+        /// fileUpload control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputFile fileUpload;
 
         /// <summary>
         /// Assessor1 control.
@@ -220,6 +247,24 @@ namespace MHI_OJT2.Pages.Management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlSelect Assessor6;
+
+        /// <summary>
+        /// downloadFileId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField downloadFileId;
+
+        /// <summary>
+        /// btnDownloadFileDocument control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlButton btnDownloadFileDocument;
 
         /// <summary>
         /// btnDelete control.

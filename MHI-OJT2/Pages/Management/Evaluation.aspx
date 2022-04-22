@@ -32,15 +32,29 @@
         .dataTables_wrapper {
             padding-bottom: 20px !important;
         }
+
+        input[type=checkbox], input[type=radio] {
+            width: 20px !important;
+            height: 20px !important;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="body" runat="server">
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-12">
+                <div class="col-6">
                     <h1 runat="server" id="title" class="m-0"></h1>
                 </div>
+                 <!-- /.col -->
+                <div class="col-6">
+                    <div class="float-sm-right">
+                        <button type="button" class="btn btn-primary" onclick="showModal()">
+                            <i class="fa fa-plus-circle mr-2"></i>
+                            ตัวช่วยกรอกคะแนน</button>
+                    </div>
+                </div>
+                <!-- /.col -->
             </div>
             <!-- /.row -->
         </div>
@@ -58,6 +72,7 @@
                             <tr>
                                 <th scope="col" class="no-sort">รหัสพนักงาน</th>
                                 <th scope="col" class="no-sort">ชื่อ-สกุล</th>
+                                <th scope="col" class="topic-score no-sort text-primary text-center">*** คะแนนสอบ</th>
                                 <th scope="col" class="topic-score no-sort">1.ความรู้ในงานและหน้าที่ (Knowledge in work and duties)</th>
                                 <th scope="col" class="topic-score no-sort">2.คุณภาพของงาน (Quality of work)</th>
                                 <th scope="col" class="topic-score no-sort">3.ความไว้วางใจ ความรับผิดชอบต่อหน้าที่ (Reliability, Responsibi-lity for duties )</th>
@@ -69,27 +84,30 @@
                         <tbody>
                             <asp:Repeater ID="RepeatCourseTable" runat="server">
                                 <ItemTemplate>
-                                    <tr class="row__data" data-personid='<%# Eval("PersonID") %>'>
+                                    <tr class="row__data" data-personid='<%# Eval("PersonID") %>' data-evaluate-id='<%# Eval("EVALUATE_ID") %>'>
                                         <td>
                                             <%# Eval("PersonCode") %>
                                         </td>
                                         <td style="white-space: nowrap">
                                             <%# Eval("EMPLOYEE_NAME_TH") %>
                                         </td>
-                                        <td>
-                                            <input type="number" min="0" max="5" value='<%# Eval("SCORE_1") %>' class='<%# "form-control input__score input__score__1__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 1)' />
+                                        <td class="text-center">
+                                            <input type="number" min="0" max="100" value='<%# Eval("SCORE_1") %>' class='<%# "form-control input_score_1 input__score input__score__1__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 1)' />
                                         </td>
                                         <td>
-                                            <input type="number" min="0" max="5" value='<%# Eval("SCORE_2") %>' class='<%# "form-control input__score input__score__2__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 2)' />
+                                            <input type="number" min="0" max="5" value='<%# Eval("SCORE_1") %>' class='<%# "form-control input_score_1 input__score input__score__1__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 1)' />
                                         </td>
                                         <td>
-                                            <input type="number" min="0" max="5" value='<%# Eval("SCORE_3") %>' class='<%# "form-control input__score input__score__3__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 3)' />
+                                            <input type="number" min="0" max="5" value='<%# Eval("SCORE_2") %>' class='<%# "form-control input_score_2 input__score input__score__2__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 2)' />
                                         </td>
                                         <td>
-                                            <input type="number" min="0" max="5" value='<%# Eval("SCORE_4") %>' class='<%# "form-control input__score input__score__4__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 4)' />
+                                            <input type="number" min="0" max="5" value='<%# Eval("SCORE_3") %>' class='<%# "form-control input_score_3 input__score input__score__3__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 3)' />
                                         </td>
                                         <td>
-                                            <input type="number" min="0" max="5" value='<%# Eval("SCORE_5") %>' class='<%# "form-control input__score input__score__5__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 5)' />
+                                            <input type="number" min="0" max="5" value='<%# Eval("SCORE_4") %>' class='<%# "form-control input_score_4 input__score input__score__4__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 4)' />
+                                        </td>
+                                        <td>
+                                            <input type="number" min="0" max="5" value='<%# Eval("SCORE_5") %>' class='<%# "form-control input_score_5 input__score input__score__5__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 5)' />
                                         </td>
                                         <td>
                                             <input type="number" value='<%# Eval("TOTAL_SCORE") %>' class='<%# "form-control total__score__" + Eval("EVALUATE_ID").ToString() %>' disabled="disabled" />
@@ -117,6 +135,52 @@
     <!-- /.content -->
 </asp:Content>
 <asp:Content ID="ModalContent" ContentPlaceHolderID="modal" runat="server">
+    <div class="modal fade" id="adviseModal" tabindex="-1" aria-labelledby="adviseModal" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal" style="box-shadow: none !important;">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title ">ตัวช่วยกรอกคะแนน</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row justify-content-between mx-1">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input advise-check" type="checkbox" id="inlineCheckbox1" value="1">
+                          <label class="form-check-label" for="inlineCheckbox1">ข้อ 1</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input advise-check" type="checkbox" id="inlineCheckbox2" value="2">
+                          <label class="form-check-label" for="inlineCheckbox2">ข้อ 2</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input advise-check" type="checkbox" id="inlineCheckbox3" value="3">
+                          <label class="form-check-label" for="inlineCheckbox3">ข้อ 3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input advise-check" type="checkbox" id="inlineCheckbox4" value="4">
+                          <label class="form-check-label" for="inlineCheckbox4">ข้อ 4</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input advise-check" type="checkbox" id="inlineCheckbox5" value="5">
+                          <label class="form-check-label" for="inlineCheckbox5">ข้อ 5</label>
+                        </div>
+                    </div>
+                    <div class="form-group my-3">
+                        <label>คะแนน</label>
+                        <input type="number" min="0" max="5" class="form-control" id="advise-input-score" />
+                    </div>
+                </div>
+                <div class="modal-footer" style="justify-content: end !important;">
+                    <div class="action-button-area">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                        <button type="button" class="btn btn-primary" onclick="adviseSubmitScore()">ตกลง</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </asp:Content>
 <asp:Content ID="ScriptContent" ContentPlaceHolderID="script" runat="server">
     <!-- (total score * 100) / 25 = total score % -->
@@ -155,6 +219,51 @@
 
             $('#btnSaveDraft').focus()
         })();
+
+        var selectedArr = []
+        $('.advise-check').on('change', function (e) {
+            let checked = e.target.checked
+            let value = parseInt(e.currentTarget.value)
+
+            if (checked) {
+                selectedArr.push(value)    
+            } else {
+                selectedArr = selectedArr.filter((val)=> val !== value)
+            }
+        })
+        function adviseSubmitScore() {
+            if (!selectedArr.length) return toasts('แจ้งเตือน', 'กรุณาเลือกหัวข้อที่ต้องการระบุคะแนน!')
+            if ($('#advise-input-score').val() === "" || !$('#advise-input-score').val()) return toasts('แจ้งเตือน', 'กรุณาระบุคะแนน!')
+
+            for (let i = 0; i < selectedArr.length; i++) {
+                $('.input_score_' + selectedArr[i]).val($('#advise-input-score').val())
+            }
+
+            var row = $('.row__data')
+            for (let i = 0; i < row.length; i++) {
+                let _this = $(row[i])
+                let inputId = _this.attr('data-evaluate-id')
+                for (let j = 0; j < selectedArr.length; j++) {
+                    calculate(inputId, selectedArr[j])
+                }
+            }
+            
+
+            $('#adviseModal').modal('hide')
+        }
+        $('#advise-input-score').on('keyup', function (e) {
+            let value = e.currentTarget.value
+
+            if (value > 5 || value < 0) {
+                $(this).addClass('is-invalid')
+            } else {
+                $(this).removeClass('is-invalid')
+            }
+        })
+
+        function showModal() {
+            $('#adviseModal').modal('show')
+        }
 
         function calculate(id, inputNumber) {
             let _this = $('.input__score__' + inputNumber + '__' + id)
