@@ -373,7 +373,7 @@ namespace MHI_OJT2.Pages.Management
 				int successCount = 0;
 				using (SqlConnection connection = new SqlConnection(connectionString))
 				{
-					string queryString = "INSERT INTO EVALUATE(COURSE_ID,PERSON_ID,SCORE_1,SCORE_2,SCORE_3,SCORE_4,SCORE_5,TOTAL_SCORE,IS_EVALUATED) VALUES(@courseId,@personId,0,0,0,0,0,0,0)";
+					string queryString = "INSERT INTO EVALUATE(COURSE_ID,PERSON_ID,SCORE_1,SCORE_2,SCORE_3,SCORE_4,SCORE_5,TOTAL_SCORE,IS_EVALUATED,EXAM_SCORE) VALUES(@courseId,@personId,0,0,0,0,0,0,0,0)";
 
 					List<EmployeeIntoCourse> list = EmployeeSelectedList;
 					for (int i = 0; i < list.Count; i++)

@@ -92,7 +92,7 @@
                                             <%# Eval("EMPLOYEE_NAME_TH") %>
                                         </td>
                                         <td class="text-center">
-                                            <input type="number" min="0" max="100" value='<%# Eval("SCORE_1") %>' class='<%# "form-control input_score_1 input__score input__score__1__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 1)' />
+                                            <input type="number" min="0" max="100" value='<%# Eval("EXAM_SCORE") %>' class='<%# "form-control input_score_0 input__score input__score__0__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 0)' />
                                         </td>
                                         <td>
                                             <input type="number" min="0" max="5" value='<%# Eval("SCORE_1") %>' class='<%# "form-control input_score_1 input__score input__score__1__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 1)' />
@@ -266,21 +266,32 @@
         }
 
         function calculate(id, inputNumber) {
-            let _this = $('.input__score__' + inputNumber + '__' + id)
-            if (_this.val() <= 5 && _this.val() >= 0) {
-                _this.removeClass('is-invalid')
+            let is_exam_evaluate = '<%= _is_exam_evaluate %>'
+            if (inputNumber > 0) {
+                let _this = $('.input__score__' + inputNumber + '__' + id)
+                if (_this.val() <= 5 && _this.val() >= 0) {
+                    _this.removeClass('is-invalid')
 
-                let evaluatedScore = 0;
-                let totalPercentage = 0;
-                for (let i = 1; i <= 5; i++) {
-                    let inputScore = $('.input__score__' + i + '__' + id).val()
-                    evaluatedScore += parseFloat(inputScore)
+                    let evaluatedScore = 0;
+                    let totalPercentage = 0;
+                    for (let i = 1; i <= 5; i++) {
+                        let inputScore = $('.input__score__' + i + '__' + id).val()
+                        evaluatedScore += parseFloat(inputScore)
+                    }
+
+                    totalPercentage = (evaluatedScore * 100) / 25
+                    $('.total__score__' + id).val(totalPercentage)
+                } else {
+                    _this.addClass('is-invalid')
                 }
-
-                totalPercentage = (evaluatedScore * 100) / 25
-                $('.total__score__' + id).val(totalPercentage)
             } else {
-                _this.addClass('is-invalid')
+                let _this = $('.input__score__0__' + id)
+                if (_this.val() <= 100 && _this.val() >= 0) {
+
+
+                } else {
+                    _this.addClass('is-invalid')
+                }
             }
         }
 
