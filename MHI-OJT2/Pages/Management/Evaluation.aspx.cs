@@ -92,6 +92,9 @@ namespace MHI_OJT2.Pages.Management
 
                         if (dt.Rows.Count > 0)
                         {
+                            _is_exam_evaluate = (bool)dt.Rows[0]["IS_EXAM_EVALUATE"];
+                            _is_real_work_evaluate = (bool)dt.Rows[0]["IS_REAL_WORK_EVALUATE"];
+
                             string _title = $"[{dt.Rows[0]["COURSE_NUMBER"]}] - {dt.Rows[0]["COURSE_NAME"]} No.{dt.Rows[0]["TIMES"]}";
                             title.InnerText = _title;
 
@@ -139,17 +142,18 @@ namespace MHI_OJT2.Pages.Management
                 {
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
-                        string queryString = "UPDATE EVALUATE SET SCORE_1=@SCORE_1,SCORE_2=@SCORE_2,SCORE_3=@SCORE_3,SCORE_4=@SCORE_4,SCORE_5=@SCORE_5,TOTAL_SCORE=@TOTAL_SCORE,CREATED_AT=GETDATE() WHERE COURSE_ID=@COURSE_ID AND PERSON_ID=@PERSON_ID";
+                        string queryString = "UPDATE EVALUATE SET EXAM_SCORE=@EXAM_SCORE,SCORE_1=@SCORE_1,SCORE_2=@SCORE_2,SCORE_3=@SCORE_3,SCORE_4=@SCORE_4,SCORE_5=@SCORE_5,TOTAL_SCORE=@TOTAL_SCORE,CREATED_AT=GETDATE() WHERE COURSE_ID=@COURSE_ID AND PERSON_ID=@PERSON_ID";
                         using (SqlCommand cmd = new SqlCommand(queryString, connection))
                         {
                             cmd.Parameters.AddWithValue("COURSE_ID", SqlDbType.Int).Value = _courseId;
                             cmd.Parameters.AddWithValue("PERSON_ID", SqlDbType.Int).Value = list[i].PersonID;
-                            cmd.Parameters.AddWithValue("SCORE_1", SqlDbType.Int).Value = list[i].Score_1;
-                            cmd.Parameters.AddWithValue("SCORE_2", SqlDbType.Int).Value = list[i].Score_2;
-                            cmd.Parameters.AddWithValue("SCORE_3", SqlDbType.Int).Value = list[i].Score_3;
-                            cmd.Parameters.AddWithValue("SCORE_4", SqlDbType.Int).Value = list[i].Score_4;
-                            cmd.Parameters.AddWithValue("SCORE_5", SqlDbType.Int).Value = list[i].Score_5;
-                            cmd.Parameters.AddWithValue("TOTAL_SCORE", SqlDbType.Int).Value = list[i].Total;
+                            cmd.Parameters.AddWithValue("SCORE_1", SqlDbType.Float).Value = list[i].Score_1;
+                            cmd.Parameters.AddWithValue("SCORE_2", SqlDbType.Float).Value = list[i].Score_2;
+                            cmd.Parameters.AddWithValue("SCORE_3", SqlDbType.Float).Value = list[i].Score_3;
+                            cmd.Parameters.AddWithValue("SCORE_4", SqlDbType.Float).Value = list[i].Score_4;
+                            cmd.Parameters.AddWithValue("SCORE_5", SqlDbType.Float).Value = list[i].Score_5;
+                            cmd.Parameters.AddWithValue("EXAM_SCORE", SqlDbType.Float).Value = list[i].Exam;
+                            cmd.Parameters.AddWithValue("TOTAL_SCORE", SqlDbType.Float).Value = list[i].Total;
 
                             connection.Open();
                             cmd.ExecuteNonQuery();
@@ -202,11 +206,12 @@ namespace MHI_OJT2.Pages.Management
     public class Evaluated
     {
         public int PersonID { get; set; }
-        public int Score_1 { get; set; }
-        public int Score_2 { get; set; }
-        public int Score_3 { get; set; }
-        public int Score_4 { get; set; }
-        public int Score_5 { get; set; }
-        public int Total { get; set; }
+        public float Score_1 { get; set; }
+        public float Score_2 { get; set; }
+        public float Score_3 { get; set; }
+        public float Score_4 { get; set; }
+        public float Score_5 { get; set; }
+        public float Total { get; set; }
+        public float Exam { get; set; }
     }
 }

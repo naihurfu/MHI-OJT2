@@ -187,15 +187,28 @@
                             <input type="number" class="form-control" id="totalHours" min="0" max="24" runat="server">
                         </div>
                     </div>
-                    <label><span class="text-danger">*</span> รูปแบบการประเมิน</label>
-                    <div class="row mb-4 mt-1">
-                        <div class="form-check form-check-inline px-2">
-                            <input class="form-check-input" type="checkbox" runat="server" id="realWorkEvaluate">
-                            <label class="form-check-label" for='<%= realWorkEvaluate.ClientID %>'>แบบปฏิบัติงานจริง</label>
-                        </div>
-                        <div class="form-check form-check-inline px-2">
-                            <input class="form-check-input" type="checkbox" runat="server" id="examEvaluate">
-                            <label class="form-check-label" for='<%= examEvaluate.ClientID %>'>แบบข้อสอบ</label>
+                    <div class="evaluate-type-container">
+                        <label><span class="text-danger">*</span> รูปแบบการประเมิน</label>
+                        <div class="row mb-4 mt-1">
+                            <div class="form-check form-check-inline px-2">
+                                <input class="form-check-input" type="checkbox" runat="server" id="realWorkEvaluate">
+                                <label class="form-check-label" for='<%= realWorkEvaluate.ClientID %>'>แบบปฏิบัติงานจริง</label>
+                            </div>
+                            <div class="form-check form-check-inline px-2">
+                                <input class="form-check-input" type="checkbox" runat="server" id="examEvaluate">
+                                <label class="form-check-label" for='<%= examEvaluate.ClientID %>'>แบบข้อสอบ</label>
+                            </div>
+                            <div class="form-inline" style="width: calc(100% - 312px);">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <input class="form-check-input" type="checkbox" runat="server" id="otherEvaluate">
+                                            <label class="form-check-label mx-2" for='<%= otherEvaluate.ClientID %>'>อื่นๆ </label>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control" style="width: 698px;" id="otherEvaluateRemark" runat="server" disabled="disabled" placeholder="หมายเหตุ">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -486,6 +499,7 @@
             $('.assessor-container-all').show()
             $('#addModalTitle').text('เพิ่มหลักสูตร')
             $('#upload-file-container').show()
+            $('#<%= otherEvaluateRemark.ClientID %>').attr('disabled', 'disabled')
             $('#addModal').modal('show')
         };
         function handleShowModal(courseId, modalName) {
@@ -527,35 +541,35 @@
                     $.ajax({
                         type: "POST",
                         url: "<%= ajax %>" + "/Pages/Management/Courses.aspx/GetApprovalList",
-                data: "{'courseId': " + courseId + "}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (results) {
-                    var data = JSON.parse(results.d)
-                    var tableBody = $('#approval-table tbody')
-                    console.log(data)
-                    approval_loading.hide()
-                    approval_container.show()
+                        data: "{'courseId': " + courseId + "}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (results) {
+                            var data = JSON.parse(results.d)
+                            var tableBody = $('#approval-table tbody')
+                            console.log(data)
+                            approval_loading.hide()
+                            approval_container.show()
 
-                    data.forEach(function (r) {
-                        let icon = '<i class="ml-2 fa fa-check"></i>'
-                        let statusText = 'อนุมัติ'
-                        let badgeColor = 'success'
-                        let actionDate = r.ACTION_DATE !== null ? new Date(r.ACTION_DATE).toLocaleDateString("th-TH") : "รอผลการอนุมัติ"
+                            data.forEach(function (r) {
+                                let icon = '<i class="ml-2 fa fa-check"></i>'
+                                let statusText = 'อนุมัติ'
+                                let badgeColor = 'success'
+                                let actionDate = r.ACTION_DATE !== null ? new Date(r.ACTION_DATE).toLocaleDateString("th-TH") : "รอผลการอนุมัติ"
 
-                        if (!r.IS_APPROVED) {
-                            icon = '<i class="ml-2 fa fa-spinner"></i>'
-                            badgeColor = 'warning'
-                            statusText = 'รออนุมัติ'
-                        } else {
-                            if (!r.APPROVAL_RESULT) {
-                                icon = '<i class="ml-2 fa fa-times"></i>'
-                                badgeColor = 'danger'
-                                statusText = 'ไม่อนุมัติ'
-                            }
-                        }
+                                if (!r.IS_APPROVED) {
+                                    icon = '<i class="ml-2 fa fa-spinner"></i>'
+                                    badgeColor = 'warning'
+                                    statusText = 'รออนุมัติ'
+                                } else {
+                                    if (!r.APPROVAL_RESULT) {
+                                        icon = '<i class="ml-2 fa fa-times"></i>'
+                                        badgeColor = 'danger'
+                                        statusText = 'ไม่อนุมัติ'
+                                    }
+                                }
 
-                        var tableRow = `<tr>
+                                var tableRow = `<tr>
                                             <td class="text-center">${r.APPROVAL_SEQUENCE}</td>
                                             <td>${r.InitialT} ${r.FnameT} ${r.LnameT}</td>
                                             <td class="text-center">
@@ -568,13 +582,13 @@
                                                 ${r.REMARK ?? "-"}
                                             </td>
                                         </tr>`;
-                        tableBody.append(tableRow);
+                                tableBody.append(tableRow);
+                            });
+                        },
+                        error: function (err) {
+                            console.log(err)
+                        }
                     });
-                },
-                error: function (err) {
-                    console.log(err)
-                }
-            });
                     break;
 
                 default: sweetAlert("error", "WTF!")
@@ -660,6 +674,14 @@
                 $('.select-plan-container').find('div').find('button').addClass('disabled')
             }
         });
+        $('#<%= otherEvaluate.ClientID %>').on('change', function () {
+            if (this.checked) {
+                $('#<%= otherEvaluateRemark.ClientID %>').removeAttr('disabled')
+            } else {
+                $('#<%= otherEvaluateRemark.ClientID %>').attr('disabled', 'disabled')
+                $('#<%= otherEvaluateRemark.ClientID %>').val('')
+            }
+        })
         function handleEditCourse(courseId) {
             $.ajax({
                 type: "POST",
@@ -695,7 +717,6 @@
         function OpenModalViewOrEdit(type, data) {
             ClearInputValue()
             $('#addModal').modal('show')
-            console.log(data)
             if (type === 'view') {
                 $('#plan-section-container').hide()
                 $('#addModalTitle').text('รายละเอียดหลักสูตร')
@@ -703,7 +724,6 @@
                 $('#<%= btnEdit.ClientID %>').hide()
                 isDisabledInput(true)
                 $('.assessor-container-all').show()
-                console.log(data.FILE_UPLOAD)
 
                 if (data.FILE_UPLOAD) {
                     $('#<%= downloadFileId.ClientID %>').val(data.ID)
@@ -712,6 +732,7 @@
             }
 
             if (type === 'edit') {
+                $('.evaluate-type-container').hide()
                 $('#upload-file-container').show()
                 $('#plan-section-container').hide()
                 $('#addModalTitle').text('แก้ไขหลักสูตร')
@@ -731,8 +752,10 @@
                 $('#<%= trainingPlan.ClientID %>').val(data.PLAN_ID).change()
                 $('.select-plan-container').find('div').find('button').removeClass('disabled')
             }
-             //jj
-            //$('#<%= realWorkEvaluate.ClientID %>')
+            $('#<%= examEvaluate.ClientID %>').prop('checked', data.IS_EXAM_EVALUATE)
+            $('#<%= realWorkEvaluate.ClientID %>').prop('checked', data.IS_REAL_WORK_EVALUATE)
+            $('#<%= otherEvaluate.ClientID %>').prop('checked', data.IS_OTHER_EVALUATE)
+            $('#<%= otherEvaluateRemark.ClientID %>').val(data.OTHER_EVALUATE_REMARK)
             $('#<%= courseNumber.ClientID %>').val(data.COURSE_NUMBER)
             $('#<%= times.ClientID %>').val(data.TIMES)
             $('#<%= courseName.ClientID %>').val(data.COURSE_NAME)
@@ -759,6 +782,8 @@
             ClearInputValue()
         })
         function ClearInputValue() {
+            $('#<%= btnDownloadFileDocument.ClientID %>').hide()
+            $('.evaluate-type-container').show()
             $('#<%= downloadFileId.ClientID %>').val("")
             $('#<%= btnDelete.ClientID %>').hide()
             $('.assessor-container-all').hide()
@@ -784,6 +809,9 @@
             $('#<%= location.ClientID %>')[0].selectedIndex = 0;
             $('#<%= teacher.ClientID %>')[0].selectedIndex = 0;
             $('#<%= fileUpload.ClientID %>').val('');
+            $('#<%= examEvaluate.ClientID %>').prop('checked', false)
+            $('#<%= realWorkEvaluate.ClientID %>').prop('checked', false)
+            $('#<%= otherEvaluate.ClientID %>').prop('checked', false)
             $('#<%= Assessor1.ClientID %>').val('-').change()
             $('#<%= Assessor2.ClientID %>').val('-').change()
             $('#<%= Assessor3.ClientID %>').val('-').change()
@@ -792,6 +820,7 @@
             $('#<%= Assessor6.ClientID %>').val('-').change()
             $('#<%= hiddenId.ClientID %>').val('')
             $('#<%= hiddenCourseAndPlanId.ClientID %>').val('')
+            $('#<%= otherEvaluateRemark.ClientID %>').val('')
         }
 
         // handle assessor selected
@@ -902,6 +931,8 @@
                 $('#<%= hiddenId.ClientID %>').prop('disabled', 'disabled')
                 $('#<%= realWorkEvaluate.ClientID %>').prop('disabled', 'disabled')
                 $('#<%= examEvaluate.ClientID %>').prop('disabled', 'disabled')
+                $('#<%= otherEvaluate.ClientID %>').prop('disabled', 'disabled')
+                $('#<%= otherEvaluateRemark.ClientID %>').prop('disabled', 'disabled')
                 $('.select-plan-container').find('div').find('button').prop("disabled", "disabled");
                 $('.assessor-container-1').find('div').find('button').prop("disabled", "disabled");
                 $('.assessor-container-2').find('div').find('button').prop("disabled", "disabled");
@@ -934,7 +965,10 @@
                 $('#<%= hiddenId.ClientID %>').prop('disabled', false)
                 $('#<%= realWorkEvaluate.ClientID %>').prop('disabled', false)
                 $('#<%= examEvaluate.ClientID %>').prop('disabled', false)
+                $('#<%= otherEvaluate.ClientID %>').prop('disabled', false)
+                $('#<%= otherEvaluateRemark.ClientID %>').prop('disabled', false)
                 $('.select-plan-container').find('div').find('button').removeProp("disabled", "disabled");
+                $('.assessor-container-1').find('div').find('button').prop("disabled", false);
                 $('.assessor-container-1').find('div').find('button').removeProp("disabled", "disabled");
                 $('.assessor-container-2').find('div').find('button').removeProp("disabled", "disabled");
                 $('.assessor-container-3').find('div').find('button').removeProp("disabled", "disabled");
@@ -969,7 +1003,7 @@
 
             let yearOfStartDate = parseInt(startD.split('/')[2])
             let yearOfEndDate = parseInt(startD.split('/')[2])
-            if ( yearOfStartDate < 2000 || yearOfStartDate > 2700 || yearOfEndDate < 2000 || yearOfEndDate > 2700 ) {
+            if (yearOfStartDate < 2000 || yearOfStartDate > 2700 || yearOfEndDate < 2000 || yearOfEndDate > 2700) {
                 toasts(notifyTitle, "กรุณาระบุวันที่เริ่มและสิ้นสุดการอบรมให้ถูกต้อง")
                 return false
             }

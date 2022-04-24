@@ -235,7 +235,9 @@ namespace MHI_OJT2.Pages.Management
 					"[STATUS]," +
 					"[CREATED_BY]," +
 					"[IS_EXAM_EVALUATE]," +
-					"[IS_REAL_WORK_EVALUATE] ";
+					"[IS_REAL_WORK_EVALUATE], " +
+					"[IS_OTHER_EVALUATE]," +
+					"[OTHER_EVALUATE_REMARK]";
 
 				if (hasFile == true)
 				{
@@ -267,7 +269,9 @@ namespace MHI_OJT2.Pages.Management
 				"@STATUS," +
 				"@CREATED_BY," +
 				"@IS_EXAM_EVALUATE," +
-				"@IS_REAL_WORK_EVALUATE";
+				"@IS_REAL_WORK_EVALUATE," +
+				"@IS_OTHER_EVALUATE," +
+				"@OTHER_EVALUATE_REMARK";
 				if (hasFile == true)
 				{
 					query += ",@FILE_UPLOAD";
@@ -297,6 +301,8 @@ namespace MHI_OJT2.Pages.Management
 				param.AddWithValue("CREATED_BY", SqlDbType.Int).Value = Session["userId"];
 				param.AddWithValue("IS_EXAM_EVALUATE", SqlDbType.Bit).Value = examEvaluate.Checked == true ? 1 : 0;
 				param.AddWithValue("IS_REAL_WORK_EVALUATE", SqlDbType.Bit).Value = realWorkEvaluate.Checked == true ? 1 : 0;
+				param.AddWithValue("IS_OTHER_EVALUATE", SqlDbType.Bit).Value = otherEvaluate.Checked == true ? 1 : 0;
+				param.AddWithValue("OTHER_EVALUATE_REMARK", SqlDbType.VarChar).Value = otherEvaluateRemark.Value;
 
 				if (hasFile == true)
                 {
@@ -690,7 +696,9 @@ namespace MHI_OJT2.Pages.Management
 					",[ASSESSOR6_ID]=@ASSESSOR6_ID " +
 					",[CREATED_BY]=@CREATED_BY" +
 					",[IS_EXAM_EVALUATE]=@IS_EXAM_EVALUATE" +
-					",[IS_REAL_WORK_EVALUATE]=@IS_REAL_WORK_EVALUATE ";
+					",[IS_REAL_WORK_EVALUATE]=@IS_REAL_WORK_EVALUATE " +
+					",[IS_OTHER_EVALUATE]=@IS_OTHER_EVALUATE " +
+					",[OTHER_EVALUATE_REMARK]=@OTHER_EVALUATE_REMARK";
 				if (hasFile == true)
                 {
 					queryUpdateAdjustCourse += ",[FILE_UPLOAD]=@FILE_UPLOAD ";
@@ -720,8 +728,10 @@ namespace MHI_OJT2.Pages.Management
 				updateAdjustCourseParamCollection.AddWithValue("courseId", SqlDbType.Int).Value = hiddenId.Value;
 				updateAdjustCourseParamCollection.AddWithValue("IS_EXAM_EVALUATE", SqlDbType.Bit).Value = examEvaluate.Checked == true ? 1 : 0;
 				updateAdjustCourseParamCollection.AddWithValue("IS_REAL_WORK_EVALUATE", SqlDbType.Bit).Value = realWorkEvaluate.Checked == true ? 1 : 0;
+				updateAdjustCourseParamCollection.AddWithValue("IS_OTHER_EVALUATE", SqlDbType.Bit).Value = otherEvaluate.Checked == true ? 1 : 0;
+				updateAdjustCourseParamCollection.AddWithValue("OTHER_EVALUATE_REMARK", SqlDbType.VarChar).Value = otherEvaluateRemark.Value;
 				if (hasFile == true)
-                {
+				{
 					updateAdjustCourseParamCollection.AddWithValue("FILE_UPLOAD", SqlDbType.VarBinary).Value = bytes;
                 }
 				SQL.ExecuteWithParams(queryUpdateAdjustCourse, mainDb, updateAdjustCourseParamCollection);

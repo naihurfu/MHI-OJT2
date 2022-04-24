@@ -57,7 +57,7 @@ namespace MHI_OJT2
                 return;
             }
 
-            if (_username == "rootadmin" && _password == "Tigersoft1998$")
+            if (_username == "rootadmin" && _password == "mcctojt@143000")
             {
                 RootAdminIsHere();
             }

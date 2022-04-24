@@ -150,6 +150,24 @@ namespace MHI_OJT2.Pages.Management
         protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox examEvaluate;
 
         /// <summary>
+        /// otherEvaluate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox otherEvaluate;
+
+        /// <summary>
+        /// otherEvaluateRemark control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText otherEvaluateRemark;
+
+        /// <summary>
         /// department control.
         /// </summary>
         /// <remarks>

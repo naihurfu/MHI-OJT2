@@ -13,8 +13,16 @@
             text-align: center;
         }
 
+        .topic-score:first-child {
+            width: 200px !important;
+        }
+
         .topic-score {
             width: 150px !important;
+        }
+
+        .topic-score:last-child {
+            width: 80px !important;
         }
 
         table thead tr th {
@@ -47,7 +55,7 @@
                     <h1 runat="server" id="title" class="m-0"></h1>
                 </div>
                  <!-- /.col -->
-                <div class="col-6">
+                <div class='col-6 <%= _is_real_work_evaluate != true ? "d-none" : "" %>' >
                     <div class="float-sm-right">
                         <button type="button" class="btn btn-primary" onclick="showModal()">
                             <i class="fa fa-plus-circle mr-2"></i>
@@ -72,13 +80,19 @@
                             <tr>
                                 <th scope="col" class="no-sort">รหัสพนักงาน</th>
                                 <th scope="col" class="no-sort">ชื่อ-สกุล</th>
-                                <th scope="col" class="topic-score no-sort text-primary text-center">*** คะแนนสอบ</th>
-                                <th scope="col" class="topic-score no-sort">1.ความรู้ในงานและหน้าที่ (Knowledge in work and duties)</th>
-                                <th scope="col" class="topic-score no-sort">2.คุณภาพของงาน (Quality of work)</th>
-                                <th scope="col" class="topic-score no-sort">3.ความไว้วางใจ ความรับผิดชอบต่อหน้าที่ (Reliability, Responsibi-lity for duties )</th>
-                                <th scope="col" class="topic-score no-sort">4.ความสามารถในการทำงานตามระยะเวลาที่กำหนด (Ability to work on time)</th>
-                                <th scope="col" class="topic-score no-sort">5.การปฎิบัติงานตามขั้นตอนเอกสารที่กำหนด (Working follow documents procedure to define)</th>
-                                <th scope="col" class="topic-score no-sort">ผลการฝึกอบรม (Training Result)</th>
+                                <%--_is_exam_evaluate == true--%>
+                                <th scope="col" class='topic-score no-sort <%= _is_exam_evaluate != true ? "d-none" : "" %>'>
+                                    *** คะแนนสอบ
+                                    <p style="font-size:small;">การกรอกคะแนน = คะแนนที่สอบได้จริง / คะแนนเต็ม X 100</p>
+                                    <p style="font-size:small;">Fill Scores = Actual Scores / Full Scores x 100</p>
+                                </th>
+
+                                <th scope="col" class='topic-score no-sort <%= _is_real_work_evaluate != true ? "d-none" : "" %>'>1.ความรู้ในงานและหน้าที่ (Knowledge in work and duties)</th>
+                                <th scope="col" class='topic-score no-sort <%= _is_real_work_evaluate != true ? "d-none" : "" %>'>2.คุณภาพของงาน (Quality of work)</th>
+                                <th scope="col" class='topic-score no-sort <%= _is_real_work_evaluate != true ? "d-none" : "" %>'>3.ความไว้วางใจ ความรับผิดชอบต่อหน้าที่ (Reliability, Responsibi-lity for duties )</th>
+                                <th scope="col" class='topic-score no-sort <%= _is_real_work_evaluate != true ? "d-none" : "" %>'>4.ความสามารถในการทำงานตามระยะเวลาที่กำหนด (Ability to work on time)</th>
+                                <th scope="col" class='topic-score no-sort <%= _is_real_work_evaluate != true ? "d-none" : "" %>'>5.การปฎิบัติงานตามขั้นตอนเอกสารที่กำหนด (Working follow documents procedure to define)</th>
+                                <th scope="col" class='topic-score no-sort'>ผลการฝึกอบรม (Training Result)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -91,26 +105,28 @@
                                         <td style="white-space: nowrap">
                                             <%# Eval("EMPLOYEE_NAME_TH") %>
                                         </td>
-                                        <td class="text-center">
+
+                                        <td class="text-center <%= _is_exam_evaluate != true ? "d-none" : "" %>">
                                             <input type="number" min="0" max="100" value='<%# Eval("EXAM_SCORE") %>' class='<%# "form-control input_score_0 input__score input__score__0__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 0)' />
                                         </td>
-                                        <td>
+
+                                        <td class='<%= _is_real_work_evaluate != true ? "d-none" : "" %>'>
                                             <input type="number" min="0" max="5" value='<%# Eval("SCORE_1") %>' class='<%# "form-control input_score_1 input__score input__score__1__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 1)' />
                                         </td>
-                                        <td>
+                                        <td class='<%= _is_real_work_evaluate != true ? "d-none" : "" %>'>
                                             <input type="number" min="0" max="5" value='<%# Eval("SCORE_2") %>' class='<%# "form-control input_score_2 input__score input__score__2__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 2)' />
                                         </td>
-                                        <td>
+                                        <td class='<%= _is_real_work_evaluate != true ? "d-none" : "" %>'>
                                             <input type="number" min="0" max="5" value='<%# Eval("SCORE_3") %>' class='<%# "form-control input_score_3 input__score input__score__3__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 3)' />
                                         </td>
-                                        <td>
+                                        <td class='<%= _is_real_work_evaluate != true ? "d-none" : "" %>'>
                                             <input type="number" min="0" max="5" value='<%# Eval("SCORE_4") %>' class='<%# "form-control input_score_4 input__score input__score__4__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 4)' />
                                         </td>
-                                        <td>
+                                        <td class='<%= _is_real_work_evaluate != true ? "d-none" : "" %>'>
                                             <input type="number" min="0" max="5" value='<%# Eval("SCORE_5") %>' class='<%# "form-control input_score_5 input__score input__score__5__" + Eval("EVALUATE_ID").ToString() %>' onchange='calculate(<%# Eval("EVALUATE_ID") %>, 5)' />
                                         </td>
                                         <td>
-                                            <input type="number" value='<%# Eval("TOTAL_SCORE") %>' class='<%# "form-control total__score__" + Eval("EVALUATE_ID").ToString() %>' disabled="disabled" />
+                                            <input type="number" value='<%# Eval("TOTAL_SCORE") %>' class='<%# "form-control total__score__" + Eval("EVALUATE_ID").ToString() %>'  <%= _is_real_work_evaluate == true || _is_exam_evaluate == true ? "disabled='disabled'" : "" %> />
                                         </td>
                                     </tr>
                                 </ItemTemplate>
@@ -266,32 +282,56 @@
         }
 
         function calculate(id, inputNumber) {
-            let is_exam_evaluate = '<%= _is_exam_evaluate %>'
+            let is_exam_evaluate = <%= _is_exam_evaluate.ToString().ToLower() %>
+            let is_real_work_evaluate = <%= _is_real_work_evaluate.ToString().ToLower() %>
+
+            console.log('is_exam_evaluate : ', is_exam_evaluate)
+            console.log('is_real_work_evaluate : ', is_real_work_evaluate)
+
+            let examScore = parseFloat($('.input__score__0__' + id).val());
+            let realWorkScore = 0;
+            let evaluatedScore = 0;
+            for (let i = 1; i <= 5; i++) {
+                let inputScore = $('.input__score__' + i + '__' + id).val()
+                evaluatedScore += parseFloat(inputScore)
+            }
+
+            realWorkScore = (evaluatedScore * 100) / 25
+
             if (inputNumber > 0) {
                 let _this = $('.input__score__' + inputNumber + '__' + id)
                 if (_this.val() <= 5 && _this.val() >= 0) {
                     _this.removeClass('is-invalid')
-
-                    let evaluatedScore = 0;
-                    let totalPercentage = 0;
-                    for (let i = 1; i <= 5; i++) {
-                        let inputScore = $('.input__score__' + i + '__' + id).val()
-                        evaluatedScore += parseFloat(inputScore)
-                    }
-
-                    totalPercentage = (evaluatedScore * 100) / 25
-                    $('.total__score__' + id).val(totalPercentage)
                 } else {
                     _this.addClass('is-invalid')
                 }
             } else {
                 let _this = $('.input__score__0__' + id)
                 if (_this.val() <= 100 && _this.val() >= 0) {
-
-
+                    _this.removeClass('is-invalid')
                 } else {
                     _this.addClass('is-invalid')
                 }
+            }
+
+            // summary 
+            if (is_exam_evaluate === true && is_real_work_evaluate === true) {
+                console.log(' true * 2 ')
+                console.log('examScore : ', examScore)
+                console.log(typeof examScore)
+                console.log('realWorkScore : ', realWorkScore)
+                let sum = examScore + realWorkScore
+                $('.total__score__' + id).val(sum / 2)
+
+            } else if (is_exam_evaluate === true && is_real_work_evaluate === false) {
+                console.log(' exam true ')
+                $('.total__score__' + id).val(examScore)
+
+            } else if (is_exam_evaluate === false && is_real_work_evaluate === true) {
+                console.log(' real work true ')
+                $('.total__score__' + id).val(realWorkScore)
+            } else {
+                $('.total__score__' + id).val(realWorkScore)
             }
         }
 
@@ -306,19 +346,21 @@
                 let personId = row[i].dataset.personid
                 let td = row[i].children
 
-                let score1 = parseInt(td[2].firstElementChild.value)
-                let score2 = parseInt(td[3].firstElementChild.value)
-                let score3 = parseInt(td[4].firstElementChild.value)
-                let score4 = parseInt(td[5].firstElementChild.value)
-                let score5 = parseInt(td[6].firstElementChild.value)
-                let totalScore = parseInt(td[7].firstElementChild.value)
+                let examScore = parseFloat(td[2].firstElementChild.value)
+                let score1 = parseFloat(td[3].firstElementChild.value)
+                let score2 = parseFloat(td[4].firstElementChild.value)
+                let score3 = parseFloat(td[5].firstElementChild.value)
+                let score4 = parseFloat(td[6].firstElementChild.value)
+                let score5 = parseFloat(td[7].firstElementChild.value)
+                let totalScore = parseFloat(td[8].firstElementChild.value)
 
-                if (score1 > 5 || score1 < 0 || score2 > 5 || score2 < 0 || score3 > 5 || score3 < 0 || score4 > 5 || score4 < 0 || score5 > 5 || score5 < 0 || totalScore > 100 || totalScore < 0) {
-                    sweetAlert("error", "Failed!", "Please enter correct score.")
+                if (examScore < 0 || examScore > 100 || score1 > 5 || score1 < 0 || score2 > 5 || score2 < 0 || score3 > 5 || score3 < 0 || score4 > 5 || score4 < 0 || score5 > 5 || score5 < 0 || totalScore > 100 || totalScore < 0) {
+                    sweetAlert("error", "ผิดพลาด!", "กรุณากรอกคะแนนให้ถูกต้อง")
                     return
                 }
 
                 person.PersonID = parseInt(personId);
+                person.Exam = examScore
                 person.Score_1 = score1
                 person.Score_2 = score2
                 person.Score_3 = score3
