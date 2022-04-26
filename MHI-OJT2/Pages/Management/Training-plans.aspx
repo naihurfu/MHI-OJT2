@@ -53,7 +53,7 @@
                                             </th>
                                             <td><%# Eval("PLAN_NAME") %></td>
                                             <td><%# Eval("DEPARTMENT_NAME") %></td>
-                                            <td><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:d MMMM yyyy}", Eval("PLAN_DATE")) %></td>
+                                            <td><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd/MM/yyyy}", Eval("PLAN_DATE")) %></td>
                                             <td class="text-center">
                                                 <div class="btn-group" role="group" aria-label="Basic example">
                                                     <button type="button" class="btn btn-sm btn-warning" onclick="handleShowAddModal('edit', { ID: <%# Eval("ID") %>, DEPARTMENT_ID: <%# Eval("DEPARTMENT_ID") %>, PLAN_NAME: '<%# Eval("PLAN_NAME") %>', REF_DOCUMENT: '<%# Eval("REF_DOCUMENT") %>', HOURS: <%# Eval("HOURS") %>, FREQUENCY: '<%# Eval("FREQUENCY") %>', SM_MG: <%# bool.Parse(Eval("SM_MG").ToString()) == true ? 1 : 0  %>, SAM_AM: <%# bool.Parse(Eval("SAM_AM").ToString()) == true ? 1 : 0  %>, SEG_SV: <%# bool.Parse(Eval("SEG_SV").ToString()) == true ? 1 : 0  %>, EG_ST: <%# bool.Parse(Eval("EG_ST").ToString()) == true ? 1 : 0  %>, FM: <%# bool.Parse(Eval("FM").ToString()) == true ? 1 : 0  %>, LD_SEP_EP: <%# bool.Parse(Eval("LD_SEP_EP").ToString()) == true ? 1 : 0  %>, OP: <%# bool.Parse(Eval("OP").ToString()) == true ? 1 : 0  %>, PLAN_DATE: '<%# Eval("PLAN_DATE") %>', ACTUAL_DATE: '<%# Eval("ACTUAL_DATE") %>', TRAINER: '<%# Eval("TRAINER") %>' })">

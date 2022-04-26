@@ -100,7 +100,8 @@ namespace MHI_OJT2.Pages.Management
                 "p.* ," +
                 "d.DEPARTMENT_NAME " +
                 "FROM TRAINING_PLAN p " +
-                "JOIN DEPARTMENT d ON d.ID = p.DEPARTMENT_ID ";
+                "JOIN DEPARTMENT d ON d.ID = p.DEPARTMENT_ID " +
+                "ORDER BY PLAN_DATE DESC, CREATED_AT DESC";
 
             if (role == "clerk")
             {

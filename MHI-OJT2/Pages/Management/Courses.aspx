@@ -60,11 +60,12 @@
                             <tr>
                                 <th class="text-center">ลำดับ</th>
                                 <th class="text-center">แก้ไข</th>
-                                <th class="text-center">รายละเอียด</th>
+                                <th>รายละเอียด</th>
                                 <th>แผนก</th>
                                 <th>ชื่อหลักสูตร</th>
                                 <th>ผู้จัดทำ</th>
                                 <th>วันที่เริ่มอบรม</th>
+                                <th>วันที่จัดทำแผน</th>
                                 <th class="text-center">ประเภท</th>
                                 <th class="text-center">สถานะ</th>
                                 <th class="text-center">ดาวโหลดรายงาน</th>
@@ -80,13 +81,17 @@
                                         <td class="text-center">
                                             <button type="button" class="btn btn-sm btn-primary" onclick="handleEditCourse(<%# Eval("COURSE_ID") %>)" <%# Session["roles"].ToString().ToLower() != "admin" ? (int)Eval("STATUS_CODE") == 10 ? "disabled" : "" : "" %>>แก้ไข</button>
                                         </td>
-                                        <td class="text-center">
-                                            <button type="button" class="btn btn-sm btn-link" onclick="handleViewCourseDetail(<%# Eval("COURSE_ID") %>)">แสดง</button>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-link" onclick="handleViewCourseDetail(<%# Eval("COURSE_ID") %>)">
+                                                แสดง
+                                                <%# Eval("FILE_UPLOAD").ToString().ToUpper() == "SYSTEM.BYTE[]" ? " <i class='fa fa-file-pdf text-danger'></i>" : "" %>
+                                            </button>
                                         </td>
                                         <td><%# Eval("DEPARTMENT_NAME") %></td>
                                         <td><%# Eval("COURSE_NAME") %></td>
                                         <td><%# Eval("CREATED_NAME") %></td>
-                                        <td><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd MMM yyyy}", Eval("START_DATE")) %></td>
+                                        <td><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd/MM/yyyy}", Eval("START_DATE")) %></td>
+                                        <td><%# Eval("PLAN_DATE").ToString() != "" ? String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd/MM/yyyy}", Eval("PLAN_DATE")) : "-"%></td>
                                         <td class="text-center">
                                             <span class="badge badge-<%# int.Parse(Eval("PLANNED").ToString()) == 1 ? "warning" : "info" %>">
                                                 <%# int.Parse(Eval("PLANNED").ToString()) == 1 ? "ในแผน" : "นอกแผน" %>
