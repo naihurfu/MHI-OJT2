@@ -10,13 +10,13 @@
                     <h1 class="m-0">SYSTEM LOG</h1>
                 </div>
                 <!-- /.col -->
-                <%--<div class="col-sm-6">
+                <div class="col-sm-6">
                     <div class="float-sm-right">
-                        <button type="button" class="btn btn-primary" onclick="handleShowModal('add', {})">
-                            <i class="fa fa-user-plus mr-2"></i>
-                            เพิ่มผู้ใช้งาน</button>
+                        <button type="button" class="btn btn-success" onclick="exportToExcel()">
+                            <i class="fa fa-file-excel mr-2"></i>
+                            ส่งออกข้อมูล</button>
                     </div>
-                </div>--%>
+                </div>
                 <!-- /.col -->
             </div>
             <!-- /.row -->
@@ -29,7 +29,7 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
-                    <table class="hover nowrap" style="width: 100%">
+                    <table class="hover nowrap" style="width: 100%" id="logTable">
                         <thead>
                             <tr>
                                 <th class="text-center">ลำดับ</th>
@@ -91,5 +91,14 @@
            });
 
        })();
+
+       function exportToExcel() {
+           $('#logTable').table2excel({
+               exclude: ".excludeThisClass",
+               name: "Worksheet Name",
+               filename: "SomeFile.xls", // do include extension
+               preserveColors: false // set to true if you want background colors and font colors preserved
+           });
+       }
    </script>
 </asp:Content>

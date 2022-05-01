@@ -342,6 +342,23 @@ namespace MHI_OJT2.Pages.Management
 					Console.WriteLine(ex.Message);
 				}
 
+				if (hasFile == true)
+				{
+					try
+					{
+						ObjectLog obj = new ObjectLog();
+						obj.TITLE = "อัปโหลดไฟล์";
+						obj.REMARK = courseName.Value;
+						obj.TABLE_NAME = "ADJUST_COURSE";
+						obj.FK_ID = int.Parse(hiddenId.Value.ToString());
+						Log.Create("edit", obj);
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine(ex.Message);
+					}
+				}
+
 				Session.Add("alert", "inserted");
 				Response.Redirect(_selfPathName);
 			}
@@ -635,6 +652,26 @@ namespace MHI_OJT2.Pages.Management
 		{
 			try
 			{
+				string query = "SELECT " +
+					"ISNULL ([IS_EXAM_EVALUATE], 0) [IS_EXAM_EVALUATE] ," +
+					"ISNULL ([IS_REAL_WORK_EVALUATE], 0) [IS_REAL_WORK_EVALUATE] ," +
+					"ISNULL ([IS_OTHER_EVALUATE], 0) [IS_OTHER_EVALUATE] " +
+					"FROM [VIEW_ADJUST_COURSE] " +
+					$"WHERE ID = {courseId}";
+				DataTable dt = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+
+				if (dt.Rows.Count > 0 )
+                {
+					bool exam = bool.Parse(dt.Rows[0]["IS_EXAM_EVALUATE"].ToString());
+					bool realWork = bool.Parse(dt.Rows[0]["IS_REAL_WORK_EVALUATE"].ToString());
+					bool other = bool.Parse(dt.Rows[0]["IS_OTHER_EVALUATE"].ToString());
+
+					if (exam == false && realWork == false && other == true)
+                    {
+						return "OTHER";
+                    }
+				}
+
 				HttpContext.Current.Session.Add("EVALUATE_COURSE_ID", courseId);
 				HttpContext.Current.Session.Add("IS_EVALUATION", 1);
 
@@ -736,6 +773,7 @@ namespace MHI_OJT2.Pages.Management
                 }
 				SQL.ExecuteWithParams(queryUpdateAdjustCourse, mainDb, updateAdjustCourseParamCollection);
 
+
 				try
 				{
 					ObjectLog obj = new ObjectLog();
@@ -748,6 +786,23 @@ namespace MHI_OJT2.Pages.Management
 				catch (Exception ex)
 				{
 					Console.WriteLine(ex.Message);
+				}
+
+				if (hasFile == true)
+                {
+					try
+					{
+						ObjectLog obj = new ObjectLog();
+						obj.TITLE = "อัปโหลดไฟล์";
+						obj.REMARK = courseName.Value;
+						obj.TABLE_NAME = "ADJUST_COURSE";
+						obj.FK_ID = int.Parse(hiddenId.Value.ToString());
+						Log.Create("edit", obj);
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine(ex.Message);
+					}
 				}
 
 				Session["alert"] = "updated";
@@ -823,6 +878,72 @@ namespace MHI_OJT2.Pages.Management
 			{
 				Alert("error", "Error!", $"{ex.Message}");
 			}
+		}
+
+		[WebMethod]
+		public static string UpdateStatusWithOther(int courseId)
+        {
+			try
+            {
+				using (SqlConnection connection = new SqlConnection(WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
+				{
+					string queryString = "UPDATE ADJUST_COURSE SET [STATUS]=3, EVALUATED_DATE=GETDATE()  WHERE ID=@COURSE_ID";
+					using (SqlCommand cmd = new SqlCommand(queryString, connection))
+					{
+						cmd.Parameters.AddWithValue("COURSE_ID", SqlDbType.Int).Value = courseId;
+
+						connection.Open();
+						cmd.ExecuteNonQuery();
+						connection.Close();
+
+						try
+						{
+							ObjectLog obj = new ObjectLog();
+							obj.TITLE = "ยืนยันการปรับสถานะหลักสูตร";
+							obj.REMARK = "-";
+							obj.TABLE_NAME = "ADJUST_COURSE";
+							obj.FK_ID = courseId;
+							Log.Create("edit", obj);
+						}
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message);
+						}
+
+						HttpCookie cookie = new HttpCookie("alert");
+						cookie.Expires = DateTime.Now.AddSeconds(20);
+						cookie.Value = "status_updated";
+						HttpContext.Current.Response.Cookies.Add(cookie);
+
+						return "OK";
+					}
+				}   
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return "ERROR";
+			}
+		}
+		[WebMethod]
+		public static string GetPlanDateByCourseId(int courseId)
+        {
+			try
+            {
+				string query = $"SELECT * FROM VIEW_PLAN WHERE ID = {courseId}";
+				DataTable dt = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+				if (dt.Rows.Count > 0)
+                {
+					return DATA.DataTableToJSONWithJSONNet(dt);
+                }
+				return "NOTHING";
+			}
+			catch (Exception ex)
+            {
+				Console.WriteLine(ex.Message);
+				return "ERROR";
+            }
+
 		}
     }
     public class EmployeeIntoCourse

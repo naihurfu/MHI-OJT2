@@ -77,7 +77,7 @@
 
                             
                                 <span class="badge badge-danger navbar-badge">
-                                    <%= notificationCount %>
+                                    <%= notificationCount >= 10 ? $"10+" : notificationCount.ToString() %>
                                 </span>
                             
 
@@ -90,7 +90,7 @@
                                 <div class="dropdown-divider"></div>
                                 <asp:Repeater ID="RepeatNotification" runat="server">
                                     <ItemTemplate>
-                                        <a href="#" class="dropdown-item list__approval text-center" data-course-id='<%# Eval("COURSE_ID") %>' data-approval-id='<%# Eval("APPROVAL_ID") %>' data-approval-sequence='<%# Eval("APPROVAL_SEQUENCE") %>' data-course-number='<%# Eval("COURSE_NUMBER") %>' data-course-department='<%# Eval("DEPARTMENT_NAME") %>' data-course-name='<%# Eval("COURSE_NAME") %>'>
+                                        <a href="#" class="dropdown-item list__approval" data-course-id='<%# Eval("COURSE_ID") %>' data-approval-id='<%# Eval("APPROVAL_ID") %>' data-approval-sequence='<%# Eval("APPROVAL_SEQUENCE") %>' data-course-number='<%# Eval("COURSE_NUMBER") %>' data-course-department='<%# Eval("DEPARTMENT_NAME") %>' data-course-name='<%# Eval("COURSE_NAME")%>' data-is-other-only='<%# Eval("IS_OTHER_ONLY") %>'>
                                             <%# Eval("COURSE_NAME") %>
                                         </a>
                                         <div class="dropdown-divider"></div>
@@ -411,9 +411,10 @@
             }
             $('.list__approval').on('click', function (e) {
                 e.preventDefault();
-                Swal.fire({
-                    title: 'คุณต้องการอนุมัติหลักสูตรนี้หรือไม่?',
-                    html: `<div class='container' style='border: 1px solid #ccc; padding-top: 8px;'>
+                const isOtherOnly = $(this).data("is-other-only")
+                console.log(isOtherOnly)
+
+                let detail = `<div class='container' style='border: 1px solid #ccc; padding-top: 8px;'>
                                 <p class='text-left'>
                                     <b>แผนก : </b> ${$(this).data("course-department")}
                                 </p>
@@ -423,19 +424,24 @@
                                 <p class='text-left'>
                                     <b>ชื่อหลักสูตร : </b> ${$(this).data("course-name")}
                                 </p>
-                                <div class="row my-2">
-                                    <div class="col-6">
-                                            <button type="button" class="btn btn-sm btn-block btn-info" onclick="ShowScore({'APPROVE_ID': ${$(this).data('approval-id')},'COURSE_ID': ${$(this).data('course-id')},'APPROVAL_SEQUENCE': ${$(this).data('approval-sequence')}})">ดูผลประเมิน</button>
-                                    </div>
-                                    <div class="col-6">
-                                        <button type="button" class="btn btn-sm btn-block btn-primary" onclick="handleDownloadReport(${$(this).data('course-id')})">พิมพ์รายงานประเมินผล</button>
-                                    </div>
+                                <div class="row my-2">`
+                if (isOtherOnly !== 1) {
+                    detail += `<div class="col">
+                                    <button type="button" class="btn btn-sm btn-block btn-info" onclick="ShowScore({'APPROVE_ID': ${$(this).data('approval-id')},'COURSE_ID': ${$(this).data('course-id')},'APPROVAL_SEQUENCE': ${$(this).data('approval-sequence')}})">ดูผลประเมิน</button>
+                              </div>`
+                }
+                detail += `<div class="col">
+                                    <button type="button" class="btn btn-sm btn-block btn-primary" onclick="handleDownloadReport(${$(this).data('course-id')})">พิมพ์รายงานประเมินผล</button>
                                 </div>
                             </div>
-                            <div class="mt-2 form-group text-left">
-                                <label>หมายเหตุ</label>
-                                <textarea type="text" id="approval-remark" class="form-control text-light" rows="3"></textarea>
-                            </div>`,
+                        </div>
+                        <div class="mt-2 form-group text-left">
+                            <label>หมายเหตุ</label>
+                            <textarea type="text" id="approval-remark" class="form-control text-light" rows="3"></textarea>
+                        </div>`
+                Swal.fire({
+                    title: 'คุณต้องการอนุมัติหลักสูตรนี้หรือไม่?',
+                    html: detail,
                     showCancelButton: true,
                     showConfirmButton: true,
                     showDenyButton: true,

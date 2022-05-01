@@ -64,8 +64,8 @@
                                 <th>แผนก</th>
                                 <th>ชื่อหลักสูตร</th>
                                 <th>ผู้จัดทำ</th>
-                                <th>วันที่เริ่มอบรม</th>
-                                <th>วันที่จัดทำแผน</th>
+                                <th class="text-center">วันที่เริ่มอบรม</th>
+                                <th class="text-center">วันที่จัดทำแผน</th>
                                 <th class="text-center">ประเภท</th>
                                 <th class="text-center">สถานะ</th>
                                 <th class="text-center">ดาวโหลดรายงาน</th>
@@ -90,8 +90,8 @@
                                         <td><%# Eval("DEPARTMENT_NAME") %></td>
                                         <td><%# Eval("COURSE_NAME") %></td>
                                         <td><%# Eval("CREATED_NAME") %></td>
-                                        <td><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd/MM/yyyy}", Eval("START_DATE")) %></td>
-                                        <td><%# Eval("PLAN_DATE").ToString() != "" ? String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd/MM/yyyy}", Eval("PLAN_DATE")) : "-"%></td>
+                                        <td class="text-center"><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd/MM/yyyy}", Eval("START_DATE")) %></td>
+                                        <td class="text-center"><%# Eval("PLAN_DATE").ToString() != "" ? String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd/MM/yyyy}", Eval("PLAN_DATE")) : "-"%></td>
                                         <td class="text-center">
                                             <span class="badge badge-<%# int.Parse(Eval("PLANNED").ToString()) == 1 ? "warning" : "info" %>">
                                                 <%# int.Parse(Eval("PLANNED").ToString()) == 1 ? "ในแผน" : "นอกแผน" %>
@@ -147,6 +147,7 @@
                             <select class="form-control selectpicker" id="trainingPlan" runat="server" data-live-search="true">
                                 <option selected>-</option>
                             </select>
+                            <span class="text-danger" id="selectPlanDate" style="font-size: small !important;"></span>
                         </div>
                         <hr />
                     </div>
@@ -523,7 +524,41 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (results) {
-                            if (results.d === "SUCCESS") {
+                            const result = results.d
+                            console.log(result)
+                            if (result === "OTHER") {
+                                Swal.fire({
+                                    title: 'หลักสูตรนี้ไม่มีการประเมินผลฝึกรม',
+                                    showConfirmButton: true,
+                                    showCancelButton: true,
+                                    showDenyButton: false,
+                                    confirmButtonText: 'ยืนยัน',
+                                    denyButtonText: ``,
+                                    cancelButtonText: `ปิด`
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "<%= ajax %>" + "/Pages/Management/Courses.aspx/UpdateStatusWithOther",
+                                            data: "{'courseId': " + courseId + "}",
+                                            contentType: "application/json; charset=utf-8",
+                                            dataType: "json",
+                                            success: function (results) {
+                                                console.log(results.d)
+                                                if (results.d === "OK") {
+                                                        window.location.href = window.location.href;
+                                                }
+                                            },
+                                            error: function (err) {
+                                                console.log(err)
+                                            }
+                                        });
+                                    }
+                                })
+                            }
+
+                            if (result === "SUCCESS") {
                                 window.location.href = window.location.protocol + "//" + window.location.host + "/Pages/Management/Evaluation.aspx"
                             }
                         },
@@ -671,14 +706,36 @@
         $('#<%= checkPlan.ClientID %>').on('change', function () {
             if (this.checked) {
                 $('.select-plan-container').find('div').find('button').removeClass('disabled')
+                $('#selectPlanDate').show()
             }
         });
         $('#<%= checkNotPlan.ClientID %>').on('change', function () {
             if (this.checked) {
                 $('#<%= trainingPlan.ClientID %>').val("-").change()
                 $('.select-plan-container').find('div').find('button').addClass('disabled')
+                $('#selectPlanDate').hide()
             }
         });
+        $('#<%= trainingPlan.ClientID %>').on('change', function () {
+            const id = $(this).val()
+            if (id !== "-") {
+                $.ajax({
+                    type: "POST",
+                    url: "<%= ajax %>" + "/Pages/Management/Courses.aspx/GetPlanDateByCourseId",
+                    data: "{'courseId': " + parseInt(id) + "}",
+                     contentType: "application/json; charset=utf-8",
+                     dataType: "json",
+                     success: function (results) {
+                         const data = JSON.parse(results.d)[0]
+                         $('#selectPlanDate').text(` วันที่จัดทำแผน : ${moment(data.PLAN_DATE).format("DD/MM/yyyy")}`)
+                     },
+                     error: function (err) {
+                         console.log(err)
+                     }
+                 });
+            }
+        })
+
         $('#<%= otherEvaluate.ClientID %>').on('change', function () {
             if (this.checked) {
                 $('#<%= otherEvaluateRemark.ClientID %>').removeAttr('disabled')
@@ -986,6 +1043,8 @@
         function addCourseValidation() {
             // true === pass
             // false === validate error
+
+
             let notifyTitle = "แจ้งเตือน"
 
             // check plan or not plan
@@ -1015,6 +1074,14 @@
 
             if ($('#<%= startTime.ClientID %>').val().trim() === "" || $('#<%= endTime.ClientID %>').val().trim() === "") {
                 toasts(notifyTitle, "กรุณาระบุเวลาเริ่มและสิ้นสุดการอบรมให้ถูกต้อง")
+                return false
+            }
+
+            const isExam = $('#<%= examEvaluate.ClientID %>').prop('checked')
+            const isRealWork = $('#<%= realWorkEvaluate.ClientID %>').prop('checked')
+            const isOther = $('#<%= otherEvaluate.ClientID %>').prop('checked')
+            if (!isExam && !isRealWork && !isOther) {
+                toasts(notifyTitle, "กรุณาเลือกรูปแบบการประเมินผลอย่างน้อย 1 ตัวเลือก")
                 return false
             }
 

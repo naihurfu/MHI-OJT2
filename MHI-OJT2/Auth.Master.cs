@@ -41,8 +41,17 @@ namespace MHI_OJT2
 				{
 					if (Request.Cookies["alert"] != null)
 					{
+						string cookieValue = Request.Cookies["alert"].Value;
+						if (cookieValue == "approved" || cookieValue == "rejected")
+						{
+							Alert("success", "สำเร็จ!", "บันทึกข้อมูลการอนุมัติเรียบร้อยแล้ว");
+						}
+
+						if (cookieValue == "status_updated")
+						{
+							Alert("success", "สำเร็จ!", "บันทึกข้อมูลเรียบร้อยแล้ว");
+						}
 						ClearCookie("alert");
-						Alert("success", "สำเร็จ!", "บันทึกข้อมูลการอนุมัติเรียบร้อยแล้ว");
 					}
 
 					int userId = int.Parse(Session["userId"].ToString());
