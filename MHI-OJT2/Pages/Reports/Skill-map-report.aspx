@@ -398,7 +398,11 @@
                         promises.push(request);
                     }
                     $.when.apply(null, promises).done(() => {
-                        tableHeader += `<td></td><td></td><td></td><td></td><td></td>`
+                        tableHeader += `<td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>`
                         tableHeader += `</tr>`
                         tableHeader += `<tr>`
                         for (let i = 0; i < keyNames.length; i++) {
@@ -406,6 +410,27 @@
                                 // emp code
                                 tableHeader += `<th class="text-center" style="width: 25px !important;">
                                                     EMP.<br/>CODE
+                                                </th>`
+                            } else if (i === keyNames.length - 5 + 4) {
+                                // ระบุจำนวนงาน(Specify job no.)  จำนวนงานที่ไม่ถึงเกณฑ์ต้องติดตาม (No.of Job to Follow up)
+                                tableHeader += `<th style="width: 75px !important">
+                                                    <span style="bottom: -25px !important;">
+                                                     ${keyNames[i]} <br/> จำนวนงานที่ไม่ถึงเกณฑ์ต้องติดตาม (No.of Job to Follow up)
+                                                    <span>
+                                                </th>`
+                            } else if (i === keyNames.length - 5 + 3) {
+                                // (B / A * 100)  เปอร์เซ็นต์ของจำนวนงานที่ผ่าน (Percentage of actual)
+                                tableHeader += `<th style="width: 75px !important">
+                                                    <span style="bottom: -25px !important;">
+                                                     ${keyNames[i]} <br/> เปอร์เซ็นต์ของจำนวนงานที่ผ่าน (Percentage of actual)
+                                                    <span>
+                                                </th>`
+                            } else if (i === keyNames.length - 5 + 1 || i === keyNames.length - 5 + 2) {
+                                // plan A and plan B จำนวนงาน / คน   (Job / Person)
+                                tableHeader += `<th style="width: 75px !important">
+                                                    <span style="bottom: -25px !important;">
+                                                     ${keyNames[i]} <br/> จำนวนงาน / คน   (Job / Person)
+                                                    <span>
                                                 </th>`
                             } else if (i > keyNames.length - 5) {
                                 tableHeader += `<th class="text-center" style="width: 40px !important">
@@ -441,7 +466,6 @@
                         tableHeader += `</tr>`
                         tableThead.append(tableHeader)
 
-                            console.log(data)
                         for (let i = 0; i < data.length; i++) {
                             let tableRow = `<tr style="vertical-align: middle;">`
                             let row = data[i]
@@ -452,7 +476,7 @@
                             for (let j = 0; j < Object.keys(row).length; j++) {
                                 // for No.
                                 if (j === 0) {
-                                    tableRow += `<td class="text-center">${i+1}</td>`
+                                    tableRow += `<td class="text-center">${i + 1}</td>`
                                 }
                                 let nameIsNull = row.key(1) === ""
                                 let name = nameIsNull === true ? "0" : row.key(1)
@@ -581,7 +605,6 @@
                             importCSS: true,
                             importStyle: true
                         });
-                        return
                         $('#card-print').hide()
 
                     })
