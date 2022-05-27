@@ -13,7 +13,6 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-
 namespace MHI_OJT2.Pages.Management
 {
     public partial class Training_plans : System.Web.UI.Page
@@ -75,7 +74,7 @@ namespace MHI_OJT2.Pages.Management
 
                 if (role == "clerk")
                 {
-                    query += $"WHERE CREATED_ID = {userId}";
+                    query += $" WHERE CREATED_ID = {userId}";
                 }
 
                 DataTable sectionDataSource = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
@@ -95,17 +94,24 @@ namespace MHI_OJT2.Pages.Management
             department.DataTextField = "DEPARTMENT_NAME";
             department.DataBind();
 
-
-            string query = "SELECT " +
+            string query = string.Empty;
+            if (role == "clerk")
+            {
+                query = "SELECT " +
                 "p.* ," +
                 "d.DEPARTMENT_NAME " +
                 "FROM TRAINING_PLAN p " +
                 "JOIN DEPARTMENT d ON d.ID = p.DEPARTMENT_ID " +
-                "ORDER BY PLAN_DATE DESC, CREATED_AT DESC";
-
-            if (role == "clerk")
+                $" WHERE p.CREATED_BY = {userId} " +
+                " ORDER BY PLAN_DATE DESC, CREATED_AT DESC ";
+            } else
             {
-                query += $"WHERE p.CREATED_BY = {userId}";
+                query = "SELECT " +
+                "p.* ," +
+                "d.DEPARTMENT_NAME " +
+                "FROM TRAINING_PLAN p " +
+                "JOIN DEPARTMENT d ON d.ID = p.DEPARTMENT_ID " +
+                "ORDER BY PLAN_DATE DESC, CREATED_AT DESC ";
             }
             RepeatTrainingPlanTable.DataSource = SQL.GetDataTable(query, mainDb);
             RepeatTrainingPlanTable.DataBind();
@@ -228,7 +234,7 @@ namespace MHI_OJT2.Pages.Management
                     ",[PLAN_DATE]=@PLAN_DATE" +
                     ",[TRAINER]=@TRAINER" +
                     ",[CREATED_BY]=@CREATED_BY " +
-                    "WHERE ID=@ID";
+                    " WHERE ID=@ID";
 
                 // new parameter collection
                 SqlParameterCollection param = new SqlCommand().Parameters;

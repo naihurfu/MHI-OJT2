@@ -158,7 +158,7 @@ namespace MHI_OJT2.Pages.Systems
 			}
 			catch (Exception ex)
 			{
-				Alert("error", "ผิดพลาด!", DATA.RemoveSpecialCharacters(ex.Message));
+				Alert("error", "ผิดพลาด!", ex.Message);
 			}
 		}
 		protected void Update(object sender, EventArgs e)

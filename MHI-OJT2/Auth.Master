@@ -247,22 +247,26 @@
                             <% if (Session["isEditMaster"].ToString() == "1")
                                 {%>
                             <li class="nav-header">ตั้งค่าข้อมูลหลัก</li>
-                            <li class="nav-item">
-                                <a href="~/Pages/Master/Section.aspx" runat="server" class="nav-link">
-                                    <i class="nav-icon fas fa-list-alt"></i>
-                                    <p>
-                                        ฝ่าย
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="~/Pages/Master/Department.aspx" runat="server" class="nav-link">
-                                    <i class="nav-icon fas fa-list-ul"></i>
-                                    <p>
-                                        แผนก
-                                    </p>
-                                </a>
-                            </li>
+                                <% if (Session["roles"].ToString().ToLower() == "admin")
+                                    {%>
+                                    <li class="nav-item">
+                                        <a href="~/Pages/Master/Section.aspx" runat="server" class="nav-link">
+                                            <i class="nav-icon fas fa-list-alt"></i>
+                                            <p>
+                                                ฝ่าย
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="~/Pages/Master/Department.aspx" runat="server" class="nav-link">
+                                            <i class="nav-icon fas fa-list-ul"></i>
+                                            <p>
+                                                แผนก
+                                            </p>
+                                        </a>
+                                    </li>
+                                <% } %>
+
                             <li class="nav-item">
                                 <a href="~/Pages/Master/Speaker.aspx" runat="server" class="nav-link">
                                     <i class="nav-icon fas fa-user"></i>
