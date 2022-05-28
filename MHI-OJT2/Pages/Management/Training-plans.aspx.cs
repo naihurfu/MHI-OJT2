@@ -348,58 +348,66 @@ namespace MHI_OJT2.Pages.Management
 
         protected void btnExportReport_Click(object sender, EventArgs e)
         {
-            ReportDocument rpt = new ReportDocument();
-            ExportFormatType expType = ExportFormatType.PortableDocFormat;
-            int id = int.Parse(Session["userId"].ToString());
-            string exportName = "TRAINING PLAN REPORT";
-            
-            rpt.Load(Server.MapPath("~/Reports/rpt_Training_Plan.rpt"));
-            rpt.SetParameterValue("PIC_PATH", Server.MapPath("~"));
-            int sectionId = int.Parse(section.Value.ToString());
-            string sectionName = "";
-            using (DataTable dt = SQL.GetDataTable($"SELECT SECTION_NAME FROM SECTION WHERE ID = {sectionId}", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
-            {
-                sectionName = dt.Rows[0][0].ToString();
-            }
-
-             rpt.SetParameterValue("Section", sectionName);
-
-            string[] sDate = startDate.Value.Split('/');
-            string[] eDate = endDate.Value.Split('/');
-            string formula = "{VIEW_PLAN_AND_COURSE.PLAN_DATE} >= Date (" + sDate[2] + ", " + sDate[1] + ", " + sDate[0] + ") " +
-                "AND {VIEW_PLAN_AND_COURSE.PLAN_DATE} <= Date (" + eDate[2] + ", " + eDate[1] + ", " + eDate[0] + ") ";
-
-            if (id != 0)
-            {
-                formula += "AND {VIEW_PLAN_AND_COURSE.PLAN_SECTION_ID} = " + int.Parse(section.Value.ToString()) + "  ";
-            }
-
-            if (_roles == "clerk")
-            {
-                formula += "  AND " +
-                        "{VIEW_PLAN_AND_COURSE.CREATED_ID} = " + id + " ";
-            }
-
-            rpt.RecordSelectionFormula = formula;
-            rpt.SetDatabaseLogon(SQL.user, SQL.pass);
-
-            // logging
             try
             {
-                ObjectLog obj = new ObjectLog();
-                obj.TITLE = exportName;
-                obj.REMARK = $"ช่วงวันที่ {startDate.Value.ToString()} ถึง {endDate.Value.ToString()}";
-                Log.Create("print", obj);
+                ReportDocument rpt = new ReportDocument();
+                ExportFormatType expType = ExportFormatType.PortableDocFormat;
+                int id = int.Parse(Session["userId"].ToString());
+                string exportName = "TRAINING PLAN REPORT";
+
+                rpt.Load(Server.MapPath("~/Reports/rpt_Training_Plan.rpt"));
+                rpt.SetParameterValue("PIC_PATH", Server.MapPath("~"));
+                
+                int sectionId = int.Parse(section.Value.ToString() == "" ? "0" : section.Value.ToString());
+                if (sectionId == 0 || sectionId == null) throw new Exception("ไม่พบข้อมูล");
+
+                string sectionName = "";
+                using (DataTable dt = SQL.GetDataTable($"SELECT SECTION_NAME FROM SECTION WHERE ID = {sectionId}", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
+                {
+                    sectionName = dt.Rows[0][0].ToString();
+                }
+
+                rpt.SetParameterValue("Section", sectionName);
+
+                string[] sDate = startDate.Value.Split('/');
+                string[] eDate = endDate.Value.Split('/');
+                string formula = "{VIEW_PLAN_AND_COURSE.PLAN_DATE} >= Date (" + sDate[2] + ", " + sDate[1] + ", " + sDate[0] + ") " +
+                    "AND {VIEW_PLAN_AND_COURSE.PLAN_DATE} <= Date (" + eDate[2] + ", " + eDate[1] + ", " + eDate[0] + ") ";
+
+                if (id != 0)
+                {
+                    formula += "AND {VIEW_PLAN_AND_COURSE.PLAN_SECTION_ID} = " + int.Parse(section.Value.ToString()) + "  ";
+                }
+
+                if (_roles == "clerk")
+                {
+                    formula += "  AND " +
+                            "{VIEW_PLAN_AND_COURSE.CREATED_ID} = " + id + " ";
+                }
+
+                rpt.RecordSelectionFormula = formula;
+                rpt.SetDatabaseLogon(SQL.user, SQL.pass);
+
+                // logging
+                try
+                {
+                    ObjectLog obj = new ObjectLog();
+                    obj.TITLE = exportName;
+                    obj.REMARK = $"ช่วงวันที่ {startDate.Value.ToString()} ถึง {endDate.Value.ToString()}";
+                    Log.Create("print", obj);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                // end logging
+
+                rpt.ExportToHttpResponse(expType, Response, true, exportName);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Alert("error", "ผิดพลาด!", $"{ex.Message}");
             }
-            // end logging
-
-            rpt.ExportToHttpResponse(expType, Response, true, exportName);
-
-            
         }
     }
 }
