@@ -601,11 +601,11 @@
                             });
                         });
 
-                        //$('#print_me').printThis({
-                        //    importCSS: true,
-                        //    importStyle: true
-                        //});
-                        //$('#card-print').hide()
+                        $('#print_me').printThis({
+                            importCSS: true,
+                            importStyle: true
+                        });
+                        $('#card-print').hide()
 
                     })
                 }
