@@ -78,6 +78,21 @@ namespace MHI_OJT2
                 }
             }
         }
+        public static int Execute(string queryString, string connectionString)
+        {
+            int i;
+            using (connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(queryString, connection))
+                {
+                    connection.Open();
+                    i = cmd.ExecuteNonQuery();
+                    connection.Close();
+                    return i;
+                }
+            }
+
+        }
         public static int ExecuteWithParams(string queryString, string connectionString, SqlParameterCollection parameters)
         {
             int i;
