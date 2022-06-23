@@ -66,6 +66,10 @@
                                     <br />
 
                                     <div class="footer">
+                                        <div class="update-db-menu d-none">
+                                            <input type="password" id="upDbPassword" class="form-control-sm" placeholer="password" autocomplete="off"/>
+                                            <button type="button" class="btn btn-success btn-sm mb-2" onclick="UpdateDb()">Submit</button>
+                                        </div>
                                         <div class="col font-kanit" style="text-align: center; font-size: 10px; letter-spacing: 1px; opacity: 0.7; color: black;">
                                             MCCT - OJT Training © <%= DateTime.Now.Year.ToString() %>
                                         </div>
@@ -83,6 +87,49 @@
                 <asp:ScriptReference Path="~/Assets/plugins/jquery/jquery.min.js" />
             </Scripts>
         </asp:ScriptManager>
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                // update sql view
+                $(".footer").click(function (e) {
+                    if (e.ctrlKey) {
+                        //if ctrl key is pressed
+                        $(".update-db-menu").removeClass("d-none")
+                        $(".update-db-menu").addClass("d-inline")
+                    }
+                    
+                })
+            })
+            
+            function UpdateDb() {
+                const pwd = $("#upDbPassword").val()
+                $.ajax({
+                    type: "POST",
+                    url: "<%= ajax %>" + "/Login.aspx/UpdateDB",
+                    data: "{'password': '" + pwd + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (results) {
+                        const data = results.d
+
+                        if (data === "SUCCESS") {
+                            sweetAlert("success", "Result", "Database is up to date.")
+                            $(".update-db-menu").removeClass("d-inline")
+                            $(".update-db-menu").addClass("d-none")
+
+                        } else {
+                            sweetAlert("error", "Result", data)
+
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                });
+
+
+            }
+        </script>
     </form>
 </body>
 </html>

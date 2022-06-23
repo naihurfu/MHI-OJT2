@@ -70,17 +70,21 @@ namespace MHI_OJT2.Pages.Management
         {
             if (role != "user")
             {
-                string query = "SELECT DISTINCT PLAN_SECTION_NAME SECTION_NAME,PLAN_SECTION_ID SECTION_ID FROM VIEW_PLAN_AND_COURSE ";
+                string query = "SELECT DISTINCT d.ID,d.DEPARTMENT_NAME" +
+                    ",s.SECTION_NAME " +
+                    "FROM VIEW_PLAN_AND_COURSE v " +
+                    "INNER JOIN DEPARTMENT d ON d.DEPARTMENT_NAME = v.DEPARTMENT_NAME " +
+                    "INNER JOIN SECTION s ON s.ID = d.SECTION_ID";
 
                 if (role == "clerk")
                 {
-                    query += $" WHERE CREATED_ID = {userId}";
+                    query += $" WHERE v.CREATED_ID = {userId}";
                 }
 
                 DataTable sectionDataSource = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
                 section.DataSource = sectionDataSource;
-                section.DataTextField = "SECTION_NAME";
-                section.DataValueField = "SECTION_ID";
+                section.DataTextField = "DEPARTMENT_NAME";
+                section.DataValueField = "ID";
                 section.DataBind();
             }
         } 
@@ -357,14 +361,21 @@ namespace MHI_OJT2.Pages.Management
 
                 rpt.Load(Server.MapPath("~/Reports/rpt_Training_Plan.rpt"));
                 rpt.SetParameterValue("PIC_PATH", Server.MapPath("~"));
-                
-                int sectionId = int.Parse(section.Value.ToString() == "" ? "0" : section.Value.ToString());
-                if (sectionId == 0 || sectionId == null) throw new Exception("ไม่พบข้อมูล");
+
+                int? depId = int.Parse(section.Value.ToString() == "" ? "0" : section.Value.ToString());
+                if (depId == 0 || depId == null) throw new Exception("ไม่พบข้อมูล");
 
                 string sectionName = "";
-                using (DataTable dt = SQL.GetDataTable($"SELECT SECTION_NAME FROM SECTION WHERE ID = {sectionId}", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
+                string query = "SELECT DISTINCT d.ID,d.DEPARTMENT_NAME" +
+                    ",s.SECTION_NAME " +
+                    "FROM VIEW_PLAN_AND_COURSE v " +
+                    "INNER JOIN DEPARTMENT d ON d.DEPARTMENT_NAME = v.DEPARTMENT_NAME " +
+                    "INNER JOIN SECTION s ON s.ID = d.SECTION_ID " +
+                    $"WHERE d.ID = {depId}";
+
+                using (DataTable dt = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
                 {
-                    sectionName = dt.Rows[0][0].ToString();
+                    sectionName = dt.Rows[0]["SECTION_NAME"].ToString();
                 }
 
                 rpt.SetParameterValue("Section", sectionName);
@@ -376,7 +387,7 @@ namespace MHI_OJT2.Pages.Management
 
                 if (id != 0)
                 {
-                    formula += "AND {VIEW_PLAN_AND_COURSE.PLAN_SECTION_ID} = " + int.Parse(section.Value.ToString()) + "  ";
+                    formula += "AND {VIEW_PLAN_AND_COURSE.PLAN_DEPARTMENT_ID} = " + depId + "  ";
                 }
 
                 if (_roles == "clerk")

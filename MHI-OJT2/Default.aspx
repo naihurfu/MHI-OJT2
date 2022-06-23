@@ -345,6 +345,8 @@
                 dataType: "json",
                 success: function (results) {
                     var data = JSON.parse(results.d)
+
+                    console.log(results.d)
                     waitForApprovalTable = data
                     $('#card-wait-for-approval-count').remove()
                 },

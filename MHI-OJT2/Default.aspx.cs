@@ -368,18 +368,14 @@ namespace MHI_OJT2
 				string query = string.Empty;
 				SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
 
-				if (role == "admin")
-				{
-					query = "SELECT DEPARTMENT_NAME,COURSE_NAME,CREATED_NAME,START_DATE FROM COURSE WHERE YEAR(START_DATE) = YEAR(GETDATE()) AND [STATUS_CODE] > 2 AND [STATUS_CODE] <= 8";
-				}
-
+				query = "SELECT DEPARTMENT_NAME,COURSE_NAME,CREATED_NAME,START_DATE FROM COURSE WHERE [STATUS_CODE] > 2 AND [STATUS_CODE] <= 8 ";
 				if (role == "clerk")
 				{
-					query = "SELECT DEPARTMENT_NAME,COURSE_NAME,CREATED_NAME,START_DATE FROM COURSE WHERE CREATED_BY = @ID AND YEAR(START_DATE) = YEAR(GETDATE()) AND [STATUS_CODE] > 2 AND [STATUS_CODE] <= 8";
+					query += "AND CREATED_BY = @ID";
 				}
 				if (role == "user")
 				{
-					query = "SELECT DEPARTMENT_NAME ,COURSE_NAME ,CREATED_NAME ,START_DATE FROM COURSE_AND_EMPLOYEE WHERE PersonID = @ID AND YEAR(START_DATE) = YEAR(GETDATE()) AND [STATUS_CODE] > 2 AND [STATUS_CODE] <= 8";
+					query = "SELECT DEPARTMENT_NAME ,COURSE_NAME ,CREATED_NAME ,START_DATE FROM COURSE_AND_EMPLOYEE WHERE PersonID = @ID AND [STATUS_CODE] > 2 AND [STATUS_CODE] <= 8";
 				}
 
 				SqlCommand command = new SqlCommand(query, con);
