@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
@@ -151,59 +152,66 @@ namespace MHI_OJT2
 		{
 			if ( downloadReportId.Value.ToString() != "" || !string.IsNullOrEmpty(downloadReportId.Value.ToString()) )
             {
-				int courseId = int.Parse(downloadReportId.Value.ToString());
-				string exportName = "unname report";
+                try
+                {
+					int courseId = int.Parse(downloadReportId.Value.ToString());
+					string exportName = "unname report";
 
-				SqlParameterCollection param = new SqlCommand().Parameters;
-				param.AddWithValue("ID", SqlDbType.Int).Value = courseId;
-				DataTable dt = SQL.GetDataTableWithParams("SELECT COURSE_NAME,TIMES FROM COURSE WHERE COURSE_ID=@ID", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString, param);
+					SqlParameterCollection param = new SqlCommand().Parameters;
+					param.AddWithValue("ID", SqlDbType.Int).Value = courseId;
+					DataTable dt = SQL.GetDataTableWithParams("SELECT COURSE_NAME,TIMES FROM COURSE WHERE COURSE_ID=@ID", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString, param);
 
-				if (dt.Rows.Count > 0)
-				{
-					string courseName = dt.Rows[0]["COURSE_NAME"].ToString();
-					string times = dt.Rows[0]["TIMES"].ToString();
+					if (dt.Rows.Count > 0)
+					{
+						string courseName = dt.Rows[0]["COURSE_NAME"].ToString();
+						string times = dt.Rows[0]["TIMES"].ToString();
 
-					exportName = $"รายงานประเมินผล {courseName} ครั้งที่ {times}";
+						exportName = $"รายงานประเมินผล {courseName} ครั้งที่ {times}";
+					}
+
+					ReportDocument rpt = new ReportDocument();
+					ExportFormatType expType = ExportFormatType.PortableDocFormat;
+
+					rpt.Load(filename: Server.MapPath($"~/Reports/rpt_Manage_Course.rpt"));
+					rpt.RecordSelectionFormula = "{COURSE_AND_EMPLOYEE.COURSE_ID}=" + courseId;
+
+					// set parameters
+					rpt.SetParameterValue("PIC_PATH", Server.MapPath("~"));
+					rpt.SetParameterValue("IS_Signed", 0);
+
+					rpt.SetParameterValue("Commander", "");
+					rpt.SetParameterValue("Commander_position", "");
+					rpt.SetParameterValue("Commander_date", "");
+
+					rpt.SetParameterValue("Ass", "");
+					rpt.SetParameterValue("Ass_position", "");
+					rpt.SetParameterValue("ASS_Date", "");
+
+					rpt.SetParameterValue("Section_Manager", "");
+					rpt.SetParameterValue("Section_Manager_position", "");
+					rpt.SetParameterValue("Section_Manager_Date", "");
+
+					rpt.SetDatabaseLogon(SQL.user, SQL.pass);
+
+					// logging
+					try
+					{
+						ObjectLog obj = new ObjectLog();
+						obj.TITLE = exportName;
+						Log.Create("print", obj);
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine(ex.Message);
+					}
+
+					rpt.ExportToHttpResponse(expType, Response, true, exportName);
+					downloadReportId.Value = "0";
+				} catch (Exception ex)
+                {
+					//DownloadReportTrainingEvaluationOJT
+					ErrorHandleNotify.LineNotify(new FileInfo(this.Request.Url.LocalPath).Name.ToString(), "DownloadReportTrainingEvaluationOJT", ex.Message);
 				}
-
-				ReportDocument rpt = new ReportDocument();
-				ExportFormatType expType = ExportFormatType.PortableDocFormat;
-
-				rpt.Load(filename: Server.MapPath($"~/Reports/rpt_Manage_Course.rpt"));
-				rpt.RecordSelectionFormula = "{COURSE_AND_EMPLOYEE.COURSE_ID}=" + courseId;
-
-				// set parameters
-				rpt.SetParameterValue("PIC_PATH", Server.MapPath("~"));
-				rpt.SetParameterValue("IS_Signed", 0);
-
-				rpt.SetParameterValue("Commander", "");
-				rpt.SetParameterValue("Commander_position", "");
-				rpt.SetParameterValue("Commander_date", "");
-
-				rpt.SetParameterValue("Ass", "");
-				rpt.SetParameterValue("Ass_position", "");
-				rpt.SetParameterValue("ASS_Date", "");
-
-				rpt.SetParameterValue("Section_Manager", "");
-				rpt.SetParameterValue("Section_Manager_position", "");
-				rpt.SetParameterValue("Section_Manager_Date", "");
-
-				rpt.SetDatabaseLogon(SQL.user, SQL.pass);
-
-				// logging
-				try
-				{
-					ObjectLog obj = new ObjectLog();
-					obj.TITLE = exportName;
-					Log.Create("print", obj);
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine(ex.Message);
-				}
-
-				rpt.ExportToHttpResponse(expType, Response, true, exportName);
-				downloadReportId.Value = "0";
 			}
 			
 

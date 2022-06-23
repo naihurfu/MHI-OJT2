@@ -90,7 +90,7 @@
                 <div class="modal-body">
                     <div class="row section__container">
                         <div class="col-12">
-                            <label>ฝ่าย</label>
+                            <label>แผนก</label>
                              <select class="form-control selectpicker" id="section" runat="server" data-live-search="true">
                                 <option selected>-</option>
                              </select> 

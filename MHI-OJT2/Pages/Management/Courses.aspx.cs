@@ -523,7 +523,8 @@ namespace MHI_OJT2.Pages.Management
             {
 				Console.WriteLine(ex.Message);
 				Alert("error", "Error!", DATA.RemoveSpecialCharacters(ex.Message));
-            }
+				ErrorHandleNotify.LineNotify(new FileInfo(this.Request.Url.LocalPath).Name.ToString(), "ExportReportEvaluationOJT", ex.Message);
+			}
         }
 		protected void RepleaterItemCommand(object sender, RepeaterCommandEventArgs e)
 		{

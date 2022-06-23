@@ -107,7 +107,7 @@ namespace MHI_OJT2.Pages.Management
                 "FROM TRAINING_PLAN p " +
                 "JOIN DEPARTMENT d ON d.ID = p.DEPARTMENT_ID " +
                 $" WHERE p.CREATED_BY = {userId} " +
-                " ORDER BY PLAN_DATE DESC, CREATED_AT DESC ";
+                " ORDER BY CREATED_AT DESC ";
             } else
             {
                 query = "SELECT " +
@@ -115,7 +115,7 @@ namespace MHI_OJT2.Pages.Management
                 "d.DEPARTMENT_NAME " +
                 "FROM TRAINING_PLAN p " +
                 "JOIN DEPARTMENT d ON d.ID = p.DEPARTMENT_ID " +
-                "ORDER BY PLAN_DATE DESC, CREATED_AT DESC ";
+                "ORDER BY CREATED_AT DESC ";
             }
             RepeatTrainingPlanTable.DataSource = SQL.GetDataTable(query, mainDb);
             RepeatTrainingPlanTable.DataBind();
@@ -418,6 +418,11 @@ namespace MHI_OJT2.Pages.Management
             catch (Exception ex)
             {
                 Alert("error", "ผิดพลาด!", $"{ex.Message}");
+                if (ex.Message.ToString() != "ไม่พบข้อมูล")
+                {
+                    ErrorHandleNotify.LineNotify(new FileInfo(this.Request.Url.LocalPath).Name.ToString(), "btnExportReport_Click", ex.Message);
+                }
+                
             }
         }
     }

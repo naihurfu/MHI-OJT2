@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
@@ -32,7 +33,7 @@ namespace MHI_OJT2.Pages
         {
             if (role != "user")
             {
-                string query = "SELECT DISTINCT SECTION_NAME,SECTION_ID FROM COURSE_AND_EMPLOYEE ";
+                string query = "SELECT DISTINCT DEPARTMENT_ID,DEPARTMENT_NAME FROM COURSE_AND_EMPLOYEE ";
             
                 if (role == "clerk")
                 {
@@ -40,8 +41,8 @@ namespace MHI_OJT2.Pages
                 }
             
                 section.DataSource = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
-                section.DataTextField = "SECTION_NAME";
-                section.DataValueField = "SECTION_ID";
+                section.DataTextField = "DEPARTMENT_NAME";
+                section.DataValueField = "DEPARTMENT_ID";
                 section.DataBind();
                 section.Items.Insert(0, new ListItem("ทั้งหมด", "0"));
                 section.SelectedIndex = 0;
@@ -90,88 +91,94 @@ namespace MHI_OJT2.Pages
         }
         protected void ExportReportTrainingProfile(object sender, EventArgs e)
         {
-            ReportDocument rpt = new ReportDocument();
-            ExportFormatType expType = ExportFormatType.PortableDocFormat;
-            int id = int.Parse(Session["userId"].ToString());
-            string exportName = "TRAINING PROFILE REPORT";
-            string reportName = "~/Reports/Training_Profile_Clerk.rpt";
-
-            if (roles == "user")
+           try
             {
-                reportName = "~/Reports/Training_Profile_Emp.rpt";
-            }
+                ReportDocument rpt = new ReportDocument();
+                ExportFormatType expType = ExportFormatType.PortableDocFormat;
+                int id = int.Parse(Session["userId"].ToString());
+                string exportName = "TRAINING PROFILE REPORT";
+                string reportName = "~/Reports/Training_Profile_Clerk.rpt";
 
-            rpt.Load(Server.MapPath(reportName));
-
-            string[] sDate = startDate.Value.Split('/');
-            string[] eDate = endDate.Value.Split('/');
-            string formula = "{COURSE_AND_EMPLOYEE.START_DATE} >= Date (" + sDate[2] + ", " + sDate[1] + ", " + sDate[0] + ") " +
-                "AND {COURSE_AND_EMPLOYEE.START_DATE} <= Date (" + eDate[2] + ", " + eDate[1] + ", " + eDate[0] + ") ";
-
-            if (roles == "user")
-            {
-                formula += " AND " +
-                    "{COURSE_AND_EMPLOYEE.PersonID} = " + id + " ";
-            }
-
-            if (roles == "clerk")
-            {
-                formula += " AND " +
-                        "{COURSE_AND_EMPLOYEE.CREATED_ID} = " + id + " ";
-            }
-
-            if (roles == "clerk" || roles == "admin")
-            {
-                int _section = int.Parse(section.Value.ToString());
-                string _employeeStartId = employeeIdStart.Value;
-                string _employeeEndId = employeeIdEnd.Value;
-                int _course = int.Parse(course.Value.ToString());
-
-                // ระบุฝ่าย
-                if (_section != 0)
+                if (roles == "user")
                 {
-                    formula += " AND " +
-                        "{COURSE_AND_EMPLOYEE.SECTION_ID} = " + _section + " ";
-
+                    reportName = "~/Reports/Training_Profile_Emp.rpt";
                 }
 
-                // ระบุรหัสพนักงาน
-                if (_employeeStartId.Length > 0 && _employeeEndId.Length > 0)
-                {
-                    int minId = SelectPersonIDForReport(_employeeStartId);
-                    int maxId = SelectPersonIDForReport(_employeeEndId);
-                    formula += " AND " +
-                         "({COURSE_AND_EMPLOYEE.PersonID} >= " + minId + " " +
-                         " AND " +
-                         "{COURSE_AND_EMPLOYEE.PersonID} <= " + maxId + " )";
-                }
+                rpt.Load(Server.MapPath(reportName));
 
+                string[] sDate = startDate.Value.Split('/');
+                string[] eDate = endDate.Value.Split('/');
+                string formula = "{COURSE_AND_EMPLOYEE.START_DATE} >= Date (" + sDate[2] + ", " + sDate[1] + ", " + sDate[0] + ") " +
+                    "AND {COURSE_AND_EMPLOYEE.START_DATE} <= Date (" + eDate[2] + ", " + eDate[1] + ", " + eDate[0] + ") ";
 
-                // ระบุครอส
-                if (_course != 0)
+                if (roles == "user")
                 {
                     formula += " AND " +
-                         "{COURSE_AND_EMPLOYEE.COURSE_ID} = " + _course + " ";
+                        "{COURSE_AND_EMPLOYEE.PersonID} = " + id + " ";
                 }
-            }
 
-            rpt.RecordSelectionFormula = formula;
-            rpt.SetDatabaseLogon(SQL.user, SQL.pass);
+                if (roles == "clerk")
+                {
+                    formula += " AND " +
+                            "{COURSE_AND_EMPLOYEE.CREATED_ID} = " + id + " ";
+                }
 
-            // logging
-            try
+                if (roles == "clerk" || roles == "admin")
+                {
+                    int _section = int.Parse(section.Value.ToString());
+                    string _employeeStartId = employeeIdStart.Value;
+                    string _employeeEndId = employeeIdEnd.Value;
+                    int _course = int.Parse(course.Value.ToString());
+
+                    // ระบุฝ่าย
+                    if (_section != 0)
+                    {
+                        formula += " AND " +
+                            "{COURSE_AND_EMPLOYEE.DEPARTMENT_ID} = " + _section + " ";
+
+                    }
+
+                    // ระบุรหัสพนักงาน
+                    if (_employeeStartId.Length > 0 && _employeeEndId.Length > 0)
+                    {
+                        int minId = SelectPersonIDForReport(_employeeStartId);
+                        int maxId = SelectPersonIDForReport(_employeeEndId);
+                        formula += " AND " +
+                             "({COURSE_AND_EMPLOYEE.PersonID} >= " + minId + " " +
+                             " AND " +
+                             "{COURSE_AND_EMPLOYEE.PersonID} <= " + maxId + " )";
+                    }
+
+
+                    // ระบุครอส
+                    if (_course != 0)
+                    {
+                        formula += " AND " +
+                             "{COURSE_AND_EMPLOYEE.COURSE_ID} = " + _course + " ";
+                    }
+                }
+
+                rpt.RecordSelectionFormula = formula;
+                rpt.SetDatabaseLogon(SQL.user, SQL.pass);
+
+                // logging
+                try
+                {
+                    ObjectLog obj = new ObjectLog();
+                    obj.TITLE = exportName;
+                    obj.REMARK = $"ช่วงวันที่ {startDate.Value.ToString()} ถึง {endDate.Value.ToString()}";
+                    Log.Create("print", obj);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                rpt.ExportToHttpResponse(expType, Response, true, exportName);
+
+            } catch (Exception ex)
             {
-                ObjectLog obj = new ObjectLog();
-                obj.TITLE = exportName;
-                obj.REMARK = $"ช่วงวันที่ {startDate.Value.ToString()} ถึง {endDate.Value.ToString()}";
-                Log.Create("print", obj);
+                ErrorHandleNotify.LineNotify(new FileInfo(this.Request.Url.LocalPath).Name.ToString(), "ExportReportTrainingProfile", ex.Message);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            rpt.ExportToHttpResponse(expType, Response, true, exportName);
         }
         static int SelectPersonIDForReport(string PersonCode)
         {
