@@ -13,14 +13,14 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">ฝ่าย</h1>
+                    <h1 class="m-0">แผนก</h1>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-6">
                     <div class="float-sm-right">
                         <button type="button" class="btn btn-primary" onclick="handleShowModal('add', {})">
                             <i class="fa fa-plus-circle mr-2"></i>
-                            เพิ่มฝ่าย</button>
+                            เพิ่มแผนก</button>
                     </div>
                 </div>
                 <!-- /.col -->
@@ -40,7 +40,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">ลำดับ</th>
-                                    <th>ชื่อฝ่าย</th>
+                                    <th>ชื่อแผนก</th>
                                     <th class="text-center">สถานะ</th>
                                     <th class="text-center">แก้ไข/ลบ</th>
                                 </tr>
@@ -92,7 +92,7 @@
                 </div>
                 <div class="modal-body">
                      <div class="form-group">
-                        <label for='<%= sectionName.ClientID %>'>ชื่อฝ่าย</label>
+                        <label for='<%= sectionName.ClientID %>'>ชื่อแผนก</label>
                         <input type="text" class="form-control" id="sectionName" runat="server">
                       </div>
                     <div class="pt-2 check-container">

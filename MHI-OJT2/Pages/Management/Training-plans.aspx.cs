@@ -107,7 +107,7 @@ namespace MHI_OJT2.Pages.Management
                 "FROM TRAINING_PLAN p " +
                 "JOIN DEPARTMENT d ON d.ID = p.DEPARTMENT_ID " +
                 $" WHERE p.CREATED_BY = {userId} " +
-                " ORDER BY CREATED_AT DESC ";
+                " ORDER BY CREATED_AT ";
             } else
             {
                 query = "SELECT " +
@@ -115,7 +115,7 @@ namespace MHI_OJT2.Pages.Management
                 "d.DEPARTMENT_NAME " +
                 "FROM TRAINING_PLAN p " +
                 "JOIN DEPARTMENT d ON d.ID = p.DEPARTMENT_ID " +
-                "ORDER BY CREATED_AT DESC ";
+                "ORDER BY CREATED_AT ";
             }
             RepeatTrainingPlanTable.DataSource = SQL.GetDataTable(query, mainDb);
             RepeatTrainingPlanTable.DataBind();

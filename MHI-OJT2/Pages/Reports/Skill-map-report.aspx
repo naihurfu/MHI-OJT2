@@ -126,7 +126,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <label for='<%= section.ClientID %>'>เลือกฝ่าย</label>
+                        <label for='<%= section.ClientID %>'>เลือกแผนก</label>
                         <select class="form-control" id="section" runat="server">
                         </select>
                     </div>

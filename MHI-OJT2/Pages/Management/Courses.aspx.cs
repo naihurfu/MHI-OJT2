@@ -91,7 +91,7 @@ namespace MHI_OJT2.Pages.Management
 				query += "WHERE CREATED_BY = " + int.Parse(Session["userId"].ToString());
             }
 
-			query += " ORDER BY COURSE_ID DESC;";
+			query += " ORDER BY COURSE_ID ;";
 			RepeatCourseTable.DataSource = SQL.GetDataTable(query, mainDb);
 			RepeatCourseTable.DataBind();
 		}

@@ -39,7 +39,7 @@
                                 <tr>
                                     <th class="text-center">ลำดับ</th>
                                     <th>ชื่อแผน</th>
-                                    <th>แผนก</th>
+                                    <th>หน่วยงาน</th>
                                     <th>วันที่</th>
                                     <th class="text-center">แก้ไข/ลบ</th>
                                 </tr>
@@ -99,7 +99,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>แผนก</label>
+                        <label>หน่วยงาน</label>
                         <select class="form-control" id="department" runat="server">
                         </select>
                     </div>
@@ -176,7 +176,7 @@
                 <div class="modal-body">
                     <div class="row section__container">
                         <div class="col-12">
-                            <label>แผนก</label>
+                            <label>หน่วยงาน</label>
                              <select class="form-control selectpicker" id="section" runat="server" data-live-search="true">
                                 <option selected>-</option>
                              </select> 

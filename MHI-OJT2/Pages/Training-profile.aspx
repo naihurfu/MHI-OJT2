@@ -42,7 +42,7 @@
                                 <th>รหัสพนักงาน</th>
                                 <th>ชื่อผู้เข้าอบรม</th>
                                 <%} %>
-                                <th class="text-center">แผนก</th>
+                                <th class="text-center">หน่วยงาน</th>
                                 <th class="text-center">คะแนน</th>
                                 <th class="text-center">วันที่อบรม</th>
                             </tr>
@@ -90,7 +90,7 @@
                 <div class="modal-body">
                     <div class="row section__container">
                         <div class="col-12">
-                            <label>แผนก</label>
+                            <label>หน่วยงาน</label>
                              <select class="form-control selectpicker" id="section" runat="server" data-live-search="true">
                                 <option selected>-</option>
                              </select> 

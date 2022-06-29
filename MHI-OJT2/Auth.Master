@@ -253,7 +253,7 @@
                                         <a href="~/Pages/Master/Section.aspx" runat="server" class="nav-link">
                                             <i class="nav-icon fas fa-list-alt"></i>
                                             <p>
-                                                ฝ่าย
+                                                แผนก
                                             </p>
                                         </a>
                                     </li>
@@ -261,7 +261,7 @@
                                         <a href="~/Pages/Master/Department.aspx" runat="server" class="nav-link">
                                             <i class="nav-icon fas fa-list-ul"></i>
                                             <p>
-                                                แผนก
+                                                หน่วยงาน
                                             </p>
                                         </a>
                                     </li>

@@ -61,7 +61,7 @@
                                 <th class="text-center">ลำดับ</th>
                                 <th class="text-center">แก้ไข</th>
                                 <th>รายละเอียด</th>
-                                <th>แผนก</th>
+                                <th>หน่วยงาน</th>
                                 <th>ชื่อหลักสูตร</th>
                                 <th>ผู้จัดทำ</th>
                                 <th class="text-center">วันที่เริ่มอบรม</th>
@@ -218,7 +218,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label><span class="text-danger">*</span> แผนก</label>
+                        <label><span class="text-danger">*</span> หน่วยงาน</label>
                         <select class="form-control" id="department" runat="server">
                             <option selected>-</option>
                         </select>
