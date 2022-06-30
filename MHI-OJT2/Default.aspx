@@ -185,7 +185,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">ลำดับ</th>
-                                    <th class="text-center">แผนก</th>
+                                    <th class="text-center">หน่วยงาน</th>
                                     <th>ชื่อหลักสูตร</th>
                                     <th class="text-center">ผู้จัดทำ</th>
                                     <th class="text-center">วันที่เริ่มอบรม</th>
