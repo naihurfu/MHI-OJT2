@@ -380,13 +380,13 @@
                         var request = $.ajax({
                             type: "POST",
                              url: "<%= ajax %>" + "/Pages/Reports/Skill-map-report.aspx/GetDepartmentName",
-                            data: `{ 'courseName': '${keyNames[i]}' }`,
+                            data: `{ 'courseName': '${String(keyNames[i])}' }`,
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             async: false,
                             success: (results) => {
-                                let department = results.d
-                                tableHeader += `<td class="${department}" style="text-align: center;">
+                                let department = String(results.d)
+                                tableHeader += `<td class="${department.replace(/[^a-zA-Z ]/g, "").replace(/ +/g, "")}" style="text-align: center;">
                                                     <b>${department}</b>
                                                 </td>`
                                 departmentGroup.push(department)
@@ -605,8 +605,9 @@
                             importCSS: true,
                             importStyle: true
                         });
-                        $('#card-print').hide()
 
+                        $('#card-print').hide()
+                        console.log('printed')
                     })
                 }
             });

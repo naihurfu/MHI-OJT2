@@ -36,7 +36,8 @@ namespace MHI_OJT2.Pages.Master
 			string query = "SELECT loc.*" +
 				",CONCAT(usr.INITIAL_NAME,usr.FIRST_NAME, ' ',usr.LAST_NAME) CREATED_NAME  " +
 				"FROM [LOCATION] loc " +
-				"JOIN SYSTEM_USERS usr ON usr.ID=loc.CREATED_BY";
+				"JOIN SYSTEM_USERS usr ON usr.ID=loc.CREATED_BY " +
+				"ORDER BY loc.ID";
 			RepeatTable.DataSource = SQL.GetDataTable(query, MainDB);
             RepeatTable.DataBind();
         }

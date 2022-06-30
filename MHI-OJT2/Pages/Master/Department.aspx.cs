@@ -36,10 +36,12 @@ namespace MHI_OJT2.Pages.Master
             string MainDB = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
             string query = "SELECT dep.* " +
                 ",sec.SECTION_NAME " +
+				",sec.ID SECTION_ID " +
                 ",CONCAT(usr.INITIAL_NAME,usr.FIRST_NAME, ' ',usr.LAST_NAME) CREATED_NAME " +
                 "FROM DEPARTMENT dep " +
                 "JOIN SECTION sec ON sec.ID=dep.SECTION_ID " +
-                "JOIN SYSTEM_USERS usr ON usr.ID=dep.CREATED_BY";
+                "JOIN SYSTEM_USERS usr ON usr.ID=dep.CREATED_BY " +
+				"ORDER BY dep.ID";
             RepeatDepartmentTable.DataSource = SQL.GetDataTable(query, MainDB);
             RepeatDepartmentTable.DataBind();
 

@@ -70,10 +70,10 @@
                                         </td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group" aria-label="Basic example">
-                                                <button type="button" class="btn btn-sm btn-warning" onclick="handleShowModal('edit', { ID:<%# Eval("ID") %>, DEPARTMENT_NAME: '<%# Eval("DEPARTMENT_NAME") %>', SECTION_NAME: '<%# Eval("SECTION_NAME") %>', IS_ACTIVE: <%# (Boolean)Eval("IS_ACTIVE") == true ? 1 : 0 %>, CREATED_NAME: '<%# Eval("CREATED_NAME") %>'  })">
+                                                <button type="button" class="btn btn-sm btn-warning" onclick="handleShowModal('edit', { ID:<%# Eval("ID") %>, DEPARTMENT_NAME: '<%# Eval("DEPARTMENT_NAME") %>', SECTION_ID: <%# Eval("SECTION_ID") %>, SECTION_NAME: '<%# Eval("SECTION_NAME") %>', IS_ACTIVE: <%# (Boolean)Eval("IS_ACTIVE") == true ? 1 : 0 %>, CREATED_NAME: '<%# Eval("CREATED_NAME") %>'  })">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-sm btn-danger" onclick="handleShowModal('delete', { ID:<%# Eval("ID") %>, DEPARTMENT_NAME: '<%# Eval("DEPARTMENT_NAME") %>', SECTION_NAME: '<%# Eval("SECTION_NAME") %>', IS_ACTIVE: <%# (Boolean)Eval("IS_ACTIVE") == true ? 1 : 0 %>, CREATED_NAME: '<%# Eval("CREATED_NAME") %>'  })">
+                                                <button type="button" class="btn btn-sm btn-danger" onclick="handleShowModal('delete', { ID:<%# Eval("ID") %>, DEPARTMENT_NAME: '<%# Eval("DEPARTMENT_NAME") %>', SECTION_ID: <%# Eval("SECTION_ID") %>, SECTION_NAME: '<%# Eval("SECTION_NAME") %>', IS_ACTIVE: <%# (Boolean)Eval("IS_ACTIVE") == true ? 1 : 0 %>, CREATED_NAME: '<%# Eval("CREATED_NAME") %>'  })">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>
@@ -208,6 +208,8 @@
             }
         }
         function setDefaultValue() {
+            departmentName.prop('disabled', false)
+            sectionName.prop('disabled', false)
             btnAdd.hide()
             btnEdit.hide()
             btnDelete.hide()

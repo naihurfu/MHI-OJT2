@@ -36,7 +36,8 @@ namespace MHI_OJT2.Pages.Master
 			string query = "SELECT sec.*" +
 				",CONCAT(usr.INITIAL_NAME,usr.FIRST_NAME, ' ',usr.LAST_NAME) CREATED_NAME " +
 				"FROM [SECTION] sec " +
-				"JOIN SYSTEM_USERS usr ON usr.ID = sec.CREATED_BY";
+				"JOIN SYSTEM_USERS usr ON usr.ID = sec.CREATED_BY " +
+				"ORDER BY sec.ID";
             RepeatTable.DataSource = SQL.GetDataTable(query, MainDB);
             RepeatTable.DataBind();
         }

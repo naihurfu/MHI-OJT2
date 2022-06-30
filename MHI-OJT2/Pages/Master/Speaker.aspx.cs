@@ -36,7 +36,8 @@ namespace MHI_OJT2.Pages.Master
             string query = "SELECT teac.*" +
                 ",CONCAT(usr.INITIAL_NAME,usr.FIRST_NAME, ' ',usr.LAST_NAME) CREATED_NAME " +
                 "FROM TEACHER teac " +
-                "JOIN SYSTEM_USERS usr ON usr.ID = teac.CREATED_BY";
+                "JOIN SYSTEM_USERS usr ON usr.ID = teac.CREATED_BY " +
+				"ORDER BY teac.ID";
             RepeatTable.DataSource = SQL.GetDataTable(query, MainDB);
             RepeatTable.DataBind();
         }
