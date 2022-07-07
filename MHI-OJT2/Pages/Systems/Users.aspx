@@ -171,16 +171,23 @@
                     </div>
                     <div id="change-password-container">
                         <div class="form-group">
-                            <label>รหัสผ่านเก่า</label>
-                            <input type="password" class="form-control" id="oldPassword" runat="server" autocomplete="off">
-                        </div>
-                        <div class="form-group">
                             <label>รหัสผ่านใหม่</label>
-                            <input type="password" class="form-control" id="password" runat="server" autocomplete="off">
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" runat="server" autocomplete="off">
+                                <div class="input-group-append">
+                                    <i class="input-group-text far fa-eye" id="togglePassword" style="cursor: pointer"></i>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="form-group">
                             <label>ยืนยันรหัสผ่าน</label>
-                            <input type="password" class="form-control" id="confirmPassword" runat="server" autocomplete="off">
+                             <div class="input-group">
+                                <input type="password" class="form-control" id="confirmPassword" runat="server" autocomplete="off">
+                                <div class="input-group-append">
+                                    <i class="input-group-text far fa-eye" id="toggleConfirmPassword" style="cursor: pointer"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -226,6 +233,36 @@
             }, 2000)
         })();
 
+        $("#togglePassword").click(function (e) {
+            var icon = $("#togglePassword")
+            var password = $('#<%= password.ClientID %>')
+            const type = password.attr("type")
+            if (type === "password") {
+                password.attr("type", "text")
+                icon.removeClass("fa-eye")
+                icon.addClass("fa-eye-slash")
+            } else {
+                password.attr("type", "password")
+                icon.removeClass("fa-eye-slash")
+                icon.addClass("fa-eye")
+            }
+        })
+
+        $("#toggleConfirmPassword").click(function (e) {
+            var icon = $("#toggleConfirmPassword")
+            var confirmPassword = $('#<%= confirmPassword.ClientID %>')
+            const type = confirmPassword.attr("type")
+            if (type === "password") {
+                confirmPassword.attr("type", "text")
+                icon.removeClass("fa-eye")
+                icon.addClass("fa-eye-slash")
+            } else {
+                confirmPassword.attr("type", "password")
+                icon.removeClass("fa-eye-slash")
+                icon.addClass("fa-eye")
+            }
+        })
+
 
 
         // modal title
@@ -246,7 +283,6 @@
 
         var oldUsername = $('#<%= oldUsername.ClientID %>')
         var hiddenId = $('#<%= hiddenId.ClientID %>')
-        var oldPassword = $('#<%= oldPassword.ClientID %>')
 
         // control button 
         var btnAdd = $('#<%= btnAdd.ClientID %>')
@@ -349,7 +385,6 @@
             positionName.val("")
             roleName.val("CLERK")
             editMaster.val(1)
-            oldPassword.val("")
             password.val("")
             confirmPassword.val("")
             oldUsername.val("")

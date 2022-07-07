@@ -441,7 +441,7 @@
                         </div>
                         <div class="mt-2 form-group text-left">
                             <label>หมายเหตุ</label>
-                            <textarea type="text" id="approval-remark" class="form-control text-light" rows="3"></textarea>
+                            <textarea type="text" id="approval-remark" class="form-control" rows="3"></textarea>
                         </div>`
                 Swal.fire({
                     title: 'คุณต้องการอนุมัติหลักสูตรนี้หรือไม่?',

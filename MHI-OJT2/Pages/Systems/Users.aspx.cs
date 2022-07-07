@@ -249,13 +249,6 @@ namespace MHI_OJT2.Pages.Systems
 				if (password.Value != confirmPassword.Value) throw new Exception("Password is not match, Please try again.");
 
 				string MainDB = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
-				using (DataTable dt = SQL.GetDataTable("SELECT PASSWORD FROM SYSTEM_USERS WHERE ID=" + hiddenId.Value, MainDB))
-                {
-					if( dt.Rows.Count > 0)
-                    {
-						if (DATA.Encrypt(oldPassword.Value) != dt.Rows[0]["PASSWORD"].ToString()) throw new Exception("Password is valid, Please try again.");
-					}
-				}
 
 				// create where parameters
 				SqlParameterCollection param = new SqlCommand().Parameters;

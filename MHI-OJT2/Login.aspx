@@ -59,6 +59,9 @@
                                             </span>
                                         </div>
                                         <input runat="server" id="password" placeholder="Password" type="password" class="form-control font-kanit" />
+                                        <div class="input-group-append">
+                                            <i class="input-group-text far fa-eye" id="togglePassword" style="cursor: pointer"></i>
+                                        </div>
                                     </div>
                                     <br />
 
@@ -67,7 +70,7 @@
 
                                     <div class="footer">
                                         <div class="update-db-menu d-none">
-                                            <input type="password" id="upDbPassword" class="form-control-sm" placeholer="password" autocomplete="off"/>
+                                            <input type="password" id="upDbPassword" class="form-control-sm" placeholer="password" autocomplete="off" />
                                             <button type="button" class="btn btn-success btn-sm mb-2" onclick="UpdateDb()">Submit</button>
                                         </div>
                                         <div class="col font-kanit" style="text-align: center; font-size: 10px; letter-spacing: 1px; opacity: 0.7; color: black;">
@@ -97,14 +100,30 @@
                         $(".update-db-menu").removeClass("d-none")
                         $(".update-db-menu").addClass("d-inline")
                     }
-                    
+
                 })
             })
-            
+
+
+            $("#togglePassword").click(function (e) {
+                var icon = $("#togglePassword")
+                var password = $('#<%= password.ClientID %>')
+                const type = password.attr("type")
+                if (type === "password") {
+                    password.attr("type", "text")
+                    icon.removeClass("fa-eye")
+                    icon.addClass("fa-eye-slash")
+                } else {
+                    password.attr("type", "password")
+                    icon.removeClass("fa-eye-slash")
+                    icon.addClass("fa-eye")
+                }
+            })
+
             function UpdateDb() {
                 const pwd = $("#upDbPassword").val()
                 $.ajax({
-                    type: "POST",
+                type: "POST",
                     url: "<%= ajax %>" + "/Login.aspx/UpdateDB",
                     data: "{'password': '" + pwd + "'}",
                     contentType: "application/json; charset=utf-8",
