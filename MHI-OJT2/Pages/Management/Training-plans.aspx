@@ -110,7 +110,7 @@
                         </div>
                         <div class="form-group col-2">
                             <label>จำนวนชั่วโมงรวม</label>
-                            <input runat="server" id="hours" class="form-control" />
+                            <input runat="server" id="hours" class="form-control" min="0" max="24" step="0.5" />
                         </div>
                     </div>
                     <div class="row justify-content-between mt-1" style="margin: auto 0;">

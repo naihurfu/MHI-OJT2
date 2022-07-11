@@ -190,7 +190,7 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label><span class="text-danger">*</span> รวมจำนวนชั่วโมง</label>
-                            <input type="number" class="form-control" id="totalHours" min="0" max="24" runat="server">
+                            <input type="number" class="form-control" id="totalHours" min="0" max="24" step="0.5" runat="server">
                         </div>
                     </div>
                     <div class="evaluate-type-container">
