@@ -120,7 +120,7 @@
                                             <tr>
                                                 <td><%# Eval("COURSE_NAME") %></td>
                                                 <td class="text-center"><%# Eval("TIMES") %></td>
-                                                <td class="text-center"><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd/MM/yyyy}", Eval("START_DATE")) %></td>
+                                                <td class="text-center"><%# String.Format(new System.Globalization.CultureInfo("en-US"), "{0:dd/MM/yyyy}", Eval("START_DATE")) %></td>
                                                 <td class="text-center">
                                                     <span class='badge badge-<%# (int)Eval("STATUS_CODE") == 1 ? "primary" : (int)Eval("STATUS_CODE") == 2 ? "warning" : (int)Eval("STATUS_CODE") == 9 ? "success" : (int)Eval("STATUS_CODE") == 10 ? "danger" : "secondary" %>'>
                                                         <%# Eval("STATUS_TEXT") %>
@@ -410,7 +410,7 @@
         function HandleDataShowInTable(items) {
             let table = $('#view-card-table tbody')
             items.forEach((item, index) => {
-                let startDate = new Date(item.START_DATE).toLocaleDateString("th-TH")
+                let startDate = new Date(item.START_DATE).toLocaleDateString("en-US")
                 var tableRow = `<tr>
                                             <td class="text-center">
                                                 ${index + 1}

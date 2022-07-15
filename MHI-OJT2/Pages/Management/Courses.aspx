@@ -90,8 +90,8 @@
                                         <td><%# Eval("DEPARTMENT_NAME") %></td>
                                         <td><%# Eval("COURSE_NAME") %></td>
                                         <td><%# Eval("CREATED_NAME") %></td>
-                                        <td class="text-center"><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd/MM/yyyy}", Eval("START_DATE")) %></td>
-                                        <td class="text-center"><%# Eval("PLAN_DATE").ToString() != "" ? String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd/MM/yyyy}", Eval("PLAN_DATE")) : "-"%></td>
+                                        <td class="text-center"><%# String.Format(new System.Globalization.CultureInfo("en-US"), "{0:dd/MM/yyyy}", Eval("START_DATE")) %></td>
+                                        <td class="text-center"><%# Eval("PLAN_DATE").ToString() != "" ? String.Format(new System.Globalization.CultureInfo("en-US"), "{0:dd/MM/yyyy}", Eval("PLAN_DATE")) : "-"%></td>
                                         <td class="text-center">
                                             <span class="badge badge-<%# int.Parse(Eval("PLANNED").ToString()) == 1 ? "warning" : "info" %>">
                                                 <%# int.Parse(Eval("PLANNED").ToString()) == 1 ? "ในแผน" : "นอกแผน" %>

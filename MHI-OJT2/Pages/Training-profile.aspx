@@ -64,7 +64,7 @@
                                         <td class="text-center"><%# Eval("DEPARTMENT_NAME") %></td>
                                         <td class="text-center"><%# Eval("TOTAL_SCORE") %></td>
 
-                                        <td class="text-center"><%# String.Format(new System.Globalization.CultureInfo("th-TH"), "{0:dd/MM/yyyy}", Eval("START_DATE")) %></td>
+                                        <td class="text-center"><%# String.Format(new System.Globalization.CultureInfo("en-US"), "{0:dd/MM/yyyy}", Eval("START_DATE")) %></td>
                                     </tr>
                                 </ItemTemplate>
                             </asp:Repeater>

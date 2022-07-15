@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Services;
@@ -32,7 +34,8 @@ namespace MHI_OJT2
 
 		protected void Page_Load(object sender, EventArgs e)
 			{
-				applicationPath = HttpContext.Current.Request.ApplicationPath == "/" ? "" : HttpContext.Current.Request.ApplicationPath;
+				Thread.CurrentThread.CurrentCulture = new CultureInfo( "en-US" );
+			applicationPath = HttpContext.Current.Request.ApplicationPath == "/" ? "" : HttpContext.Current.Request.ApplicationPath;
 				Dashboard = "~" + applicationPath + "/Default.aspx";
 				_403 = "~" + applicationPath + "/Pages/Error/403.aspx";
 
