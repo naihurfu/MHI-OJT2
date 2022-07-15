@@ -478,7 +478,7 @@ namespace MHI_OJT2.Pages.Management
 					string courseName = dt.Rows[0]["COURSE_NAME"].ToString();
 					string times = dt.Rows[0]["TIMES"].ToString();
 
-					exportName = $"รายงานประเมินผล {courseName} ครั้งที่ {times}";
+					exportName = $"รายงานประเมินผล {DATA.MakeValidFileName(courseName)} ครั้งที่ {times}";
 				}
 
 				ReportDocument rpt = new ReportDocument();
@@ -544,7 +544,7 @@ namespace MHI_OJT2.Pages.Management
 						string courseName = dt.Rows[0]["COURSE_NAME"].ToString();
 						string times = dt.Rows[0]["TIMES"].ToString();
 
-						exportName = $"รายงานประเมินผล {courseName} ครั้งที่ {times}";
+						exportName = $"รายงานประเมินผล {DATA.MakeValidFileName(courseName)} ครั้งที่ {times}";
 					}
 
 					ReportDocument rpt = new ReportDocument();

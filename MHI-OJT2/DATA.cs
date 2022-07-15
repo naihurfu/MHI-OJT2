@@ -117,5 +117,13 @@ namespace MHI_OJT2
 		{
 			return Regex.Replace(str, @"[^0-9a-zA-Z]+", " ");
 		}
+
+		public static string MakeValidFileName( string name )
+		{
+			string invalidChars = Regex.Escape(new string(System.IO.Path.GetInvalidFileNameChars()));
+			string invalidReStr = string.Format(@"[{0}]+", invalidChars);
+			string replace = Regex.Replace(name, invalidReStr, "_").Replace(";", "").Replace(",", "");
+			return replace;
+		}
 	}
 }
