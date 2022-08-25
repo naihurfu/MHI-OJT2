@@ -195,7 +195,6 @@
                 </div> 
                 <div class="modal-footer">
                     <asp:Button ID="btnExportReport" Text="พิมพ์รายงาน" runat="server" CssClass="btn btn-block btn-success" OnClick="btnExportReport_Click" OnClientClick="return validationFilters()" />
-                </div>
             </div>
         </div>
     </div>
@@ -245,7 +244,8 @@
             if (startDate !== 10 && endDate !== 10) {
                 toasts(title, "กรุณาระบุข้อมูลให้ถูกต้อง")
                 return false
-            }
+            } 
+
 
             return true
         }
