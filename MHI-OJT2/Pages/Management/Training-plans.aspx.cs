@@ -169,7 +169,7 @@ namespace MHI_OJT2.Pages.Management
                 // new parameter collection
                 SqlParameterCollection param = new SqlCommand().Parameters;
                 param.AddWithValue("DEPARTMENT_ID", SqlDbType.Int).Value = department.Value;
-                param.AddWithValue("PLAN_NAME", SqlDbType.VarChar).Value = planName.Value;
+                param.AddWithValue("PLAN_NAME", SqlDbType.VarChar).Value = planName.Value.ToString().Replace("'", "");
                 param.AddWithValue("REF_DOCUMENT", SqlDbType.VarChar).Value = refDocument.Value;
                 param.AddWithValue("HOURS", SqlDbType.Int).Value = hours.Value;
                 param.AddWithValue("FREQUENCY", SqlDbType.VarChar).Value = frequency.Value;
@@ -181,7 +181,7 @@ namespace MHI_OJT2.Pages.Management
                 param.AddWithValue("LD_SEP_EP", SqlDbType.Bit).Value = LD_SEP_EP.Checked;
                 param.AddWithValue("OP", SqlDbType.Bit).Value = OP.Checked;
                 param.AddWithValue("PLAN_DATE", SqlDbType.Date).Value = DATA.DateTimeToSQL(date.Value);
-                param.AddWithValue("TRAINER", SqlDbType.VarChar).Value = trainer.Value;
+                param.AddWithValue("TRAINER", SqlDbType.VarChar).Value = trainer.Value.ToString().Replace("'", "");
                 param.AddWithValue("CREATED_BY", SqlDbType.Int).Value = Session["userId"];
 
                 // execute query

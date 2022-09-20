@@ -280,7 +280,7 @@ namespace MHI_OJT2.Pages.Management
 
 				param.AddWithValue("COURSE_NUMBER", SqlDbType.VarChar).Value = courseNumber.Value;
 				param.AddWithValue("TIMES", SqlDbType.Int).Value = times.Value;
-				param.AddWithValue("COURSE_NAME", SqlDbType.VarChar).Value = courseName.Value;
+				param.AddWithValue("COURSE_NAME", SqlDbType.VarChar).Value = courseName.Value.ToString().Replace("'", "");
 				param.AddWithValue("START_DATE", SqlDbType.Date).Value = DATA.DateTimeToSQL(startDate.Value);
 				param.AddWithValue("END_DATE", SqlDbType.Date).Value = DATA.DateTimeToSQL(endDate.Value);
 				param.AddWithValue("START_TIME", SqlDbType.VarChar).Value = startTime.Value;
@@ -289,8 +289,8 @@ namespace MHI_OJT2.Pages.Management
 				param.AddWithValue("DEPARTMENT_ID", SqlDbType.Int).Value = department.Value;
 				param.AddWithValue("LOCATION_ID", SqlDbType.Int).Value = location.Value;
 				param.AddWithValue("TEACHER_ID", SqlDbType.Int).Value = teacher.Value;
-				param.AddWithValue("DETAIL", SqlDbType.VarChar).Value = detail.Value;
-				param.AddWithValue("OBJECTIVE", SqlDbType.VarChar).Value = objective.Value;
+				param.AddWithValue("DETAIL", SqlDbType.VarChar).Value = detail.Value.ToString().Replace("'", "");
+				param.AddWithValue("OBJECTIVE", SqlDbType.VarChar).Value = objective.Value.ToString().Replace("'", "");
 				param.AddWithValue("ASSESSOR1_ID", SqlDbType.Int).Value = Assessor1.Value;
 				param.AddWithValue("ASSESSOR2_ID", SqlDbType.Int).Value = Assessor2.Value;
 				param.AddWithValue("ASSESSOR3_ID", SqlDbType.Int).Value = Assessor3.Value;
