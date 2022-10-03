@@ -186,33 +186,31 @@ namespace MHI_OJT2
 				
 				if (Roles == "admin")
                 {
-					query = "SELECT COURSE_NAME labels " +
-						",COUNT(*) datas " +
-						"FROM EVALUATE " +
-						"INNER JOIN ADJUST_COURSE ON ADJUST_COURSE.ID = EVALUATE.COURSE_ID " +
-						"WHERE YEAR(ADJUST_COURSE.START_DATE) = YEAR(GETDATE()) " +
-						"GROUP BY COURSE_NAME";
+					query = "SELECT (SELECT COUNT(*) FROM ADJUST_COURSE WHERE [STATUS] = 9 " +
+						$"AND YEAR(START_DATE) = {DateTime.Now.Year.ToString()}) COUNT_APPROVED ,(SELECT COUNT(*) FROM ADJUST_COURSE WHERE [STATUS] <> 9 " +
+						$"AND YEAR(START_DATE) = {DateTime.Now.Year.ToString()}) COUNT_PENDING";
 
 				}  else if (Roles == "clerk")
                 {
-					query = "SELECT COURSE_NAME labels " +
-						",COUNT(*) datas " +
-						"FROM EVALUATE " +
-						"INNER JOIN ADJUST_COURSE ON ADJUST_COURSE.ID = EVALUATE.COURSE_ID " +
-						"WHERE YEAR(ADJUST_COURSE.START_DATE) = YEAR(GETDATE()) " +
-						"AND CREATED_BY = @ID " +
-						"GROUP BY COURSE_NAME";
+					query = "SELECT (SELECT COUNT(*) FROM ADJUST_COURSE WHERE [STATUS] = 9 " +
+						$"AND YEAR(START_DATE) = {DateTime.Now.Year.ToString()} " +
+						$"AND CREATED_BY = @ID) COUNT_APPROVED " +
+						$",(SELECT COUNT(*) FROM ADJUST_COURSE WHERE [STATUS] <> 9 " +
+						$"AND YEAR(START_DATE) = {DateTime.Now.Year.ToString()} " +
+						$"AND CREATED_BY = @ID) COUNT_PENDING";
 
 				}
 				else
 				{
 					query = "SELECT " +
-					" TOTAL_SCORE datas " +
-					",COURSE_NAME labels " +
-					"FROM EVALUATE " +
-					"INNER JOIN ADJUST_COURSE ON ADJUST_COURSE.ID = EVALUATE.COURSE_ID " +
-					"WHERE YEAR(ADJUST_COURSE.START_DATE) = YEAR(GETDATE()) " +
-					"AND EVALUATE.PERSON_ID = @ID ";
+						"(SELECT COUNT(*) " +
+						"FROM COURSE_AND_EMPLOYEE " +
+						"WHERE [STATUS_CODE] = 9 " +
+						$"AND YEAR(START_DATE) = {DateTime.Now.Year.ToString()} AND PersonID = @ID) COUNT_APPROVED " +
+						",(SELECT COUNT(*) " +
+						"FROM COURSE_AND_EMPLOYEE " +
+						"WHERE [STATUS_CODE] <> 9 " +
+						$"AND YEAR(START_DATE) = {DateTime.Now.Year.ToString()} AND PersonID = @ID) COUNT_PENDING";
 				}
 
 				SqlCommand command = new SqlCommand(query, con);

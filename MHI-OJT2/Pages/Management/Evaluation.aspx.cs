@@ -131,7 +131,7 @@ namespace MHI_OJT2.Pages.Management
             Page.ClientScript.RegisterStartupScript(this.GetType(), "SweetAlert", $"sweetAlert('{type}','{title}','{message}')", true);
         }
         [WebMethod]
-        public static int SaveEvaluateResults(List<Evaluated> EvaluatedList,Boolean IsDraft)
+        public static int SaveEvaluateResults(List<Evaluated> EvaluatedList,Boolean IsDraft,string EvaluatedDate)
         {
             try
             {
@@ -168,10 +168,21 @@ namespace MHI_OJT2.Pages.Management
                 {
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
-                        string queryString = "UPDATE ADJUST_COURSE SET [STATUS]=3, EVALUATED_DATE=GETDATE()  WHERE ID=@COURSE_ID";
+                        string queryString = "UPDATE ADJUST_COURSE SET [STATUS]=3 ";
+                        bool hasEvaluatedDate = EvaluatedDate.Length > 0 && !string.IsNullOrWhiteSpace(EvaluatedDate);
+                        if (hasEvaluatedDate)
+                        {
+                            queryString += ",EVALUATED_DATE=@EVAL_DATE";
+                        }
+                        queryString += " WHERE ID=@COURSE_ID";
                         using (SqlCommand cmd = new SqlCommand(queryString, connection))
                         {
                             cmd.Parameters.AddWithValue("COURSE_ID", SqlDbType.Int).Value = _courseId;
+
+                            if (hasEvaluatedDate)
+                            {
+                                cmd.Parameters.AddWithValue("EVAL_DATE", SqlDbType.Date).Value = DATA.DateTimeToSQL(EvaluatedDate);
+                            }
 
                             connection.Open();
                             cmd.ExecuteNonQuery();

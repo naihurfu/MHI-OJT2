@@ -150,11 +150,11 @@
                     <div class="card">
                         <div class="card-header border-0">
                             <h3 class="card-title">
-                                <%= (string)Session["roles"] == "user" ? "คะแนนการอบรม (ปีปัจจุบัน)" : "จำนวนคนแต่ละหลักสูตร" %>
+                               จำนวนหลักสูตรแยกตามสถานะ
                             </h3>
                         </div>
                         <div class="card-body h-75">
-                            <canvas id="score-chart" style="display: block; min-height: 400px; height: 100%; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            <canvas id="score-chart" style="display: block; height:150px; width:150px; height: 100%; width: 100%;" class="chartjs-render-monitor"></canvas>
                         </div>
                     </div>
                 </div>
@@ -221,47 +221,34 @@
                 success: function (results) {
                     const data = JSON.parse(results.d)
 
-                    let labels = data.map((item) => item.labels);
-                    let datas = data.map((item) => item.datas);
+                    let labels = ["APPROVED", "PENDING"]
+                    let datas = [data[0].COUNT_APPROVED, data[0].COUNT_PENDING]
                     // create chart 
                     const ctx = document.getElementById('score-chart').getContext('2d');
                     let delayed;
                     new Chart(ctx, {
-                        type: 'bar',
+                        type: 'doughnut',
                         data: {
                             labels: labels,
                             datasets: [{
                                 data: datas,
-                                backgroundColor: Array.from({ length: datas.length }, (x, i) => {
-                                    return getColor()
-                                }),
+                                backgroundColor: [
+                                    'rgb(54, 162, 235)',
+                                    'rgb(255, 99, 132)'
+                                   
+                                ],
+                                offset: 5,
+                                hoverOffset: 8,
+
+                                //backgroundColor: Array.from({ length: datas.length }, (x, i) => {
+                                //    return getColor()
+                                //}),
                                 borderColor: [],
                                 borderWidth: 0,
-                                borderRadius: 15,
                             }]
                         },
                         options: {
-                            plugins: {
-                                legend: {
-                                    display: false
-                                }
-                            },
-                            responsive: true,
-                            scales: {
-                                xAxis: {
-                                    //ticks: {
-                                    //    color: 'rgba(255, 255, 255, 1)'
-                                    //},
-                                },
-                                yAxis: {
-                                    precision: 0,
-                                    min: 0,
-                                    max: parseInt(`${<%= (string)Session["roles"] == "user" ? "100" : "Math.max(...datas) + 5" %>}`),
-                                    //ticks: {
-                                    //    color: 'rgba(255, 255, 255, 1)'
-                                    //},
-                                }
-                            }
+                            responsive: false
                         }
                     });
                 },

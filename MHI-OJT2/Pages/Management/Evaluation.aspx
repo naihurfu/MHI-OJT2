@@ -135,12 +135,22 @@
                     </table>
                 </div>
                 <div class="card-footer">
-                    <div class="row justify-content-end">
-                        <input type="hidden" runat="server" id="hiddenCourseId" />
+                    <div class="row justify-content-between">
+                        <div class="w-25">
+                            <input type="hidden" runat="server" id="hiddenCourseId" />
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <label>วันที่ประเมินผล : &nbsp;</label>
+                                    <input type="tel" id="dpEvalDate" class="form-control form-control-sm text-center" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" style="width: 150px;" />
+                                </div>
+                            </div>
+                        </div>
                         <% if (_isEvaluation == 1)
                             { %>
-                        <button type="button" class="btn btn-warning" onclick="saved(true)" id="btnSaveDraft">บันทึก (ร่าง)</button>
-                        <button type="button" class="btn btn-success ml-2 w-25" onclick="saved(false)">บันทึก</button>
+                        <div class="w-75 text-right">
+                            <button type="button" class="btn btn-warning" onclick="saved(true)" id="btnSaveDraft">บันทึก (ร่าง)</button>
+                            <button type="button" class="btn btn-success ml-2 w-25" onclick="saved(false)">บันทึก</button>
+                        </div>
                         <% } %>
                     </div>
                 </div>
@@ -239,7 +249,7 @@
         var selectedArr = []
         $('.advise-check').on('change', function (e) {
             let checked = e.target.checked
-            let value = parseInt(e.currentTarget.value)
+            let value = Math.round(e.currentTarget.value)
 
             if (checked) {
                 selectedArr.push(value)    
@@ -288,12 +298,12 @@
             console.log('is_exam_evaluate : ', is_exam_evaluate)
             console.log('is_real_work_evaluate : ', is_real_work_evaluate)
 
-            let examScore = parseFloat($('.input__score__0__' + id).val());
+            let examScore = Math.round($('.input__score__0__' + id).val());
             let realWorkScore = 0;
             let evaluatedScore = 0;
             for (let i = 1; i <= 5; i++) {
                 let inputScore = $('.input__score__' + i + '__' + id).val()
-                evaluatedScore += parseFloat(inputScore)
+                evaluatedScore += Math.round(inputScore)
             }
 
             realWorkScore = (evaluatedScore * 100) / 25
@@ -337,6 +347,14 @@
 
         // hidden function if is evaluation !== 1
         function saved(isDraft) {
+            var _evalDate = $('#dpEvalDate').val()
+            if (!isDraft) {
+                if (_evalDate.length <= 0) {
+                    Swal.fire('Warning!', 'Please fill evaluate date.', 'error')
+                    return;
+                }
+            }
+
             var row = $('.row__data')
             var evaluatedList = []
 
@@ -346,13 +364,13 @@
                 let personId = row[i].dataset.personid
                 let td = row[i].children
 
-                let examScore = parseFloat(td[2].firstElementChild.value)
-                let score1 = parseFloat(td[3].firstElementChild.value)
-                let score2 = parseFloat(td[4].firstElementChild.value)
-                let score3 = parseFloat(td[5].firstElementChild.value)
-                let score4 = parseFloat(td[6].firstElementChild.value)
-                let score5 = parseFloat(td[7].firstElementChild.value)
-                let totalScore = parseFloat(td[8].firstElementChild.value)
+                let examScore = Math.round(td[2].firstElementChild.value)
+                let score1 = Math.round(td[3].firstElementChild.value)
+                let score2 = Math.round(td[4].firstElementChild.value)
+                let score3 = Math.round(td[5].firstElementChild.value)
+                let score4 = Math.round(td[6].firstElementChild.value)
+                let score5 = Math.round(td[7].firstElementChild.value)
+                let totalScore = Math.round(td[8].firstElementChild.value)
 
                 if (examScore < 0 || examScore > 100 || score1 > 5 || score1 < 0 || score2 > 5 || score2 < 0 || score3 > 5 || score3 < 0 || score4 > 5 || score4 < 0 || score5 > 5 || score5 < 0 || totalScore > 100 || totalScore < 0) {
                     sweetAlert("error", "ผิดพลาด!", "กรุณากรอกคะแนนให้ถูกต้อง")
@@ -374,13 +392,21 @@
             <% if (_isEvaluation == 1)
             { %>
             if (evaluatedList.length > 0) {
+                let EvaluatedDate = $('#dpEvalDate').val()
                 $.ajax({
                     type: "POST",
                     url: "<%= ajax %>" + "/Pages/Management/Evaluation.aspx/SaveEvaluateResults",
-                    data: "{ 'EvaluatedList': " + JSON.stringify(evaluatedList) + ", 'IsDraft': " + isDraft + " }",
+                    data: "{ 'EvaluatedList': " + JSON.stringify(evaluatedList) + ", 'IsDraft': " + isDraft + ", 'EvaluatedDate': '" + EvaluatedDate + "' }",
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     success: function (res) {
+                        var _r = res.d
+
+                        if (_r === 0) {
+                            Swal.fire('Warning!', 'Please recheck data', 'error')
+                            return;
+                        }
+
                         window.location.href = window.location.protocol + "//" + window.location.host + "/Pages/Management/Courses.aspx"
                     }
                 });

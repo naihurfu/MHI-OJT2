@@ -31,6 +31,15 @@
         <div class="container-fluid">
             <div class="card ">
                 <div class="card-body">
+                    <div class="form-inline">
+                        <div class="form-group mb-2 ml-4">
+                            <label for="<%= txtYearSearch.ClientID %>">ปี : &nbsp;</label>
+                            <input runat="server" id="txtYearSearch" class="form-control form-control-sm"/>
+                        </div>
+
+                        <asp:Button runat="server" ID="btnSearch" cssClass="btn btn-primary btn-sm mb-2 ml-2" OnClick="btnSearch_Click" Text="ค้นหา" />
+                    </div>
+                    <hr style="margin: 15px -8px; border: 0.3px solid silver !important;" />
                     <table class="hover nowrap" style="width: 100%;">
                         <thead>
                             <tr>
@@ -79,7 +88,7 @@
 </asp:Content>
 <asp:Content ID="ModalContent" ContentPlaceHolderID="modal" runat="server">
     <div class="modal fade" id="ExportReportModal" tabindex="-1" aria-labelledby="ExportReportModal" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="box-shadow: none !important;">
+        <div class="modal-dialog modal-dialog-xl modal-xl modal-dialog-scrollable modal-dialog-centered" style="box-shadow: none !important;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">เลือกเงื่อนไขเพื่อพิมพ์รายงาน</h5>

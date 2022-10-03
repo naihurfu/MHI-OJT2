@@ -21,6 +21,7 @@ namespace MHI_OJT2
             if (!IsPostBack)
             {
                 CheckSessionAndRedirect();
+
             }
         }
         void CheckSessionAndRedirect()

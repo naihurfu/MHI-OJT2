@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
@@ -17,7 +18,7 @@ namespace MHI_OJT2.Pages.Reports
         public static string role = "";
         protected void Page_Load(object sender, EventArgs e)
         {
-			ajax = HttpContext.Current.Request.ApplicationPath == "/" ? "" : HttpContext.Current.Request.ApplicationPath;
+            ajax = HttpContext.Current.Request.ApplicationPath == "/" ? "" : HttpContext.Current.Request.ApplicationPath;
             Auth.CheckLoggedIn();
             if(!IsPostBack)
             {
@@ -34,12 +35,12 @@ namespace MHI_OJT2.Pages.Reports
         protected void GetSectionName()
         {
             // for admin
-            string query = "SELECT SECTION_NAME FROM SECTION WHERE IS_ACTIVE = 1";
+            string query = "SELECT ID SECTION_ID, SECTION_NAME FROM SECTION WHERE IS_ACTIVE = 1";
             
             // for clerk
             if (role == "clerk")
             {
-                query = "SELECT DISTINCT SECTION_NAME FROM COURSE WHERE CREATED_BY = " + int.Parse(Session["userId"].ToString());
+                query = "SELECT DISTINCT SECTION_ID, SECTION_NAME FROM COURSE WHERE CREATED_BY = " + int.Parse(Session["userId"].ToString());
             }
             DataTable dt = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
 
@@ -50,8 +51,8 @@ namespace MHI_OJT2.Pages.Reports
             }
 
             section.DataSource = dt;
+            section.DataValueField = "SECTION_ID";
             section.DataTextField = "SECTION_NAME";
-            section.DataValueField = "SECTION_NAME";
             section.DataBind();
         }
 
@@ -71,17 +72,18 @@ namespace MHI_OJT2.Pages.Reports
         }
 
         [WebMethod]
-        public static string GetReportData(string sectionName, string startDate, string endDate)
+        public static string GetReportData(int sectionId, string startDate, string endDate, string courseList)
         {
-            string query = $"EXEC SP_SKILL_MAP '{sectionName}', '{DateToSQLDateString(startDate)}', '{DateToSQLDateString(endDate)}'";
+            string query = $"EXEC SP_SKILL_MAP {sectionId}, '{DateToSQLDateString(startDate)}', '{DateToSQLDateString(endDate)}', '{courseList}'";
             DataTable dt = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
 
+            Debug.WriteLine(query);
             // logging
             try
             {
                 ObjectLog obj = new ObjectLog();
                 obj.TITLE = "SKILL MAP";
-                obj.REMARK = $"ฝ่าย->{sectionName} // ช่วงวันที่ {startDate} ถึง {endDate}";
+                obj.REMARK = $"ฝ่าย->{sectionId} // ช่วงวันที่ {startDate} ถึง {endDate}";
                 Log.Create("print", obj);
             }
             catch (Exception ex)
@@ -91,21 +93,38 @@ namespace MHI_OJT2.Pages.Reports
 
             return DATA.DataTableToJSONWithJSONNet(dt);
         }
+
         [WebMethod]
-        public static string GetDepartmentName(string courseName)
+        public static string GetDepartmentName(string courseId)
         {
             string result = "NULL";
             string query = "SELECT " +
                 "DEP.DEPARTMENT_NAME " +
                 "FROM ADJUST_COURSE ADJ " +
                 "JOIN DEPARTMENT DEP ON DEP.ID = ADJ.DEPARTMENT_ID " +
-                $"WHERE COURSE_NAME = '{courseName}'";
+                $"WHERE ADJ.ID = '{courseId}'";
             DataTable dt = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
             if (dt.Rows.Count > 0)
             {
                 result = dt.Rows[0]["DEPARTMENT_NAME"].ToString().ToUpper();
             }
             return result;
+        }
+
+        [WebMethod]
+        public static string GetCourseList(int departmentId, string startDate, string endDate)
+        {
+            int userId = 0;
+            string roleName = HttpContext.Current.Session["roles"].ToString().ToLower();
+
+            if (roleName == "user")
+            {
+                userId = int.Parse(HttpContext.Current.Session["userId"].ToString());
+            }
+
+            DataTable dt = SQL.GetDataTable($"EXEC GET_COURSE_LIST {departmentId}, {userId}, '{DateToSQLDateString(startDate)}', '{DateToSQLDateString(endDate)}'", WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+            Debug.WriteLine(string.Format("COURSE LIST FOUND : {0}", dt.Rows.Count.ToString()));
+            return DATA.DataTableToJSONWithJSONNet(dt);
         }
     }
 }

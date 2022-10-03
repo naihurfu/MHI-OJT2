@@ -95,6 +95,28 @@
         #print_me * {
             font-family: 'AngsanaUPC' !important;
         }
+
+        input[type=checkbox], input[type=radio] {
+            width: 20px !important;
+            height: 20px !important;
+        }
+
+        label:not(.form-check-label):not(.custom-file-label) {
+            font-weight: 400 !important;
+        }
+
+        FIELDSET {
+            margin: 8px;
+            border: 1px solid silver;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        LEGEND {
+            width: auto !important;
+            padding: 2px;
+            font-size: 16px !important;
+        }
     </style>
     <style type="text/css" media="print">
         @page {
@@ -125,7 +147,7 @@
                     <h3 class="card-title">เลือกเงื่อนไขเพื่อออกรายงาน</h3>
                 </div>
                 <div class="card-body">
-                    <div class="form-group">
+                    <div class="form-group col">
                         <label for='<%= section.ClientID %>'>เลือกแผนก</label>
                         <select class="form-control" id="section" runat="server">
                         </select>
@@ -186,7 +208,7 @@
                 </div>
 
                 <div class="card-footer">
-                    <button type="button" id="btnDownloadReport" class="btn btn-success btn-block" onclick="GetReportData()">พิมพ์รายงาน</button>
+                    <button type="button" id="btnDownloadReport" class="btn btn-success btn-block" onclick="PrepareReport()">เลือกหลักสูตร</button>
                 </div>
             </div>
             <div class="card" id="card-print">
@@ -302,6 +324,27 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="chooseCourseModal" tabindex="-1" aria-labelledby="addModal" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl" style="box-shadow: none !important;">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title ">เลือกหลักสูตรที่ต้องการแสดงผลในรายงาน</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="height: 575px !important;">
+                    <div class="transfer"></div>
+                </div>
+                <div class="modal-footer" style="justify-content: end !important;">
+                    <div class="action-button-area">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="GetReportData()" style="width: 80px !important;">Print</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </asp:Content>
 <asp:Content ID="ModalContent" ContentPlaceHolderID="modal" runat="server">
 </asp:Content>
@@ -319,14 +362,89 @@
             $('#card-print').hide()
         })();
 
+        var dualBox; 
+
+        function PrepareReport() {
+            var depId = $('#<%= section.ClientID %>').val()
+
+            if (depId) {
+                iniTransferBox(depId)
+            } else {
+                Swal.fire("Somthing went wrong!", "", "error")
+                return false;
+            }
+        }
+
+        function iniTransferBox(departmentId) {
+                var sD = $('#<%= startDate.ClientID %>').val()
+                var eD = $('#<%= endDate.ClientID %>').val()
+
+                if (!moment(sD, "DD/MM/YYY", true).isValid() || !moment(eD, "DD/MM/YYYY", true).isValid()) {
+                    Swal.fire("ผิดพลาด", "รูปแบบวันที่ไม่ถูกต้อง", 'error')
+                    return;
+                }
+
+                if (moment(eD, "DD/MM/YYYY").diff(moment(sD, "DD/MM/YYYY")) < 0) {
+                    Swal.fire("ผิดพลาด", "วันที่เริ่มต้นมากกว่าวันที่สิ้นสุด", 'error')
+                    return;
+                }
+            
+
+                $('#chooseCourseModal').modal('show')
+                $(".transfer-double").remove()
+                var courseLists = []
+                var data = "{'departmentId': " + departmentId + ", 'startDate': '" + sD + "', 'endDate': '" + eD + "' }"
+                $.ajax({
+                    type: "POST",
+                    url: "<%= ajax %>" + "/Pages/Reports/Skill-map-report.aspx/GetCourseList",
+                    data: data,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (results) {
+                        courseLists = JSON.parse(results.d)
+                        var settings = {
+                            itemName: "courseName",
+                            valueName: "courseId",
+                            tabNameText: "เลือกหลักสูตร",
+                            rightTabNameText: "หลักสูตรที่เลือก",
+                            searchPlaceholderText: "ค้นหาหลักสูตร",
+                            dataArray: courseLists,
+                        };
+                        dualBox = $(".transfer").transfer(settings);
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                });
+        }
+
         function GetReportData() {
+            let selectedList = dualBox.getSelectedItems()
+            console.log(selectedList)
+            let strCourseLists = ''
+
+            for (i = 0; i < selectedList.length; i++) {
+                if (strCourseLists.length > 0) {
+                    strCourseLists += ',' + selectedList[i].courseId
+
+                } else {
+                    strCourseLists = selectedList[i].courseId
+                }
+            }
+
+            if (strCourseLists.length <= 0) {
+                Swal.fire("กรุณาเลือกหลักสูตรอย่างน้อย 1 หลักสูตร", "", "error")
+                return false
+            }
+            
+
             let startDate = $('#<%= startDate.ClientID %>').val()
             let endDate = $('#<%= endDate.ClientID %>').val()
             let section = $('#<%= section.ClientID %>').val()
-            let body = `{ 'sectionName': '${section}', 'startDate' : '${startDate}', 'endDate': '${endDate}'}`
+            let body = `{ 'sectionId': ${section}, 'startDate' : '${startDate}', 'endDate': '${endDate}', 'courseList': '${strCourseLists}'}`
 
 
-            $('#report_section').text(section)
+            $('#report_section').text($('#<%= section.ClientID %> option:selected').text())
 
             $('#report_evaluate_date').text($('#evaluate_date').val() === "" ? "  " : $('#evaluate_date').val())
 
@@ -353,8 +471,6 @@
                         return
                     }
 
-                    $('#card-print').show()
-
                     // clear old data
                     $('table thead tr').remove()
                     $('table tbody tr').remove()
@@ -365,6 +481,7 @@
                     let keyNames = Object.keys(data[0]);
                     let rowWithKey = []
                     let departmentGroup = []
+
 
                     let tableHeader = `<tr id="table-row-department" style="height: 70px !important; padding: 0; margin: 0;">
                                           <th class="text-center" rowspan="2" style="width: 10px;">No.</th>
@@ -380,12 +497,13 @@
                         var request = $.ajax({
                             type: "POST",
                              url: "<%= ajax %>" + "/Pages/Reports/Skill-map-report.aspx/GetDepartmentName",
-                            data: `{ 'courseName': '${String(keyNames[i])}' }`,
+                            data: `{ 'courseId': ${keyNames[i].split("|")[1]} }`,
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             async: false,
                             success: (results) => {
                                 let department = String(results.d)
+                                console.log("department : ", department)
                                 tableHeader += `<td class="${department.replace(/[^a-zA-Z ]/g, "").replace(/ +/g, "")}" style="text-align: center;">
                                                     <b>${department}</b>
                                                 </td>`
@@ -433,7 +551,7 @@
                                                     <span>
                                                 </th>`
                             } else if (i > keyNames.length - 5) {
-                                tableHeader += `<th class="text-center" style="width: 40px !important">
+                                tableHeader += `<th class="text-center" style="width: 40px !important;">
                                                     <span>
                                                      ${keyNames[i]}
                                                     <span>
@@ -443,7 +561,7 @@
                                 // course name
                                 tableHeader += `<th> 
                                                     <span>
-                                                        ${keyNames[i]}
+                                                        ${keyNames[i].split("|")[0]}
                                                     </span>
                                                 </th>`
                             } else if (i === 1) {
@@ -483,27 +601,36 @@
                                 let date = moment(row.key(2)).format("D/M/YY")
                                 if (j > 3 && j <= (keyNames.length - 5)) {
                                     let picName = ""
-                                    let score = row.key(j) ?? 0
-                                    if (score >= 20 && score <= 25) {
-                                        picName = "20_25"
 
-                                    } else if (score >= 26 && score <= 50) {
-                                        picName = "26_50"
+                                    if (row.key(j) !== null) {
+                                        let score = row.key(j) ?? 0
+                                        if (score >= 20 && score <= 25) {
+                                            picName = "20_25"
 
-                                    } else if (score >= 51 && score <= 75) {
-                                        picName = "51_75"
+                                        } else if (score >= 26 && score <= 50) {
+                                            picName = "26_50"
 
-                                    } else if (score >= 76 && score <= 100) {
-                                        picName = "76_100"
+                                        } else if (score >= 51 && score <= 75) {
+                                            picName = "51_75"
+
+                                        } else if (score >= 76 && score <= 100) {
+                                            picName = "76_100"
+
+                                        } else {
+                                            picName = "0_19"
+
+                                        }
+
+                                        tableRow += `<td style="padding: 0; margin: 0; text-align: center;">
+                                                        <img src="../../Reports/Pic/${picName}.png" width="50" height="47"/>
+                                                     </td>`
 
                                     } else {
-                                        picName = "0_19"
-
+                                        // score null or employee is not in course
+                                        tableRow += `<td style="padding: 0; margin: 0; text-align: center;">
+                                                            <span style="width:50px; height:47px;"></span>
+                                                     </td>`
                                     }
-
-                                    tableRow += `<td style="padding: 0; margin: 0; text-align: center;">
-                                                <img src="../../Reports/Pic/${picName}.png" width="50" height="47"/>
-                                             </td>`
 
                                 } else if (j === 1) {
                                     tableRow += `<td style="text-align: center; padding: 0 !important; vertical-align: middle; white-space: nowrap !important;">
@@ -519,12 +646,6 @@
                             }
                             tableRow += `</tr>`
                             tableBody.append(tableRow)
-
-                            var header_height = 0;
-                            $('.rotate-table-grid th span').each(function () {
-                                if ($(this).outerWidth() > header_height) header_height = $(this).outerWidth();
-                            });
-                            $('.rotate-table-grid th').height(header_height + 25);
 
                         }
 
@@ -586,6 +707,20 @@
                         rowFixValue += `</tr>`
                         tableBody.append(rowFixValue)
 
+
+                        var header_height = 450;
+                        $('.rotate-table-grid th span').each(function () {
+                            var strLen = $(this).text().trim().length
+                            var calHeight = strLen * 7.5
+
+                            console.log(strLen)
+                            console.log(calHeight)
+                            if (calHeight > header_height) {
+                                header_height = calHeight
+                            }
+                        });
+                        $('.rotate-table-grid th').height(header_height);
+
                         // auto merge department
                         $('#table-row-department td').each(function () {
                             $(this).each(function () {
@@ -607,7 +742,6 @@
                         });
 
                         $('#card-print').hide()
-                        console.log('printed')
                     })
                 }
             });

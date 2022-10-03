@@ -118,6 +118,16 @@ namespace MHI_OJT2
 			return Regex.Replace(str, @"[^0-9a-zA-Z]+", " ");
 		}
 
+		public static bool HasSpecialCharacters(string val)
+        {
+			var regexItem = new Regex("^[a-zA-Z0-9 ]*$");
+			if (regexItem.IsMatch(val)) {
+				return true;
+			}
+
+			return false;
+		}
+
 		public static string MakeValidFileName( string name )
 		{
 			string invalidChars = Regex.Escape(new string(System.IO.Path.GetInvalidFileNameChars()));

@@ -34,11 +34,30 @@ namespace MHI_OJT2.Pages.Management
 					Response.Redirect(Auth._403);
 				}
 
+				ddStatus.SelectedIndex = 1;
+
 				CheckAlertSession();
-				GetGridViewData();
 				GetMasterOfCourse(role);
 				GetAssessor();
+				GetDepartment();
+				GetGridViewData();
 			}
+		}
+		void GetDepartment()
+        {
+			string query = "SELECT DISTINCT DEPARTMENT_ID, DEPARTMENT_NAME FROM VIEW_ADJUST_COURSE WHERE 1=1 ";
+			string where = "";
+
+			if (Session["roles"].ToString().ToUpper() != "ADMIN")
+			{
+				where += " AND CREATED_BY = " + int.Parse(Session["userId"].ToString());
+			}
+
+			ddDepartment.DataSource = SQL.GetDataTable(query + where,
+                                              WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+			ddDepartment.DataTextField = "DEPARTMENT_NAME";
+			ddDepartment.DataValueField = "DEPARTMENT_ID";
+			ddDepartment.DataBind();
 		}
 		void CheckAlertSession()
 		{
@@ -85,15 +104,40 @@ namespace MHI_OJT2.Pages.Management
 		void GetGridViewData()
 		{
 			string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
-			string query = "SELECT * FROM VIEW_ADJUST_COURSE ";
+			string where = "";
+
+			string query = "SELECT * FROM VIEW_ADJUST_COURSE WHERE 1=1 ";
+
 			if (Session["roles"].ToString().ToUpper() != "ADMIN")
             {
-				query += "WHERE CREATED_BY = " + int.Parse(Session["userId"].ToString());
+				where += " AND CREATED_BY = " + int.Parse(Session["userId"].ToString());
             }
 
-			query += " ORDER BY COURSE_ID ;";
-			RepeatCourseTable.DataSource = SQL.GetDataTable(query, mainDb);
+			int ddStatusValue = int.Parse(ddStatus.SelectedValue.ToString());
+
+			if (ddStatusValue == 0 || ddStatusValue == 3)
+            {
+				where += "";
+
+            } else if (ddStatusValue == 1)
+            {
+				where += " AND [STATUS_CODE] < 9 ";
+
+			} else if (ddStatusValue == 2)
+            {
+				where += " AND [STATUS_CODE] = 9 ";
+			}
+
+			where += " AND DEPARTMENT_ID = " + ddDepartment.SelectedValue.ToString() + " ";
+
+			RepeatCourseTable.DataSource = SQL.GetDataTable(query + where + " ORDER BY COURSE_ID DESC;", mainDb);
 			RepeatCourseTable.DataBind();
+		}
+
+
+		protected void ddStatus_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			GetGridViewData();
 		}
 		void GetAssessor()					   
 		{
@@ -946,6 +990,11 @@ namespace MHI_OJT2.Pages.Management
             }
 
 		}
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+			GetGridViewData();
+        }
     }
     public class EmployeeIntoCourse
     {

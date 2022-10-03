@@ -55,6 +55,28 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
+                    <div class="form-inline">
+                        <div class="form-group mb-2">
+                            <label for="<%= ddStatus.ClientID %>">สถานะ : &nbsp;</label>
+                            <asp:DropDownList runat="server" ID="ddStatus" CssClass="form-control form-control-sm" AutoPostBack="false" OnSelectedIndexChanged="ddStatus_SelectedIndexChanged">
+                                <asp:ListItem Enabled="false" Text="เลือกสถานะ" Value="0" Selected="True"></asp:ListItem>
+                                <asp:ListItem Enabled="true" Text="ยังไม่อนุมัติ" Value="1"></asp:ListItem>
+                                <asp:ListItem Enabled="true" Text="อนุมัติแล้ว" Value="2"></asp:ListItem>
+                                <asp:ListItem Enabled="true" Text="ทั้งหมด" Value="3"></asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+
+                        <div class="form-group mb-2 ml-4">
+                            <label for="<%= ddDepartment.ClientID %>">หน่วยงาน : &nbsp;</label>
+                            <asp:DropDownList runat="server" ID="ddDepartment" CssClass="form-control form-control-sm" AutoPostBack="false">
+                                <%--<asp:ListItem Enabled="true" Text="ทั้งหมด" Value="0" Selected="True"></asp:ListItem>--%>
+                            </asp:DropDownList>
+                        </div>
+
+                        <asp:Button runat="server" ID="btnSearch" cssClass="btn btn-primary btn-sm mb-2 ml-2" OnClick="btnSearch_Click" Text="ค้นหา" />
+                    </div>
+
+                    <hr style="margin: 15px -8px; border: 0.3px solid silver !important;" />
                     <table class="hover nowrap" id="courseTable" style="width: 100%">
                         <thead>
                             <tr>
@@ -84,6 +106,7 @@
                                         <td>
                                             <button type="button" class="btn btn-sm btn-link" onclick="handleViewCourseDetail(<%# Eval("COURSE_ID") %>)">
                                                 แสดง
+                                               
                                                 <%# Eval("FILE_UPLOAD").ToString().ToUpper() == "SYSTEM.BYTE[]" ? " <i class='fa fa-file-pdf text-danger'></i>" : "" %>
                                             </button>
                                         </td>
@@ -105,6 +128,7 @@
                                         <td class="text-center">
                                             <button type="button" class='btn btn-sm btn-success' onclick="handleExportReport({COURSE_ID: <%# Eval("COURSE_ID") %>, COURSE_CODE : '<%# Eval("COURSE_NUMBER") %>' , COURSE_NAME : '<%# Eval("COURSE_NAME") %>', COURSE_TIMES: '<%# Eval("TIMES") %>' , COURSE_START_DATE : '<%# Eval("START_DATE") %>', CREATED_NAME : '<%# Eval("CREATED_NAME") %>'})" <%# (int)Eval("STATUS_CODE") >= 3 ? "" : "disabled" %>>
                                                 Training/Evaluation OJT
+                                           
                                             </button>
                                         </td>
                                     </tr>
@@ -375,6 +399,7 @@
                 <div class="modal-body">
                     <div class="d-flex justify-content-center my-3">
                         <h5>[<span id="export-report-code"></span>] - 
+                           
                             <span id="export-report-title"></span>
                         </h5>
                     </div>
@@ -547,7 +572,7 @@
                                             success: function (results) {
                                                 console.log(results.d)
                                                 if (results.d === "OK") {
-                                                        window.location.href = window.location.href;
+                                                    window.location.href = window.location.href;
                                                 }
                                             },
                                             error: function (err) {
@@ -723,16 +748,16 @@
                     type: "POST",
                     url: "<%= ajax %>" + "/Pages/Management/Courses.aspx/GetPlanDateByCourseId",
                     data: "{'courseId': " + parseInt(id) + "}",
-                     contentType: "application/json; charset=utf-8",
-                     dataType: "json",
-                     success: function (results) {
-                         const data = JSON.parse(results.d)[0]
-                         $('#selectPlanDate').text(` วันที่จัดทำแผน : ${moment(data.PLAN_DATE).format("DD/MM/yyyy")}`)
-                     },
-                     error: function (err) {
-                         console.log(err)
-                     }
-                 });
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (results) {
+                        const data = JSON.parse(results.d)[0]
+                        $('#selectPlanDate').text(` วันที่จัดทำแผน : ${moment(data.PLAN_DATE).format("DD/MM/yyyy")}`)
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                });
             }
         })
 
@@ -753,6 +778,7 @@
                 dataType: "json",
                 success: function (results) {
                     var data = JSON.parse(results.d)[0]
+                    console.log(data)
                     OpenModalViewOrEdit('edit', data)
                 },
                 error: function (err) {
@@ -838,6 +864,7 @@
             $('#<%= Assessor6.ClientID %>').val(data.ASSESSOR6_ID !== 0 && data.ASSESSOR6_ID !== null ? data.ASSESSOR6_ID : 0).change();
             $('#<%= hiddenId.ClientID %>').val(data.ID)
             $('#<%= hiddenCourseAndPlanId.ClientID %>').val(data.PLAN_AND_COURSE_ID)
+            $('#<%= detail.ClientID %>').val(data.DETAIL)
 
         }
         $('#addModal').on('hidden.bs.modal', function () {
@@ -883,6 +910,7 @@
             $('#<%= hiddenId.ClientID %>').val('')
             $('#<%= hiddenCourseAndPlanId.ClientID %>').val('')
             $('#<%= otherEvaluateRemark.ClientID %>').val('')
+            $('#<%= detail.ClientID %>').val('')
         }
 
         // handle assessor selected

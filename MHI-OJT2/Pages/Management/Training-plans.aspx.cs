@@ -29,6 +29,8 @@ namespace MHI_OJT2.Pages.Management
 
             if (!IsPostBack)
             {
+                txtYearSearch.Value = DateTime.Now.Year.ToString();
+
                 string role = Session["roles"].ToString().ToLower();
                 _roles = role;
                 int userId = int.Parse(Session["userId"].ToString());
@@ -37,9 +39,9 @@ namespace MHI_OJT2.Pages.Management
                     Response.Redirect(Auth._403);
                 }
 
-                GetMasterData(userId, role);
                 GetSection(userId, role);
                 CheckAlertSession();
+                GetMasterData(userId, role);
             }
         }
         void CheckAlertSession()
@@ -99,6 +101,7 @@ namespace MHI_OJT2.Pages.Management
             department.DataBind();
 
             string query = string.Empty;
+            string where = string.Empty;
             if (role == "clerk")
             {
                 query = "SELECT " +
@@ -106,8 +109,7 @@ namespace MHI_OJT2.Pages.Management
                 "d.DEPARTMENT_NAME " +
                 "FROM TRAINING_PLAN p " +
                 "JOIN DEPARTMENT d ON d.ID = p.DEPARTMENT_ID " +
-                $" WHERE p.CREATED_BY = {userId} " +
-                " ORDER BY CREATED_AT ";
+                $" WHERE p.CREATED_BY = {userId} ";
             } else
             {
                 query = "SELECT " +
@@ -115,9 +117,12 @@ namespace MHI_OJT2.Pages.Management
                 "d.DEPARTMENT_NAME " +
                 "FROM TRAINING_PLAN p " +
                 "JOIN DEPARTMENT d ON d.ID = p.DEPARTMENT_ID " +
-                "ORDER BY CREATED_AT ";
+                " WHERE 1=1 ";
             }
-            RepeatTrainingPlanTable.DataSource = SQL.GetDataTable(query, mainDb);
+
+            where = " AND YEAR(PLAN_DATE) = " + txtYearSearch.Value.ToString();
+
+            RepeatTrainingPlanTable.DataSource = SQL.GetDataTable(query + where + " ORDER BY CREATED_AT", mainDb);
             RepeatTrainingPlanTable.DataBind();
         }
         void Alert(string type, string title, string message)
@@ -210,7 +215,7 @@ namespace MHI_OJT2.Pages.Management
             }
             catch (Exception ex)
             {
-                Alert("error", "ผิดพลาด!", $"{ex.Message}");
+                Alert("error", "ผิดพลาด!", $"กรุณากรอกข้อมูลให้ครบถ้วน");
             }
         }
 
@@ -361,6 +366,13 @@ namespace MHI_OJT2.Pages.Management
 
                 rpt.Load(Server.MapPath("~/Reports/rpt_Training_Plan.rpt"));
                 rpt.SetParameterValue("PIC_PATH", Server.MapPath("~"));
+                rpt.SetParameterValue("pp_name", pp_name.Value); 
+                rpt.SetParameterValue("pp_date", pp_date.Value);
+                rpt.SetParameterValue("ck_name", ck_name.Value);
+                rpt.SetParameterValue("ck_date", ck_date.Value);
+                rpt.SetParameterValue("ap_name", ap_name.Value);
+                rpt.SetParameterValue("ap_date", ap_date.Value);
+
 
                 int? depId = int.Parse(section.Value.ToString() == "" ? "0" : section.Value.ToString());
                 if (depId == 0 || depId == null) throw new Exception("ไม่พบข้อมูล");
@@ -424,6 +436,11 @@ namespace MHI_OJT2.Pages.Management
                 }
                 
             }
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            GetMasterData(int.Parse(Session["userId"].ToString()), Session["roles"].ToString().ToLower());
         }
     }
 }

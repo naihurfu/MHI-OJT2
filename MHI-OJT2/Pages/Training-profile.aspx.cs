@@ -22,6 +22,7 @@ namespace MHI_OJT2.Pages
             Auth.CheckLoggedIn();
             if (!IsPostBack)
             {
+                txtYearSearch.Value = DateTime.Now.Year.ToString();
                 string role = Session["roles"].ToString().ToLower();
                 roles = role;
                 GetTrainingHistory(role);
@@ -70,20 +71,22 @@ namespace MHI_OJT2.Pages
         void GetTrainingHistory(string role)
         {
             SqlParameterCollection param = new SqlCommand().Parameters;
-            string query = "SELECT * FROM COURSE_AND_EMPLOYEE ";
+            string query = "SELECT * FROM COURSE_AND_EMPLOYEE WHERE 1=1 ";
 
             if (role == "user")
             {
                 param.AddWithValue("ID", SqlDbType.Int).Value = int.Parse(Session["userId"].ToString());
-                query += "WHERE PersonID=@ID";
+                query += " AND PersonID=@ID ";
             }
 
             if (role == "clerk")
             {
                 param.AddWithValue("ID", SqlDbType.Int).Value = int.Parse(Session["userId"].ToString());
-                query += "WHERE CREATED_ID=@ID";
+                query += " AND CREATED_ID=@ID ";
             
             }
+
+            query += " AND YEAR(START_DATE) = " + txtYearSearch.Value.ToString();
 
 
             RepeatTable.DataSource = SQL.GetDataTableWithParams(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString, param);
@@ -198,6 +201,11 @@ namespace MHI_OJT2.Pages
                 Console.WriteLine(ex.Message);
                 return 0;
             }
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            GetTrainingHistory(Session["roles"].ToString().ToLower());
         }
     }
 }
