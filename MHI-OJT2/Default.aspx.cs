@@ -33,6 +33,7 @@ namespace MHI_OJT2
 				GetCourseTable(userId, connectionString);
 				GetCountCard(userId, connectionString);
 				CheckAlertSession();
+
 			}
         }
 		void Alert(string type, string title, string message)

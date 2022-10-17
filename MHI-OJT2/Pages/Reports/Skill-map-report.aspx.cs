@@ -95,20 +95,28 @@ namespace MHI_OJT2.Pages.Reports
         }
 
         [WebMethod]
-        public static string GetDepartmentName(string courseId)
+        public static string GetDepartmentName(int courseId)
         {
-            string result = "NULL";
-            string query = "SELECT " +
-                "DEP.DEPARTMENT_NAME " +
-                "FROM ADJUST_COURSE ADJ " +
-                "JOIN DEPARTMENT DEP ON DEP.ID = ADJ.DEPARTMENT_ID " +
-                $"WHERE ADJ.ID = '{courseId}'";
-            DataTable dt = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
-            if (dt.Rows.Count > 0)
+            try
             {
-                result = dt.Rows[0]["DEPARTMENT_NAME"].ToString().ToUpper();
+                string result = "NULL";
+                string query = "SELECT " +
+                    "DEP.DEPARTMENT_NAME " +
+                    "FROM ADJUST_COURSE ADJ " +
+                    "JOIN DEPARTMENT DEP ON DEP.ID = ADJ.DEPARTMENT_ID " +
+                    "WHERE ADJ.ID = " + courseId;
+                DataTable dt = SQL.GetDataTable(query, WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+                if (dt.Rows.Count > 0)
+                {
+                    result = dt.Rows[0]["DEPARTMENT_NAME"].ToString().ToUpper();
+                }
+                return result;
             }
-            return result;
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return "";
+            }
         }
 
         [WebMethod]

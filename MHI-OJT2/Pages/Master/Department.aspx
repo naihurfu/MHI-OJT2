@@ -124,8 +124,8 @@
                     <input type="hidden" id="hiddenId" runat="server" />
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
                     <button type="button" class="btn btn-danger" id="btnDelete" runat="server" onserverclick="Delete">ลบ</button>
-                    <button type="button" class="btn btn-success" id="btnEdit" runat="server" onserverclick="Update">บันทึก</button>
-                    <button type="button" class="btn btn-primary" id="btnAdd" runat="server" onserverclick="Create">บันทึก</button>
+                    <button type="button" class="btn btn-success" id="btnEdit" runat="server" onclick="if (ValidateChar())" onserverclick="Update">บันทึก</button>
+                    <button type="button" class="btn btn-primary" id="btnAdd" runat="server" onclick="if (ValidateChar())" onserverclick="Create">บันทึก</button>
                 </div>
             </div>
         </div>
@@ -219,6 +219,15 @@
             checkActive.prop('checked', false)
             checkInActive.prop('checked', false)
             hiddenId.val("")
+        }
+
+        function ValidateChar() {
+            if (HasSpecialChar(departmentName.val())) {
+                toasts("แจ้งเตือน", "ไม่สามารถระบุอัขระพิเศษได้ กรุณาแก้ไขข้อมูล", "bg-danger")
+                return false;
+            }
+
+            return true;
         }
     </script>
 </asp:Content>

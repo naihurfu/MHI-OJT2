@@ -113,15 +113,14 @@ namespace MHI_OJT2
 			DateTime dt = DateTime.ParseExact(result, "yyyy-MM-dd", CultureInfo.InvariantCulture);
 			return dt;
 		}
-		public static string RemoveSpecialCharacters(string str)
+		public static string RemoveSpecialCharacters(string str, string replace = "")
 		{
-			return Regex.Replace(str, @"[^0-9a-zA-Z]+", " ");
+			return Regex.Replace(str, @"^[a-zA-Z0-9]\+(\+)+$", replace);
 		}
 
 		public static bool HasSpecialCharacters(string val)
         {
-			var regexItem = new Regex("^[a-zA-Z0-9 ]*$");
-			if (regexItem.IsMatch(val)) {
+			if (Regex.IsMatch(val, @"^[a-zA-Z0-9]\+(\+)+$")) {
 				return true;
 			}
 

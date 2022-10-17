@@ -37,47 +37,47 @@
                     <div class="form-inline">
                         <div class="form-group mb-2 ml-4">
                             <label for="<%= txtYearSearch.ClientID %>">ปี : &nbsp;</label>
-                            <input runat="server" id="txtYearSearch" class="form-control form-control-sm"/>
+                            <input runat="server" id="txtYearSearch" class="form-control form-control-sm" />
                         </div>
 
-                        <asp:Button runat="server" ID="btnSearch" cssClass="btn btn-primary btn-sm mb-2 ml-2" OnClick="btnSearch_Click" Text="ค้นหา" />
+                        <asp:Button runat="server" ID="btnSearch" CssClass="btn btn-primary btn-sm mb-2 ml-2" OnClick="btnSearch_Click" Text="ค้นหา" />
                     </div>
                     <hr style="margin: 15px -8px; border: 0.3px solid silver !important;" />
-                        <table class="hover nowrap" id="trainingPlanTable" style="width:100%;">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">ลำดับ</th>
-                                    <th>ชื่อแผน</th>
-                                    <th>หน่วยงาน</th>
-                                    <th>วันที่</th>
-                                    <th class="text-center">แก้ไข/ลบ</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <asp:Repeater ID="RepeatTrainingPlanTable" runat="server">
-                                    <ItemTemplate>
-                                        <tr>
-                                            <th scope="row" class="text-center">
-                                                <%# Container.ItemIndex + 1 %>
+                    <table class="hover nowrap" id="trainingPlanTable" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th class="text-center">ลำดับ</th>
+                                <th>ชื่อแผน</th>
+                                <th>หน่วยงาน</th>
+                                <th>วันที่</th>
+                                <th class="text-center">แก้ไข/ลบ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <asp:Repeater ID="RepeatTrainingPlanTable" runat="server">
+                                <ItemTemplate>
+                                    <tr>
+                                        <th scope="row" class="text-center">
+                                            <%# Container.ItemIndex + 1 %>
                                             </th>
-                                            <td><%# Eval("PLAN_NAME") %></td>
-                                            <td><%# Eval("DEPARTMENT_NAME") %></td>
-                                            <td><%# String.Format(new System.Globalization.CultureInfo("en-US"), "{0:dd/MM/yyyy}", Eval("PLAN_DATE")) %></td>
-                                            <td class="text-center">
-                                                <div class="btn-group" role="group" aria-label="Basic example">
-                                                    <button type="button" class="btn btn-sm btn-warning" onclick="handleShowAddModal('edit', { ID: <%# Eval("ID") %>, DEPARTMENT_ID: <%# Eval("DEPARTMENT_ID") %>, PLAN_NAME: '<%# Eval("PLAN_NAME").ToString().Replace("'","") %>', REF_DOCUMENT: '<%# Eval("REF_DOCUMENT").ToString().Replace("'","") %>', HOURS: <%# Eval("HOURS") %>, FREQUENCY: '<%# Eval("FREQUENCY") %>', SM_MG: <%# bool.Parse(Eval("SM_MG").ToString()) == true ? 1 : 0  %>, SAM_AM: <%# bool.Parse(Eval("SAM_AM").ToString()) == true ? 1 : 0  %>, SEG_SV: <%# bool.Parse(Eval("SEG_SV").ToString()) == true ? 1 : 0  %>, EG_ST: <%# bool.Parse(Eval("EG_ST").ToString()) == true ? 1 : 0  %>, FM: <%# bool.Parse(Eval("FM").ToString()) == true ? 1 : 0  %>, LD_SEP_EP: <%# bool.Parse(Eval("LD_SEP_EP").ToString()) == true ? 1 : 0  %>, OP: <%# bool.Parse(Eval("OP").ToString()) == true ? 1 : 0  %>, PLAN_DATE: '<%# Eval("PLAN_DATE") %>', ACTUAL_DATE: '<%# Eval("ACTUAL_DATE") %>', TRAINER: '<%# Eval("TRAINER").ToString().Replace("'","") %>' })">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button type="button" class="btn btn-sm btn-danger" onclick="handleDelete(<%# Eval("ID") %>, '<%# Eval("PLAN_NAME").ToString().Replace("'","") %>')">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </ItemTemplate>
-                                </asp:Repeater>
-                            </tbody>
-                        </table>
+                                        <td><%# Eval("PLAN_NAME") %></td>
+                                        <td><%# Eval("DEPARTMENT_NAME") %></td>
+                                        <td><%# String.Format(new System.Globalization.CultureInfo("en-US"), "{0:dd/MM/yyyy}", Eval("PLAN_DATE")) %></td>
+                                        <td class="text-center">
+                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                <button type="button" class="btn btn-sm btn-warning" onclick='handleShowAddModal("edit", { ID: <%# Eval("ID") %>, DEPARTMENT_ID: <%# Eval("DEPARTMENT_ID") %>, PLAN_NAME: "<%# JsChar(Eval("PLAN_NAME").ToString()) %>", REF_DOCUMENT: "<%# JsChar(Eval("REF_DOCUMENT").ToString()) %>", HOURS: <%# Eval("HOURS") %>, FREQUENCY: "<%# JsChar(Eval("FREQUENCY").ToString()) %>", SM_MG: <%# bool.Parse(Eval("SM_MG").ToString()) == true ? 1 : 0  %>, SAM_AM: <%# bool.Parse(Eval("SAM_AM").ToString()) == true ? 1 : 0  %>, SEG_SV: <%# bool.Parse(Eval("SEG_SV").ToString()) == true ? 1 : 0  %>, EG_ST: <%# bool.Parse(Eval("EG_ST").ToString()) == true ? 1 : 0  %>, FM: <%# bool.Parse(Eval("FM").ToString()) == true ? 1 : 0  %>, LD_SEP_EP: <%# bool.Parse(Eval("LD_SEP_EP").ToString()) == true ? 1 : 0  %>, OP: <%# bool.Parse(Eval("OP").ToString()) == true ? 1 : 0  %>, PLAN_DATE: "<%# Eval("PLAN_DATE") %>", ACTUAL_DATE: "<%# Eval("ACTUAL_DATE") %>", TRAINER: "<%# JsChar(Eval("TRAINER").ToString()) %>" })'>
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-danger" onclick="handleDelete(<%# Eval("ID") %>, '<%# JsChar(Eval("PLAN_NAME").ToString()) %>')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -92,7 +92,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">สร้างแผนการฝึกอบรม</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -166,8 +166,8 @@
                 <div class="modal-footer">
                     <input type="hidden" runat="server" id="hiddenIdAddModal" />
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                    <asp:Button ID="btnEdit" runat="server" CssClass="btn btn-primary" Text="บันทึก" OnClick="btnEdit_Click" />
-                    <asp:Button ID="btnInserted" runat="server" CssClass="btn btn-primary" Text="บันทึก" OnClick="btnInserted_Click" />
+                    <asp:Button ID="btnEdit" runat="server" CssClass="btn btn-primary" Text="บันทึก" OnClick="btnEdit_Click" OnClientClick="return validateForm(true)" />
+                    <asp:Button ID="btnInserted" runat="server" CssClass="btn btn-primary" Text="บันทึก" OnClick="btnInserted_Click" OnClientClick="return validateForm(false)" />
                 </div>
             </div>
         </div>
@@ -178,7 +178,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">เลือกเงื่อนไขเพื่อพิมพ์รายงาน</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -186,9 +186,9 @@
                     <div class="row section__container">
                         <div class="col-12">
                             <label>หน่วยงาน</label>
-                             <select class="form-control selectpicker" id="section" runat="server" data-live-search="true">
+                            <select class="form-control selectpicker" id="section" runat="server" data-live-search="true">
                                 <option selected>-</option>
-                             </select> 
+                            </select>
                         </div>
                     </div>
                     <div class="row date__range__container mt-2">
@@ -234,9 +234,10 @@
                             <input type="tel" id="ap_date" runat="server" class="form-control" maxlength="10" placeholder="dd/mm/yyyy" oninput="this.value = DDMMYYYY(this.value, event)" />
                         </div>
                     </div>
-                </div> 
+                </div>
                 <div class="modal-footer">
                     <asp:Button ID="btnExportReport" Text="พิมพ์รายงาน" runat="server" CssClass="btn btn-block btn-success" OnClick="btnExportReport_Click" OnClientClick="return validationFilters()" />
+                </div>
             </div>
         </div>
     </div>
@@ -263,9 +264,20 @@
                     }
                 }
             });
-
-
         })();
+
+        function validateForm(isEdit) {
+            var planName = $("#<%= planName.ClientID %>").val()
+            var refDoc = $("#<%= refDocument.ClientID %>").val()
+            var trainer = $("#<%= trainer.ClientID %>").val()
+
+            if (HasSpecialChar(planName) || HasSpecialChar(refDoc) || HasSpecialChar(trainer)) {
+                toasts("ผิดพลาด", "ไม่สามารถระบุอัขระพิเศษได้ กรุณาแก้ไขข้อมูล", "bg-danger")
+                return false;
+            }
+
+            return true;
+        }
 
         function handleShowExportReportModal() {
             let modal = $('#ExportReportModal')
@@ -286,7 +298,7 @@
             if (startDate !== 10 && endDate !== 10) {
                 toasts(title, "กรุณาระบุข้อมูลให้ถูกต้อง")
                 return false
-            } 
+            }
 
 
             return true
@@ -312,8 +324,8 @@
 
                     case "edit":
                         inputHiddenId.val(data.ID)
-                        $('#<%= planName.ClientID %>').val(data.PLAN_NAME)
-                        $('#<%= refDocument.ClientID %>').val(data.REF_DOCUMENT)
+                        $('#<%= planName.ClientID %>').val(EscapeChar(data.PLAN_NAME))
+                        $('#<%= refDocument.ClientID %>').val(EscapeChar(data.REF_DOCUMENT))
                         $('#<%= department.ClientID %>').val(data.DEPARTMENT_ID)
                         $('#<%= frequency.ClientID %>').val(data.FREQUENCY)
                         $('#<%= hours.ClientID %>').val(data.HOURS)
@@ -324,7 +336,7 @@
                         $('#<%= FM.ClientID %>').prop('checked', data.FM)
                         $('#<%= LD_SEP_EP.ClientID %>').prop('checked', data.LD_SEP_EP)
                         $('#<%= OP.ClientID %>').prop('checked', data.OP)
-                        $('#<%= trainer.ClientID %>').val(data.TRAINER)
+                        $('#<%= trainer.ClientID %>').val(EscapeChar(data.TRAINER))
                         const planDate = moment(data.PLAN_DATE).format("DD/MM/yyyy")
                         $('#<%= date.ClientID %>').val(planDate)
 
@@ -353,7 +365,7 @@
                 if (result.isDenied) {
                     $.ajax({
                         type: "POST",
-                         url: "<%= ajax %>" + "/Pages/Management/Training-plans.aspx/DeletePlan",
+                        url: "<%= ajax %>" + "/Pages/Management/Training-plans.aspx/DeletePlan",
                         data: "{'planId': " + id + "}",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",

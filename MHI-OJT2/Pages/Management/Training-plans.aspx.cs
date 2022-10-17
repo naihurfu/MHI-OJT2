@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Services;
@@ -133,6 +134,8 @@ namespace MHI_OJT2.Pages.Management
         {
             try
             {
+                if (DATA.HasSpecialCharacters(planName.Value.Trim().ToString())) throw new Exception("กรุณาตรวจสอบข้อมูลให้ถูกต้อง");
+
                 if (int.Parse(department.Value.ToString()) == 0) throw new Exception("กรุณากรอกข้อมูลให้ครบ");
                 // get connection string from web.config file
                 string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
@@ -174,8 +177,8 @@ namespace MHI_OJT2.Pages.Management
                 // new parameter collection
                 SqlParameterCollection param = new SqlCommand().Parameters;
                 param.AddWithValue("DEPARTMENT_ID", SqlDbType.Int).Value = department.Value;
-                param.AddWithValue("PLAN_NAME", SqlDbType.VarChar).Value = planName.Value.ToString().Replace("'", "");
-                param.AddWithValue("REF_DOCUMENT", SqlDbType.VarChar).Value = refDocument.Value;
+                param.AddWithValue("PLAN_NAME", SqlDbType.VarChar).Value = JsChar(planName.Value.ToString().Trim());
+                param.AddWithValue("REF_DOCUMENT", SqlDbType.VarChar).Value = JsChar(refDocument.Value.ToString());
                 param.AddWithValue("HOURS", SqlDbType.Int).Value = hours.Value;
                 param.AddWithValue("FREQUENCY", SqlDbType.VarChar).Value = frequency.Value;
                 param.AddWithValue("SM_MG", SqlDbType.Bit).Value = SM_MG.Checked;
@@ -186,7 +189,7 @@ namespace MHI_OJT2.Pages.Management
                 param.AddWithValue("LD_SEP_EP", SqlDbType.Bit).Value = LD_SEP_EP.Checked;
                 param.AddWithValue("OP", SqlDbType.Bit).Value = OP.Checked;
                 param.AddWithValue("PLAN_DATE", SqlDbType.Date).Value = DATA.DateTimeToSQL(date.Value);
-                param.AddWithValue("TRAINER", SqlDbType.VarChar).Value = trainer.Value.ToString().Replace("'", "");
+                param.AddWithValue("TRAINER", SqlDbType.VarChar).Value = JsChar(trainer.Value.ToString());
                 param.AddWithValue("CREATED_BY", SqlDbType.Int).Value = Session["userId"];
 
                 // execute query
@@ -223,6 +226,8 @@ namespace MHI_OJT2.Pages.Management
         {
             try
             {
+                if (DATA.HasSpecialCharacters(planName.Value.Trim().ToString())) throw new Exception("กรุณาตรวจสอบข้อมูลให้ถูกต้อง");
+
                 // get connection string from web.config file
                 string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
 
@@ -394,8 +399,9 @@ namespace MHI_OJT2.Pages.Management
 
                 string[] sDate = startDate.Value.Split('/');
                 string[] eDate = endDate.Value.Split('/');
-                string formula = "{VIEW_PLAN_AND_COURSE.PLAN_DATE} >= Date (" + sDate[2] + ", " + sDate[1] + ", " + sDate[0] + ") " +
-                    "AND {VIEW_PLAN_AND_COURSE.PLAN_DATE} <= Date (" + eDate[2] + ", " + eDate[1] + ", " + eDate[0] + ") ";
+                string formula = "{VIEW_PLAN_AND_COURSE.COURSE_TIMES} = 1 " +
+                    " AND {VIEW_PLAN_AND_COURSE.PLAN_DATE} >= Date (" + sDate[2] + ", " + sDate[1] + ", " + sDate[0] + ") " +
+                    " AND {VIEW_PLAN_AND_COURSE.PLAN_DATE} <= Date (" + eDate[2] + ", " + eDate[1] + ", " + eDate[0] + ") ";
 
                 if (id != 0)
                 {
@@ -441,6 +447,11 @@ namespace MHI_OJT2.Pages.Management
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             GetMasterData(int.Parse(Session["userId"].ToString()), Session["roles"].ToString().ToLower());
+        }
+
+        public static string JsChar(string str)
+        {
+            return DATA.RemoveSpecialCharacters(str);
         }
     }
 }

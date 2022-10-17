@@ -57,6 +57,29 @@ namespace MHI_OJT2.Pages.Management
                 return "ERROR";
             }
         }
+
+        [WebMethod]
+        public static string HandleMultipleApprove(List<ApproveResult> approveResults)
+        {
+            try
+            {
+                if (approveResults.Count > 0)
+                {
+                    foreach (var item in approveResults)
+                    {
+                        HandleApprove(item);
+                    }
+                    return "SUCCESS";
+                }
+
+                return "NOTFOUND";
+            }
+            catch (Exception)
+            {
+                return "ERROR";
+            }
+        }
+
         [WebMethod]
         public static string HandleApprove(ApproveResult _ApproveResult)
         {

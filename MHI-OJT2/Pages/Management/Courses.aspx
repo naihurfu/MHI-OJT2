@@ -37,6 +37,9 @@
                 <!-- /.col -->
                 <div class="col-sm-6">
                     <div class="float-sm-right">
+                        <button type="button" class="btn btn-secondary mr-3" onclick="showSelectCourseTable()">
+                            <i class="fa fa-edit mr-2"></i>
+                            เพิ่มหลักสูตรที่มีมากกว่า 1 รุ่น</button>
                         <button type="button" class="btn btn-primary" onclick="handleShowAddModal('add')">
                             <i class="fa fa-plus-circle mr-2"></i>
                             สร้างหลักสูตร</button>
@@ -85,6 +88,7 @@
                                 <th>รายละเอียด</th>
                                 <th>หน่วยงาน</th>
                                 <th>ชื่อหลักสูตร</th>
+                                <th class="text-center">ครั้งที่</th>
                                 <th>ผู้จัดทำ</th>
                                 <th class="text-center">วันที่เริ่มอบรม</th>
                                 <th class="text-center">วันที่จัดทำแผน</th>
@@ -112,6 +116,7 @@
                                         </td>
                                         <td><%# Eval("DEPARTMENT_NAME") %></td>
                                         <td><%# Eval("COURSE_NAME") %></td>
+                                        <td class="text-center"><%# Eval("TIMES") %></td>
                                         <td><%# Eval("CREATED_NAME") %></td>
                                         <td class="text-center"><%# String.Format(new System.Globalization.CultureInfo("en-US"), "{0:dd/MM/yyyy}", Eval("START_DATE")) %></td>
                                         <td class="text-center"><%# Eval("PLAN_DATE").ToString() != "" ? String.Format(new System.Globalization.CultureInfo("en-US"), "{0:dd/MM/yyyy}", Eval("PLAN_DATE")) : "-"%></td>
@@ -150,7 +155,7 @@
             <div class="modal-content ">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addModalTitle"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" aria-label="Close" onclick="closeModal()">
                         <span aria-hidden="true" class="">&times;</span>
                     </button>
                 </div>
@@ -174,6 +179,10 @@
                             <span class="text-danger" id="selectPlanDate" style="font-size: small !important;"></span>
                         </div>
                         <hr />
+                    </div>
+                    <div class="form-group py-3 add-old-container">
+                        <label>ชื่อแผน</label>
+                        <input class="form-control" id="addOldPlanName" readonly="readonly"/>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -228,7 +237,7 @@
                                 <input class="form-check-input" type="checkbox" runat="server" id="examEvaluate">
                                 <label class="form-check-label" for='<%= examEvaluate.ClientID %>'>แบบข้อสอบ</label>
                             </div>
-                            <div class="form-inline" style="width: calc(100% - 312px);">
+                            <div class="form-inline">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">
@@ -314,11 +323,13 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <asp:HiddenField ID="planId" runat="server" />
                     <asp:HiddenField ID="downloadFileId" runat="server" />
                     <button type="button" runat="server" id="btnDownloadFileDocument" class="btn btn-primary mr-auto" style="display: none;" onserverclick="DownloadPDFDocument">ดาวโหลดเอกสารที่เกี่ยวข้อง</button>
-                    <button type="button" runat="server" id="btnDelete" class="btn btn-danger mr-auto" onserverclick="btnDelete_ServerClick" style="display: none;">ลบ</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                    <button type="button" runat="server" id="btnEdit" class="btn btn-primary" onserverclick="btnEdit_Click" style="display: none;">บันทึก</button>
+                    <button type="button" runat="server" id="btnDelete" class="btn btn-danger mr-auto" onserverclick="btnDelete_ServerClick" onclick="confirm('Please confirm to delete!');" style="display: none;">ลบ</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">ปิด</button>
+                    <button type="button" runat="server" id="btnEdit" class="btn btn-primary" onserverclick="btnEdit_Click" style="display: none;" onclick="if (editCourseValidation())">บันทึก</button>
+                    <button type="button" runat="server" id="btnAddOld" class="btn btn-success" onserverclick="btnInserted_Click" onclick="if (addCourseValidation())" style="display: none;">บันทึก</button>
                     <button type="button" runat="server" id="btnInserted" class="btn btn-primary" onserverclick="btnInserted_Click" onclick="if (addCourseValidation())" style="display: none;">บันทึก</button>
                     <input type="hidden" runat="server" id="hiddenId" />
                     <input type="hidden" runat="server" id="hiddenCourseAndPlanId" />
@@ -473,35 +484,131 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="SelectCourseModal" tabindex="-1" aria-labelledby="SelectCourseModal" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl" style="box-shadow: none !important;">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title ">เลือกหลักสูตร</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="hover nowrap" id="select-course-table" style="width: 100% !important">
+                            <thead>
+                                <tr style="width: 100%">
+                                    <th class="text-center">ลำดับ</th>
+                                    <th>หน่วยงาน</th>
+                                    <th>ชื่อหลักสูตร</th>
+                                    <th>วันที่อบรม</th>
+                                    <th>เลือก</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <asp:Repeater ID="selectCourseRepeater" runat="server" OnItemCommand="selectCourseRepeater_ItemCommand">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <th scope="row" class="text-center">
+                                                <%# Container.ItemIndex + 1 %>
+                                            </th>
+                                            <td>
+                                                <%# Eval("DEPARTMENT_NAME") %>
+                                            </td>
+                                            <td>
+                                                <%# Eval("COURSE_NAME") %>
+                                            </td>
+                                            <td>
+                                                <%# String.Format(new System.Globalization.CultureInfo("en-US"), "{0:dd/MM/yyyy}", Eval("START_DATE")) %>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-warning btn-sm" onclick='dupCourse(event,"<%# Eval("COURSE_ID") %>")'>เลือก</button>
+                                            </td>
+                                        </tr>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </tbody>
+                    </table>        
+
+                </div>
+            </div>
+        </div>
+    </div>
 </asp:Content>
 <asp:Content ID="ScriptContent" ContentPlaceHolderID="script" runat="server">
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
-                                        (function () {
-                                            // initial datatable
-                                            $("#courseTable").DataTable({
-                                                responsive: true,
-                                                scrollX: 500,
-                                                scrollCollapse: true,
-                                                scroller: true,
-                                                "oLanguage": {
-                                                    "sSearch": "ค้นหา :",
-                                                    "sLengthMenu": "แสดง _MENU_ รายการ"
-                                                },
-                                                "language": {
-                                                    "info": "แสดง _START_-_END_ รายการ ทั้งหมด _TOTAL_ รายการ",
-                                                    "paginate": {
-                                                        "previous": "ย้อนกลับ",
-                                                        "next": "หน้าถัดไป"
-                                                    }
-                                                }
+        function showSelectCourseTable() {
+            $("#SelectCourseModal").modal("show")
+        }
 
-                                            });
-                                            // hide select option value - 
-                                            $("#<%= trainingPlan.ClientID %> option[value='-']").hide()
-                                            $("#<%= trainingPlan.ClientID %>").prop("disabled", "disabled")
-                                        })();
+        function dupCourse(e, courseId) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "<%= ajax %>" + "/Pages/Management/Courses.aspx/GetCourseDetailById",
+                data: "{'courseId': " + courseId + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (results) {
+                    var data = JSON.parse(results.d)[0]
+                    $("#SelectCourseModal").hide()
+                    OpenModalViewOrEdit('add-old', data)
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            });
+        }
 
+        function closeModal() {
+            $("#addModal").modal("hide")
+            $("#SelectCourseModal").modal("hide")
+        }
+
+        //-----------------------------------------------------------------------------------//
+        (function () {
+            // initial datatable
+            $("#courseTable").DataTable({
+                responsive: true,
+                scrollX: 500,
+                scrollCollapse: true,
+                scroller: true,
+                "oLanguage": {
+                    "sSearch": "ค้นหา :",
+                    "sLengthMenu": "แสดง _MENU_ รายการ"
+                },
+                "language": {
+                    "info": "แสดง _START_-_END_ รายการ ทั้งหมด _TOTAL_ รายการ",
+                    "paginate": {
+                        "previous": "ย้อนกลับ",
+                        "next": "หน้าถัดไป"
+                    }
+                }
+
+            });
+
+            $("#select-course-table").DataTable({
+                responsive: true,
+                scrollX: 500,
+                scrollCollapse: true,
+                scroller: true,
+                "oLanguage": {
+                    "sSearch": "ค้นหา :",
+                    "sLengthMenu": "แสดง _MENU_ รายการ"
+                },
+                "language": {
+                    "info": "แสดง _START_-_END_ รายการ ทั้งหมด _TOTAL_ รายการ",
+                    "paginate": {
+                        "previous": "ย้อนกลับ",
+                        "next": "หน้าถัดไป"
+                    }
+                }
+
+            });
+            // hide select option value - 
+            $("#<%= trainingPlan.ClientID %> option[value='-']").hide()
+            $("#<%= trainingPlan.ClientID %>").prop("disabled", "disabled")
+        })();
         function handleExportReport(d) {
             if (d.COURSE_ID) {
                 let modal = $('#ExportReportModal')
@@ -517,9 +624,7 @@
             } else {
                 toasts("ผิดพลาด", "พบข้อผิดพลาดขณะเตรียมข้อมูล กรุณาตรวจสอบการเชื่อมต่อเครือข่าย และลองใหม่ภายหลัง", "bg-danger")
             }
-
         }
-
         function handleShowAddModal() {
             $('#<%= btnInserted.ClientID %>').show()
             $('#<%= btnEdit.ClientID %>').hide()
@@ -533,6 +638,7 @@
             $('#<%= otherEvaluateRemark.ClientID %>').attr('disabled', 'disabled')
             $('#addModal').modal('show')
         };
+
         function handleShowModal(courseId, modalName) {
             switch (modalName) {
                 case 'add-employee':
@@ -540,7 +646,6 @@
                     iniTransferBox(courseId)
                     $('#addEmployeeModal').modal('show')
                     break;
-
                 case 'evaluate':
                     $.ajax({
                         type: "POST",
@@ -593,7 +698,6 @@
                     });
 
                     break;
-
                 case 'view-status':
                     $('#viewStatusModal').modal('show')
 
@@ -612,7 +716,7 @@
                         success: function (results) {
                             var data = JSON.parse(results.d)
                             var tableBody = $('#approval-table tbody')
-                            console.log(data)
+
                             approval_loading.hide()
                             approval_container.show()
 
@@ -655,7 +759,6 @@
                         }
                     });
                     break;
-
                 default: sweetAlert("error", "WTF!")
             }
         };
@@ -755,12 +858,11 @@
                         $('#selectPlanDate').text(` วันที่จัดทำแผน : ${moment(data.PLAN_DATE).format("DD/MM/yyyy")}`)
                     },
                     error: function (err) {
-                        console.log(err)
+                       // console.log(err)
                     }
                 });
             }
         })
-
         $('#<%= otherEvaluate.ClientID %>').on('change', function () {
             if (this.checked) {
                 $('#<%= otherEvaluateRemark.ClientID %>').removeAttr('disabled')
@@ -778,7 +880,6 @@
                 dataType: "json",
                 success: function (results) {
                     var data = JSON.parse(results.d)[0]
-                    console.log(data)
                     OpenModalViewOrEdit('edit', data)
                 },
                 error: function (err) {
@@ -812,14 +913,16 @@
                 $('#<%= btnEdit.ClientID %>').hide()
                 isDisabledInput(true)
                 $('.assessor-container-all').show()
+                $('#add-old-container').hide()
+                $("#<%= btnAddOld.ClientID %>").hide()
 
                 if (data.FILE_UPLOAD) {
                     $('#<%= downloadFileId.ClientID %>').val(data.ID)
                     $('#<%= btnDownloadFileDocument.ClientID %>').show()
                 }
             }
-
             if (type === 'edit') {
+                $('#add-old-container').hide()
                 $('.evaluate-type-container').hide()
                 $('#upload-file-container').show()
                 $('#plan-section-container').hide()
@@ -829,6 +932,38 @@
                 $('#<%= btnInserted.ClientID %>').hide()
                 isDisabledInput(false)
                 $('#<%= btnDownloadFileDocument.ClientID %>').hide()
+                $("#<%= btnAddOld.ClientID %>").hide()
+            }
+
+            if (type === 'add-old') {
+                $('.evaluate-type-container').show()
+                $('#upload-file-container').show()
+                $('#plan-section-container').hide()
+                $('#add-old-container').show()
+                $('#addModalTitle').text('เพิ่มหลักสูตร')
+                $('#<%= btnDelete.ClientID %>').hide()
+                $('#<%= btnEdit.ClientID %>').hide()
+                $('#<%= btnInserted.ClientID %>').hide()
+                $('#<%= btnAddOld.ClientID %>').show()
+                isDisabledInput(false)
+                $('#<%= btnDownloadFileDocument.ClientID %>').hide()
+                $('.assessor-container-all').show()
+
+                $.ajax({
+                    type: "POST",
+                    url: "<%= ajax %>" + "/Pages/Management/Courses.aspx/GetPlanDateByCourseId",
+                    data: "{'courseId': " + parseInt(data.PLAN_ID) + "}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (results) {
+                        const data = JSON.parse(results.d)[0]
+                        console.log(data.PLAN_NAME)
+                        $('#addOldPlanName').val(data.PLAN_NAME)
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                });
             }
 
             $('#<%= checkPlan.ClientID %>').prop('checked', data.PLAN_ID !== null ? true : false);
@@ -837,6 +972,7 @@
             $('#<%= checkNotPlan.ClientID %>').attr('disabled', true);
 
             if (data.PLAN_ID !== null) {
+                $('#<%= planId.ClientID %>').val(data.PLAN_ID)
                 $('#<%= trainingPlan.ClientID %>').val(data.PLAN_ID).change()
                 $('.select-plan-container').find('div').find('button').removeClass('disabled')
             }
@@ -844,10 +980,36 @@
             $('#<%= realWorkEvaluate.ClientID %>').prop('checked', data.IS_REAL_WORK_EVALUATE)
             $('#<%= otherEvaluate.ClientID %>').prop('checked', data.IS_OTHER_EVALUATE)
             $('#<%= otherEvaluateRemark.ClientID %>').val(data.OTHER_EVALUATE_REMARK)
-            $('#<%= courseNumber.ClientID %>').val(data.COURSE_NUMBER)
-            $('#<%= times.ClientID %>').val(data.TIMES)
-            $('#<%= courseName.ClientID %>').val(data.COURSE_NAME)
-            $('#<%= objective.ClientID %>').val(data.OBJECTIVE)
+            $('#<%= courseNumber.ClientID %>').val(EscapeChar(data.COURSE_NUMBER))
+
+            if (type === "add-old") {
+                $.ajax({
+                    type: "POST",
+                    url: "<%= ajax %>" + "/Pages/Management/Courses.aspx/GetTimesInPlan",
+                    data: "{'planId': " + data.PLAN_ID + "}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (results) {
+                        var _d = parseInt(results.d)
+                        $('#<%= times.ClientID %>').val(_d)
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                });
+            } else {
+                $('#<%= times.ClientID %>').val(data.TIMES)
+
+                $('#<%= Assessor1.ClientID %>').val(data.ASSESSOR1_ID !== 0 && data.ASSESSOR1_ID !== null ? data.ASSESSOR1_ID : 0).change();
+                $('#<%= Assessor2.ClientID %>').val(data.ASSESSOR2_ID !== 0 && data.ASSESSOR2_ID !== null ? data.ASSESSOR2_ID : 0).change();
+                $('#<%= Assessor3.ClientID %>').val(data.ASSESSOR3_ID !== 0 && data.ASSESSOR3_ID !== null ? data.ASSESSOR3_ID : 0).change();
+                $('#<%= Assessor4.ClientID %>').val(data.ASSESSOR4_ID !== 0 && data.ASSESSOR4_ID !== null ? data.ASSESSOR4_ID : 0).change();
+                $('#<%= Assessor5.ClientID %>').val(data.ASSESSOR5_ID !== 0 && data.ASSESSOR5_ID !== null ? data.ASSESSOR5_ID : 0).change();
+                $('#<%= Assessor6.ClientID %>').val(data.ASSESSOR6_ID !== 0 && data.ASSESSOR6_ID !== null ? data.ASSESSOR6_ID : 0).change();
+            }
+
+            $('#<%= courseName.ClientID %>').val(EscapeChar(data.COURSE_NAME))
+            $('#<%= objective.ClientID %>').val(EscapeChar(data.OBJECTIVE))
             $('#<%= startDate.ClientID %>').val(SQLDateToInput(data.START_DATE))
             $('#<%= endDate.ClientID %>').val(SQLDateToInput(data.END_DATE))
             $('#<%= startTime.ClientID %>').val(data.START_TIME)
@@ -856,15 +1018,10 @@
             $('#<%= department.ClientID %>').val(data.DEPARTMENT_ID)
             $('#<%= location.ClientID %>').val(data.LOCATION_ID)
             $('#<%= teacher.ClientID %>').val(data.TEACHER_ID)
-            $('#<%= Assessor1.ClientID %>').val(data.ASSESSOR1_ID !== 0 && data.ASSESSOR1_ID !== null ? data.ASSESSOR1_ID : 0).change();
-            $('#<%= Assessor2.ClientID %>').val(data.ASSESSOR2_ID !== 0 && data.ASSESSOR2_ID !== null ? data.ASSESSOR2_ID : 0).change();
-            $('#<%= Assessor3.ClientID %>').val(data.ASSESSOR3_ID !== 0 && data.ASSESSOR3_ID !== null ? data.ASSESSOR3_ID : 0).change();
-            $('#<%= Assessor4.ClientID %>').val(data.ASSESSOR4_ID !== 0 && data.ASSESSOR4_ID !== null ? data.ASSESSOR4_ID : 0).change();
-            $('#<%= Assessor5.ClientID %>').val(data.ASSESSOR5_ID !== 0 && data.ASSESSOR5_ID !== null ? data.ASSESSOR5_ID : 0).change();
-            $('#<%= Assessor6.ClientID %>').val(data.ASSESSOR6_ID !== 0 && data.ASSESSOR6_ID !== null ? data.ASSESSOR6_ID : 0).change();
+
             $('#<%= hiddenId.ClientID %>').val(data.ID)
             $('#<%= hiddenCourseAndPlanId.ClientID %>').val(data.PLAN_AND_COURSE_ID)
-            $('#<%= detail.ClientID %>').val(data.DETAIL)
+            $('#<%= detail.ClientID %>').val(EscapeChar(data.DETAIL))
 
         }
         $('#addModal').on('hidden.bs.modal', function () {
@@ -1074,6 +1231,11 @@
 
 
             let notifyTitle = "แจ้งเตือน"
+            let _courseNumber = $('#<%= courseNumber.ClientID %>').val()
+            let _courseName = $('#<%= courseName.ClientID %>').val()
+            let _detail = $('#<%= detail.ClientID %>').val()
+            let _objective = $('#<%= objective.ClientID %>').val()
+            let _examRemark = $('#<%= otherEvaluateRemark.ClientID %>').val()
 
             // check plan or not plan
             if (!$('#<%= checkPlan.ClientID %>')[0].checked && !$('#<%= checkNotPlan.ClientID %>')[0].checked) {
@@ -1081,7 +1243,7 @@
                 return false
             }
 
-            if ($('#<%= courseName.ClientID %>').val().trim() === "") {
+            if (_courseName.trim() === "") {
                 toasts(notifyTitle, "กรุณาระบุชื่อหลักสูตร")
                 return false
             }
@@ -1116,6 +1278,26 @@
             // check assessor selected min 1 person
             if (assessor1.val() === "0") {
                 toasts(notifyTitle, "กรุณาเลือกผู้อนุมัติอย่างน้อย 1 คน")
+                return false
+            }
+
+            if (HasSpecialChar(_courseNumber) || HasSpecialChar(_courseName) || HasSpecialChar(_detail) || HasSpecialChar(_objective) || HasSpecialChar(_examRemark)) {
+                toasts(notifyTitle, "ไม่สามารถระบุอัขระพิเศษได้ กรุณาแก้ไขข้อมูล", "bg-danger")
+                return false
+            }
+
+            return true;
+        }
+
+        function editCourseValidation() {
+            let _courseNumber = $('#<%= courseNumber.ClientID %>').val()
+            let _courseName = $('#<%= courseName.ClientID %>').val()
+            let _detail = $('#<%= detail.ClientID %>').val()
+            let _objective = $('#<%= objective.ClientID %>').val()
+            let _examRemark = $('#<%= otherEvaluateRemark.ClientID %>').val()
+
+            if (HasSpecialChar(_courseNumber) || HasSpecialChar(_courseName) || HasSpecialChar(_detail) || HasSpecialChar(_objective) || HasSpecialChar(_examRemark)) {
+                toasts("แจ้งเตือน", "ไม่สามารถระบุอัขระพิเศษได้ กรุณาแก้ไขข้อมูล", "bg-danger")
                 return false
             }
 

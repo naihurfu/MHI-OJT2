@@ -311,13 +311,13 @@
                                 <span style="white-space:nowrap; margin: 5px 5px 0 0;">Note : </span>
                                 <ul style="width: 100%">
                                     <li style="width: 100%">1. ประเมินพนักงานใหม่ ต้องทำการประเมินภายในวันที่ 91 Probation period. The evaluation will do within 91st of Probation period since start working</li>
-                                    <li style="width: 100%">2. ประเมินพนักงานหลังบรรจุเป็นพนักงานประจำแล้ว โดยต้องทำการประเมินทุก 6 เดือน After Passed Probation. Re-Evaluation every 6 months (2 times/year)</li>
+                                    <li style="width: 100%">2. ประเมินพนักงานหลังบรรจุเป็นพนักงานประจำแล้ว โดยต้องทำการประเมินทุก 1 ปี After Passed Probation. Re-Evaluation every year (1 time/year)</li>
                                     <li style="width: 100%">3. ต้นสังกัด จัดเก็บไฟล์อิเล็กทรอนิกส์ (Each section keep eclectronic file)</li>
                                 </ul>
                             </div>
                         </div>
                         <div class="row justify-content-end" style="padding-right:8px;">
-                            <b>FR-HR01-007 ED:22-Jan-19 (Rev.00)</b>   
+                            <%--<b>FR-HR01-007 ED:22-Jan-19 (Rev.00)</b>--%>   
                         </div>
                     </div>
                 </div>
@@ -502,12 +502,12 @@
                             dataType: "json",
                             async: false,
                             success: (results) => {
-                                let department = String(results.d)
-                                console.log("department : ", department)
-                                tableHeader += `<td class="${department.replace(/[^a-zA-Z ]/g, "").replace(/ +/g, "")}" style="text-align: center;">
-                                                    <b>${department}</b>
+                                let departmentValue = String(results.d)
+                                let departmentName = departmentValue.split("|")[0]
+                                tableHeader += `<td class="${departmentValue.replace(/[^a-zA-Z ]/g, "-").replace(/ +/g, "-")}" style="text-align: center;">
+                                                    <b>${departmentName}</b>
                                                 </td>`
-                                departmentGroup.push(department)
+                                departmentGroup.push(departmentName)
                             },
                             error: function (err) {
                                 console.log(err)
@@ -671,13 +671,19 @@
                                           </td>`
                         for (let i = 4; i >= 4 && i <= (keyNames.length - 5); i++) {
                             let actualSummary = 0;
+                            let planSummary = 0;
                             for (let k = 0; k < Object.keys(rowWithKey).length; k++) {
-                                if (rowWithKey[k].key(i) > 50) {
-                                    actualSummary += 1
+
+                                if (rowWithKey[k].key(i) || rowWithKey[k].key(i) === 0) {
+                                    planSummary += 1
+
+                                    if (rowWithKey[k].key(i) > 50) {
+                                        actualSummary += 1
+                                    }
                                 }
                             }
                             rowFooter += `<td style="text-align:center; padding: 0.25rem 0 !important; border: 1px solid grey;">
-                                            <span>${rowWithKey.length}</span>
+                                            <span>${planSummary}</span>
                                             <hr style="margin: 2px 0 !important; border-top: 1px solid grey;" />
                                             <span>${actualSummary}</span>
                                       </td>`
@@ -711,10 +717,8 @@
                         var header_height = 450;
                         $('.rotate-table-grid th span').each(function () {
                             var strLen = $(this).text().trim().length
-                            var calHeight = strLen * 7.5
+                            var calHeight = strLen * 6.8
 
-                            console.log(strLen)
-                            console.log(calHeight)
                             if (calHeight > header_height) {
                                 header_height = calHeight
                             }

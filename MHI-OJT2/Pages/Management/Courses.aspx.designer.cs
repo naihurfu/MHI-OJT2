@@ -294,6 +294,15 @@ namespace MHI_OJT2.Pages.Management
         protected global::System.Web.UI.HtmlControls.HtmlSelect Assessor6;
 
         /// <summary>
+        /// planId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField planId;
+
+        /// <summary>
         /// downloadFileId control.
         /// </summary>
         /// <remarks>
@@ -328,6 +337,15 @@ namespace MHI_OJT2.Pages.Management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlButton btnEdit;
+
+        /// <summary>
+        /// btnAddOld control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlButton btnAddOld;
 
         /// <summary>
         /// btnInserted control.
@@ -472,5 +490,14 @@ namespace MHI_OJT2.Pages.Management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnExportReport;
+
+        /// <summary>
+        /// selectCourseRepeater control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater selectCourseRepeater;
     }
 }

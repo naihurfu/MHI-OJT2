@@ -11,6 +11,10 @@
         * {
             font-family: 'Kanit', sans-serif;
         }
+
+        .toasts-top-right {
+            z-index: 1080 !important;
+        }
     </style>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="~/Assets/plugins/fontawesome-free/css/all.min.css">
@@ -44,6 +48,7 @@
                     fade: true
                 })
             }
+            
             function SQLDateToInput(date) {
                 let yyyyMMdd = date.split('T')[0].split('-')
                 let year = yyyyMMdd[0]
@@ -51,6 +56,16 @@
                 let day = yyyyMMdd[2]
 
                 return `${day}/${month}/${year}`
+            }
+
+            function EscapeChar(str) {
+                return str.replace(/[&\/\\#,+$~%.'":*?<>{}]/g, "")
+            }
+
+            function HasSpecialChar(str) {
+                var s = str.trim()
+                var format = /[`!@#$%^&*_+\=\[\]{};':"\\|,.<>\/?~]/;
+                return format.test(s)
             }
         </script>
 
@@ -462,7 +477,7 @@
                     body.APPROVE_ID = $(this).data('approval-id')
                     body.COURSE_ID = $(this).data('course-id')
                     body.APPROVAL_SEQUENCE = $(this).data('approval-sequence')
-                    body.REMARK = $('#approval-remark').val()
+                    body.REMARK = EscapeChar($('#approval-remark').val())
 
                     // approved
                     if (isConfirmed) {

@@ -5,12 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Services;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 namespace MHI_OJT2.Pages.Management
@@ -40,18 +43,33 @@ namespace MHI_OJT2.Pages.Management
 				GetMasterOfCourse(role);
 				GetAssessor();
 				GetDepartment();
+
+				string dep = (string)HttpContext.Current.Session["dep"];
+				string sts = (string)HttpContext.Current.Session["sts"];
+				if (!string.IsNullOrEmpty(dep))
+				{
+					ddDepartment.SelectedValue = dep;
+					Session.Remove("dep");
+				}
+
+				if (!string.IsNullOrEmpty(sts))
+                {
+					ddStatus.SelectedValue = sts;
+					Session.Remove("sts");
+                }
+
 				GetGridViewData();
 			}
 		}
 		void GetDepartment()
         {
-			string query = "SELECT DISTINCT DEPARTMENT_ID, DEPARTMENT_NAME FROM VIEW_ADJUST_COURSE WHERE 1=1 ";
+			string query = "SELECT DISTINCT ID DEPARTMENT_ID, DEPARTMENT_NAME FROM DEPARTMENT WHERE IS_ACTIVE=1 ";
 			string where = "";
 
-			if (Session["roles"].ToString().ToUpper() != "ADMIN")
-			{
-				where += " AND CREATED_BY = " + int.Parse(Session["userId"].ToString());
-			}
+			//if (Session["roles"].ToString().ToUpper() != "ADMIN")
+			//{
+			//	where += " AND CREATED_BY = " + int.Parse(Session["userId"].ToString());
+			//}
 
 			ddDepartment.DataSource = SQL.GetDataTable(query + where,
                                               WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
@@ -127,11 +145,26 @@ namespace MHI_OJT2.Pages.Management
             {
 				where += " AND [STATUS_CODE] = 9 ";
 			}
+			
+			if (!string.IsNullOrEmpty(ddDepartment.SelectedValue.ToString()))
+            {
+				where += " AND DEPARTMENT_ID = " + ddDepartment.SelectedValue.ToString() + " ";
+				Session["dep"] = ddDepartment.SelectedValue.ToString();
 
-			where += " AND DEPARTMENT_ID = " + ddDepartment.SelectedValue.ToString() + " ";
+			}
 
-			RepeatCourseTable.DataSource = SQL.GetDataTable(query + where + " ORDER BY COURSE_ID DESC;", mainDb);
+			if (!string.IsNullOrEmpty(ddStatus.SelectedValue.ToString()))
+            {
+				Session["sts"] = ddStatus.SelectedValue.ToString();
+            }
+
+			DataTable dt = SQL.GetDataTable(query + where + " ORDER BY COURSE_ID DESC;", mainDb);
+
+			RepeatCourseTable.DataSource = dt;
 			RepeatCourseTable.DataBind();
+
+			selectCourseRepeater.DataSource = dt;
+			selectCourseRepeater.DataBind();
 		}
 
 
@@ -232,8 +265,12 @@ namespace MHI_OJT2.Pages.Management
 		{
             try
 			{
+				if (DATA.HasSpecialCharacters(courseName.Value.ToString().Trim())
+                    || DATA.HasSpecialCharacters(detail.Value.ToString().Trim()) 
+					|| DATA.HasSpecialCharacters(objective.Value.ToString().Trim()) 
+					|| DATA.HasSpecialCharacters(otherEvaluateRemark.Value.ToString().Trim())) throw new Exception("ไม่สามารถบันทึกข้อมูลได้ กรุณาตรวจสอบอีกครั้ง");
 
-				string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
+                string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
 				SqlParameterCollection param = new SqlCommand().Parameters;
 				bool hasFile = false;
 				string filePath = "";
@@ -322,9 +359,9 @@ namespace MHI_OJT2.Pages.Management
 				}
 				query += ")";
 
-				param.AddWithValue("COURSE_NUMBER", SqlDbType.VarChar).Value = courseNumber.Value;
+                param.AddWithValue("COURSE_NUMBER", SqlDbType.VarChar).Value = courseNumber.Value;
 				param.AddWithValue("TIMES", SqlDbType.Int).Value = times.Value;
-				param.AddWithValue("COURSE_NAME", SqlDbType.VarChar).Value = courseName.Value.ToString().Replace("'", "");
+				param.AddWithValue("COURSE_NAME", SqlDbType.VarChar).Value = courseName.Value;
 				param.AddWithValue("START_DATE", SqlDbType.Date).Value = DATA.DateTimeToSQL(startDate.Value);
 				param.AddWithValue("END_DATE", SqlDbType.Date).Value = DATA.DateTimeToSQL(endDate.Value);
 				param.AddWithValue("START_TIME", SqlDbType.VarChar).Value = startTime.Value;
@@ -333,8 +370,8 @@ namespace MHI_OJT2.Pages.Management
 				param.AddWithValue("DEPARTMENT_ID", SqlDbType.Int).Value = department.Value;
 				param.AddWithValue("LOCATION_ID", SqlDbType.Int).Value = location.Value;
 				param.AddWithValue("TEACHER_ID", SqlDbType.Int).Value = teacher.Value;
-				param.AddWithValue("DETAIL", SqlDbType.VarChar).Value = detail.Value.ToString().Replace("'", "");
-				param.AddWithValue("OBJECTIVE", SqlDbType.VarChar).Value = objective.Value.ToString().Replace("'", "");
+				param.AddWithValue("DETAIL", SqlDbType.VarChar).Value = detail.Value;
+				param.AddWithValue("OBJECTIVE", SqlDbType.VarChar).Value = objective.Value;
 				param.AddWithValue("ASSESSOR1_ID", SqlDbType.Int).Value = Assessor1.Value;
 				param.AddWithValue("ASSESSOR2_ID", SqlDbType.Int).Value = Assessor2.Value;
 				param.AddWithValue("ASSESSOR3_ID", SqlDbType.Int).Value = Assessor3.Value;
@@ -361,14 +398,32 @@ namespace MHI_OJT2.Pages.Management
 				CreateApproval(insertedId, int.Parse(Assessor5.Value), 5);
 				CreateApproval(insertedId, int.Parse(Assessor6.Value), 6);
 
-				if (checkPlan.Checked == true && checkNotPlan.Checked == false)
+				//btnInserted
+				//btnAddOld
+
+				HtmlButton btn = (HtmlButton)sender;
+				if (btn.ID == "btnAddOld" || (checkPlan.Checked == true && checkNotPlan.Checked == false))
 				{
 					if (insertedId == 0) throw new Exception("Something went wrong!");
+					int trpId = 0;
+					switch (btn.ID)
+                    {
+						case "btnInserted":
+							trpId = int.Parse(trainingPlan.Value.ToString());
+							break;
 
-					SqlParameterCollection paramPlanAndCourse = new SqlCommand().Parameters;
-					paramPlanAndCourse.AddWithValue("PLAN_ID", SqlDbType.Int).Value = trainingPlan.Value;
+						case "btnAddOld":
+							trpId = int.Parse(planId.Value.ToString());
+							break;
+
+						default: throw new Exception("Something went wrong");
+
+					}
+
+					var paramPlanAndCourse = new SqlCommand().Parameters;
+					paramPlanAndCourse.AddWithValue("PLAN_ID", SqlDbType.Int).Value = trpId;
 					paramPlanAndCourse.AddWithValue("COURSE_ID", SqlDbType.Int).Value = insertedId;
-					paramPlanAndCourse.AddWithValue("CREATED_BY", SqlDbType.Int).Value = 1;
+					paramPlanAndCourse.AddWithValue("CREATED_BY", SqlDbType.Int).Value = Session["userId"];
 					SQL.ExecuteWithParams("INSERT INTO PLAN_AND_COURSE([PLAN_ID],[COURSE_ID],[CREATED_BY]) VALUES(@PLAN_ID,@COURSE_ID,@CREATED_BY)", mainDb, paramPlanAndCourse);
 				}
 
@@ -501,6 +556,16 @@ namespace MHI_OJT2.Pages.Management
 			DataTable dt = SQL.GetDataTable($"EXEC GET_TIGER_EMPLOYEE {courseId}", connectionString);
 			return DATA.DataTableToJSONWithJSONNet(dt);
 		}
+
+		[WebMethod]
+		public static int GetTimesInPlan(int planId)
+		{
+			string connectionString = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
+
+			DataTable dt = SQL.GetDataTable($"SELECT * FROM PLAN_AND_COURSE WHERE PLAN_ID = {planId}", connectionString);
+			return dt.Rows.Count + 1;
+		}
+
 		void Alert(string type, string title, string message)
 		{
 			Page.ClientScript.RegisterStartupScript(this.GetType(), "SweetAlert", $"sweetAlert('{type}','{title}','{message}')", true);
@@ -732,6 +797,11 @@ namespace MHI_OJT2.Pages.Management
 		{
 			try
 			{
+				if (DATA.HasSpecialCharacters(courseName.Value.ToString().Trim())
+					|| DATA.HasSpecialCharacters(detail.Value.ToString().Trim())
+					|| DATA.HasSpecialCharacters(objective.Value.ToString().Trim())
+					|| DATA.HasSpecialCharacters(otherEvaluateRemark.Value.ToString().Trim())) throw new Exception("ไม่สามารถบันทึกข้อมูลได้ กรุณาตรวจสอบอีกครั้ง");
+
 				string mainDb = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
 				SqlParameterCollection updateAdjustCourseParamCollection = new SqlCommand().Parameters;
 				bool hasFile = false;
@@ -787,9 +857,9 @@ namespace MHI_OJT2.Pages.Management
 
 				}
 				queryUpdateAdjustCourse += " WHERE ID=@courseId";
-				updateAdjustCourseParamCollection.AddWithValue("COURSE_NUMBER", SqlDbType.VarChar).Value = courseNumber.Value;
+				updateAdjustCourseParamCollection.AddWithValue("COURSE_NUMBER", SqlDbType.VarChar).Value = courseNumber.Value.ToString().Trim();
 				updateAdjustCourseParamCollection.AddWithValue("TIMES", SqlDbType.Int).Value = times.Value;
-				updateAdjustCourseParamCollection.AddWithValue("COURSE_NAME", SqlDbType.VarChar).Value = courseName.Value;
+				updateAdjustCourseParamCollection.AddWithValue("COURSE_NAME", SqlDbType.VarChar).Value = courseName.Value.ToString().Trim();
 				updateAdjustCourseParamCollection.AddWithValue("START_DATE", SqlDbType.Date).Value = DATA.DateTimeToSQL(startDate.Value);
 				updateAdjustCourseParamCollection.AddWithValue("END_DATE", SqlDbType.Date).Value = DATA.DateTimeToSQL(endDate.Value);
 				updateAdjustCourseParamCollection.AddWithValue("START_TIME", SqlDbType.VarChar).Value = startTime.Value;
@@ -798,8 +868,8 @@ namespace MHI_OJT2.Pages.Management
 				updateAdjustCourseParamCollection.AddWithValue("DEPARTMENT_ID", SqlDbType.Int).Value = department.Value;
 				updateAdjustCourseParamCollection.AddWithValue("LOCATION_ID", SqlDbType.Int).Value = location.Value;
 				updateAdjustCourseParamCollection.AddWithValue("TEACHER_ID", SqlDbType.Int).Value = teacher.Value;
-				updateAdjustCourseParamCollection.AddWithValue("DETAIL", SqlDbType.VarChar).Value = detail.Value;
-				updateAdjustCourseParamCollection.AddWithValue("OBJECTIVE", SqlDbType.VarChar).Value = objective.Value;
+				updateAdjustCourseParamCollection.AddWithValue("DETAIL", SqlDbType.VarChar).Value = detail.Value.ToString().Trim();
+				updateAdjustCourseParamCollection.AddWithValue("OBJECTIVE", SqlDbType.VarChar).Value = objective.Value.ToString().Trim();
 				updateAdjustCourseParamCollection.AddWithValue("ASSESSOR1_ID", SqlDbType.Int).Value = Assessor1.Value;
 				updateAdjustCourseParamCollection.AddWithValue("ASSESSOR2_ID", SqlDbType.Int).Value = Assessor2.Value;
 				updateAdjustCourseParamCollection.AddWithValue("ASSESSOR3_ID", SqlDbType.Int).Value = Assessor3.Value;
@@ -994,6 +1064,16 @@ namespace MHI_OJT2.Pages.Management
         protected void btnSearch_Click(object sender, EventArgs e)
         {
 			GetGridViewData();
+        }
+
+		public static string JsChar(string str)
+		{
+			return DATA.RemoveSpecialCharacters(str);
+		}
+
+        protected void selectCourseRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+
         }
     }
     public class EmployeeIntoCourse
