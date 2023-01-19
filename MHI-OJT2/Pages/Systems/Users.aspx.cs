@@ -67,7 +67,7 @@ namespace MHI_OJT2.Pages.Systems
 					Alert("success", "สำเร็จ", "เปลี่ยนรหัสผ่านเรียบร้อย");
                 }
 
-				Session.Remove("alert");
+                Session.Remove("alert");
 			}
 		}
 		static int CheckUsernameDuplicate(string username)
@@ -161,10 +161,39 @@ namespace MHI_OJT2.Pages.Systems
 				Alert("error", "ผิดพลาด!", ex.Message);
 			}
 		}
+		protected bool IsUsernameDuplicated(int userId, string username)
+        {
+            try
+            {
+				string MainDB = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
+				string query = " SELECT [USERNAME] " +
+							   " FROM [SYSTEM_USERS] " +
+							   " WHERE ID <> @ID" + 
+							   " AND [USERNAME] = @USERNAME";
+				SqlParameterCollection param = new SqlCommand().Parameters;
+				param.AddWithValue( "ID", SqlDbType.Int ).Value = userId;
+				param.AddWithValue( "USERNAME", SqlDbType.VarChar ).Value = username;
+
+				DataTable dataTable = SQL.GetDataTableWithParams( query, MainDB, param );
+				return dataTable.Rows.Count > 0;
+			}
+            catch ( Exception )
+            {
+				return true;
+            }
+
+			return false;
+        }
 		protected void Update(object sender, EventArgs e)
 		{
 			try
 			{
+				int _id = int.Parse(hiddenId.Value);
+				string _username = username.Value.ToString();
+
+				bool isUsernameDuplicated = IsUsernameDuplicated(_id, _username);
+				if ( isUsernameDuplicated ) throw new Exception("Username is already to used");
+
 				string MainDB = WebConfigurationManager.ConnectionStrings["MainDB"].ConnectionString;
 				string query = "UPDATE SYSTEM_USERS SET" +
 					" [USERNAME]=@USERNAME " +
@@ -177,8 +206,8 @@ namespace MHI_OJT2.Pages.Systems
 					",[CREATED_AT]=GETDATE() " +
 					"WHERE ID=@ID";
 				SqlParameterCollection param = new SqlCommand().Parameters;
-				param.AddWithValue("ID", SqlDbType.Int).Value = hiddenId.Value;
-				param.AddWithValue("USERNAME", SqlDbType.VarChar).Value = username.Value;
+				param.AddWithValue("ID", SqlDbType.Int).Value = _id;
+				param.AddWithValue("USERNAME", SqlDbType.VarChar).Value = _username;
 				param.AddWithValue("INITIAL_NAME", SqlDbType.VarChar).Value = initialName.Value;
 				param.AddWithValue("FIRST_NAME", SqlDbType.VarChar).Value = firstName.Value;
 				param.AddWithValue("LAST_NAME", SqlDbType.VarChar).Value = lastName.Value;
@@ -188,8 +217,10 @@ namespace MHI_OJT2.Pages.Systems
 				SQL.ExecuteWithParams(query, MainDB, param);
 
 				Session.Add("alert", "updated");
-				try
-				{
+
+                #region Save Logs
+                try
+                {
 					ObjectLog obj = new ObjectLog();
 					obj.TITLE = "แก้ไขข้อมูลผู้ใช้ระบบ";
 					obj.REMARK = $"{username.Value}";
@@ -201,7 +232,9 @@ namespace MHI_OJT2.Pages.Systems
 				{
 					Console.WriteLine(ex.Message);
 				}
-				Response.Redirect(_selfPathName);
+                #endregion
+
+                Response.Redirect(_selfPathName);
 			}
 			catch (Exception ex)
 			{
