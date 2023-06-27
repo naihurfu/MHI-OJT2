@@ -146,6 +146,7 @@
     <script type="text/javascript">
         (function () {
             $("table").DataTable({
+                stateSave : true,
                 responsive: true,
                 scrollX: 500,
                 scrollCollapse: true,
