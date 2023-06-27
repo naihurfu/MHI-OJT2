@@ -247,6 +247,7 @@
     <script type="text/javascript">
         (function () {
             $("#trainingPlanTable").DataTable({
+                stateSave: true,
                 responsive: true,
                 scrollX: 500,
                 scrollCollapse: true,

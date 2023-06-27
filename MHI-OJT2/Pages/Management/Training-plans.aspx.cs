@@ -216,7 +216,7 @@ namespace MHI_OJT2.Pages.Management
                 // refresh page
                 Response.Redirect(_selfPathName);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Alert("error", "ผิดพลาด!", $"กรุณากรอกข้อมูลให้ครบถ้วน");
             }
